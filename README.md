@@ -1,36 +1,61 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# BuildMyPlan - SkyFynd
+
+Interactive pricing and service selection page for SkyFynd, a creative and digital marketing company.
+
+## Features
+
+- Browse 13 services across 4 categories
+- Select from 3 pricing tiers (Essential, Pro, Enterprise)
+- Real-time price calculator
+- Bundle discounts (10-20% off)
+- Quote request form
+- Dark modern tech aesthetic
+
+## Tech Stack
+
+- Next.js 15 (App Router)
+- TypeScript
+- Tailwind CSS
+- Zustand (State Management)
+- Framer Motion (Animations)
+- React Hook Form + Zod
 
 ## Getting Started
 
-First, run the development server:
-
 ```bash
+# Install dependencies
+npm install
+
+# Run development server
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+
+# Build for production
+npm run build
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) to view the app.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Service Categories
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+1. **Design & Development** - Websites, Apps, Animations, Images, Ringtones
+2. **Marketing** - Paid Media, Social Media, Email Marketing
+3. **Branding** - Brand Strategy, Visual Identity, Brand Applications
+4. **Content** - Content Strategy, Copywriting
 
-## Learn More
+## Pricing
 
-To learn more about Next.js, take a look at the following resources:
+| Tier | Price |
+|------|-------|
+| Essential | $500 |
+| Pro | $1,000 |
+| Enterprise | $1,500 |
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Bundle Discounts
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- 3+ services: 10% off
+- 5+ services: 15% off
+- 7+ services: 20% off
 
-## Deploy on Vercel
+## License
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Private - SkyFynd
