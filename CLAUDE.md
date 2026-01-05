@@ -80,7 +80,7 @@ BuildMyPlan is an interactive pricing and service selection subpage for SkyFynd,
 
 | Category | Services |
 |----------|----------|
-| Design & Development | Websites, App Creation, Animations, Images, Original Ringtones |
+| Design & Development | Websites, App Creation, Animations, Images, Brand Signature Sound |
 | Marketing | Paid Media & Lead Gen, Social Media Management, Email Marketing |
 | Branding | Brand Strategy, Visual Identity Design, Brand Applications |
 | Content | Content Strategy, Messaging & Copywriting |

@@ -385,7 +385,7 @@ export const services: Service[] = [
     id: 'ringtones',
     category: 'design-development',
     categoryName: 'Design & Development',
-    name: 'Original Ringtones',
+    name: 'Brand Signature Sound',
     description: 'Custom ringtones, notification sounds, and audio branding',
     tiers: [
       {
