@@ -164,7 +164,7 @@ export const services: Service[] = [
     category: 'design-development',
     categoryName: 'Design & Development',
     name: 'App Creation',
-    description: 'Mobile and web application development from MVP to full-scale platforms',
+    description: 'Mobile and web application development from MVP to full-scale platforms, fully customized to your specific business needs and workflows.',
     tiers: [
       {
         id: 'essential',

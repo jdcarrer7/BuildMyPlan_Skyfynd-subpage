@@ -105,7 +105,7 @@ export default function BuildMyAppPage() {
             <Home className="w-5 h-5" />
             <span className="text-sm">Back to Services</span>
           </Link>
-          <h1 className="text-xl font-semibold gradient-text font-serif">
+          <h1 className="text-2xl font-semibold gradient-text font-serif">
             Build My App
           </h1>
           <div className="w-32" /> {/* Spacer for centering */}

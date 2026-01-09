@@ -221,7 +221,7 @@ export default function Step9Summary({ showQuoteForm = false, onCloseQuoteForm }
               <Music className="w-5 h-5 text-white" />
             </div>
             <div>
-              <h2 className="text-2xl font-semibold text-white font-serif">
+              <h2 className="text-3xl font-semibold text-white font-serif">
                 Sound Quote Summary
               </h2>
               <p className="text-[var(--text-secondary)] text-sm">
@@ -452,7 +452,7 @@ export default function Step9Summary({ showQuoteForm = false, onCloseQuoteForm }
                   <Globe className="w-5 h-5 text-white" />
                 </div>
                 <div>
-                  <h2 className="text-2xl font-semibold text-white font-serif">
+                  <h2 className="text-3xl font-semibold text-white font-serif">
                     Website Quote Summary
                   </h2>
                   <p className="text-[var(--text-secondary)] text-sm">
@@ -576,7 +576,7 @@ export default function Step9Summary({ showQuoteForm = false, onCloseQuoteForm }
                   <Smartphone className="w-5 h-5 text-white" />
                 </div>
                 <div>
-                  <h2 className="text-2xl font-semibold text-white font-serif">
+                  <h2 className="text-3xl font-semibold text-white font-serif">
                     App Quote Summary
                   </h2>
                   <p className="text-[var(--text-secondary)] text-sm">
@@ -700,7 +700,7 @@ export default function Step9Summary({ showQuoteForm = false, onCloseQuoteForm }
                   <Film className="w-5 h-5 text-white" />
                 </div>
                 <div>
-                  <h2 className="text-2xl font-semibold text-white font-serif">
+                  <h2 className="text-3xl font-semibold text-white font-serif">
                     Animation Quote Summary
                   </h2>
                   <p className="text-[var(--text-secondary)] text-sm">
@@ -816,7 +816,7 @@ export default function Step9Summary({ showQuoteForm = false, onCloseQuoteForm }
                   <Image className="w-5 h-5 text-white" />
                 </div>
                 <div>
-                  <h2 className="text-2xl font-semibold text-white font-serif">
+                  <h2 className="text-3xl font-semibold text-white font-serif">
                     Image Quote Summary
                   </h2>
                   <p className="text-[var(--text-secondary)] text-sm">
@@ -932,7 +932,7 @@ export default function Step9Summary({ showQuoteForm = false, onCloseQuoteForm }
                   <Megaphone className="w-5 h-5 text-white" />
                 </div>
                 <div>
-                  <h2 className="text-2xl font-semibold text-white font-serif">
+                  <h2 className="text-3xl font-semibold text-white font-serif">
                     Paid Media Quote Summary
                   </h2>
                   <p className="text-[var(--text-secondary)] text-sm">
@@ -1047,7 +1047,7 @@ export default function Step9Summary({ showQuoteForm = false, onCloseQuoteForm }
                   <Mail className="w-5 h-5 text-white" />
                 </div>
                 <div>
-                  <h2 className="text-2xl font-semibold text-white font-serif">
+                  <h2 className="text-3xl font-semibold text-white font-serif">
                     Email Marketing Quote Summary
                   </h2>
                   <p className="text-[var(--text-secondary)] text-sm">
@@ -1166,7 +1166,7 @@ export default function Step9Summary({ showQuoteForm = false, onCloseQuoteForm }
                   <Palette className="w-5 h-5 text-white" />
                 </div>
                 <div>
-                  <h2 className="text-2xl font-semibold text-white font-serif">
+                  <h2 className="text-3xl font-semibold text-white font-serif">
                     Visual Identity Quote Summary
                   </h2>
                   <p className="text-[var(--text-secondary)] text-sm">

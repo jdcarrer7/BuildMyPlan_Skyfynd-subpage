@@ -147,7 +147,7 @@ export default function CombinedEstimateSidebar({ currentService, onRequestQuote
     >
       <div className="flex items-center gap-2 mb-4">
         <Calculator className="w-5 h-5 text-[var(--accent-purple)]" />
-        <h3 className="text-lg font-semibold text-white">
+        <h3 className="text-xl font-semibold text-white">
           {isMultipleServices ? 'Combined Estimate' : 'Total Estimate'}
         </h3>
       </div>

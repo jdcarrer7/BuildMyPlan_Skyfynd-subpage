@@ -95,7 +95,7 @@ export default function BuildMySoundPage() {
           </Link>
           <div className="flex items-center gap-2">
             <Music className="w-5 h-5 text-[var(--accent-purple)]" />
-            <h1 className="text-xl font-semibold gradient-text font-serif">
+            <h1 className="text-2xl font-semibold gradient-text font-serif">
               Build My Sound
             </h1>
           </div>

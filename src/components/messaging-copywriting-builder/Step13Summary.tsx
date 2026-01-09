@@ -185,7 +185,7 @@ export default function Step13Summary({ showQuoteForm = false, onCloseQuoteForm 
               <PenTool className="w-5 h-5 text-white" />
             </div>
             <div>
-              <h2 className="text-2xl font-semibold text-white font-serif">
+              <h2 className="text-3xl font-semibold text-white font-serif">
                 Messaging & Copywriting Quote Summary
               </h2>
               <p className="text-[var(--text-secondary)] text-sm">{goalLabel}</p>

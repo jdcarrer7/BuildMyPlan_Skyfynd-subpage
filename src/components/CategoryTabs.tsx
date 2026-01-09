@@ -32,23 +32,25 @@ export default function CategoryTabs({
             onClick={() => onCategoryChange(category.id)}
             className={`
               relative flex items-center gap-2.5 px-6 py-3.5 rounded-full
-              font-medium text-sm transition-all duration-400
+              font-medium transition-all duration-400
               ${isActive
-                ? 'text-[#09090b]'
+                ? 'text-white'
                 : 'bg-transparent text-[var(--text-secondary)] hover:text-white hover:bg-[var(--bg-card)]/60'
               }
             `}
+            style={{ fontSize: '15px' }}
             whileHover={{ scale: isActive ? 1 : 1.02 }}
             whileTap={{ scale: 0.98 }}
           >
             {isActive && (
               <motion.div
                 layoutId="activeTab"
-                className="absolute inset-0 bg-gradient-to-r from-[var(--accent-orange)] to-[var(--accent-gold)] rounded-full"
+                className="absolute inset-0 rounded-full border border-[var(--accent-purple)]/40"
+                style={{ background: 'linear-gradient(135deg, rgba(139, 92, 246, 0.5) 0%, rgba(236, 72, 153, 0.5) 100%)' }}
                 transition={{ type: 'spring', bounce: 0.15, duration: 0.5 }}
               />
             )}
-            <span className={`relative z-10 ${isActive ? 'text-[#09090b]' : ''}`}>
+            <span className="relative z-10">
               {categoryIcons[category.id]}
             </span>
             <span className="relative z-10">{category.name}</span>

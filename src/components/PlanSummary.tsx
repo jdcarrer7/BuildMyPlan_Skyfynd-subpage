@@ -30,8 +30,8 @@ export default function PlanSummary({ onRequestQuote }: PlanSummaryProps) {
           <div className="w-20 h-20 mx-auto mb-6 rounded-2xl bg-gradient-to-br from-[var(--bg-secondary)] to-[var(--bg-elevated)] flex items-center justify-center border border-[var(--border-subtle)]">
             <ShoppingCart className="w-9 h-9 text-[var(--text-muted)]" />
           </div>
-          <h3 className="text-xl font-semibold text-white mb-3 font-serif">Your Plan is Empty</h3>
-          <p className="text-[var(--text-secondary)] text-sm leading-relaxed mb-6">
+          <h3 className="font-serif mb-3" style={{ fontSize: '24px', fontWeight: 600, lineHeight: 1.25, letterSpacing: '-0.01em', color: '#FAFAFA' }}>Your Plan is Empty</h3>
+          <p className="mb-6" style={{ fontSize: '15px', color: '#A1A1AA', lineHeight: 1.5 }}>
             Browse our services and add them to build your custom plan.
           </p>
           <div className="flex items-center justify-center gap-2 text-xs text-[var(--text-muted)]">
@@ -50,7 +50,7 @@ export default function PlanSummary({ onRequestQuote }: PlanSummaryProps) {
     >
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
-        <h3 className="text-xl font-semibold text-white font-serif flex items-center gap-2.5">
+        <h3 className="font-serif flex items-center gap-2.5" style={{ fontSize: '24px', fontWeight: 600, lineHeight: 1.25, letterSpacing: '-0.01em', color: '#FAFAFA' }}>
           <ShoppingCart className="w-5 h-5 text-[var(--accent-purple)]" />
           Your Plan
         </h3>

@@ -180,7 +180,7 @@ export default function Step10Summary({ showQuoteForm = false, onCloseQuoteForm 
               <Megaphone className="w-5 h-5 text-white" />
             </div>
             <div>
-              <h2 className="text-2xl font-semibold text-white font-serif">
+              <h2 className="text-3xl font-semibold text-white font-serif">
                 Paid Media Quote Summary
               </h2>
               <p className="text-[var(--text-secondary)] text-sm">{campaignTypeLabel}</p>

@@ -110,7 +110,7 @@ export default function BuildMyApplicationsPage() {
           </Link>
           <div className="flex items-center gap-2">
             <Briefcase className="w-5 h-5 text-[var(--accent-purple)]" />
-            <h1 className="text-xl font-semibold gradient-text font-serif">
+            <h1 className="text-2xl font-semibold gradient-text font-serif">
               Build My Brand Applications
             </h1>
           </div>

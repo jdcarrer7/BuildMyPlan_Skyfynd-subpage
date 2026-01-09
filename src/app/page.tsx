@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useRef, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { categories, getServicesByCategory } from '@/data/services';
 import { usePlanStore } from '@/hooks/usePlanStore';
@@ -16,11 +16,17 @@ export default function BuildMyPlan() {
   const [activeCategory, setActiveCategory] = useState(categories[0].id);
   const [isQuoteFormOpen, setIsQuoteFormOpen] = useState(false);
   const [expandedServiceId, setExpandedServiceId] = useState<string | null>(null);
+  const [mounted, setMounted] = useState(false);
 
-  const { itemCount, discountPercentage, total } = usePlanStore();
+  const { itemCount, discountPercentage, total, items } = usePlanStore();
   const { getAllConfiguredServices } = useUnifiedQuoteStore();
 
-  const configuredServices = getAllConfiguredServices();
+  // Prevent hydration mismatch from Zustand persisted state
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const configuredServices = mounted ? getAllConfiguredServices() : [];
   const hasConfiguredServices = configuredServices.length > 0;
   const firstConfiguredService = configuredServices[0];
 
@@ -29,6 +35,56 @@ export default function BuildMyPlan() {
   }, [activeCategory]);
 
   const currentCategory = categories.find(c => c.id === activeCategory);
+
+  // Refs for service cards to enable auto-scroll
+  const serviceCardRefs = useRef<Record<string, HTMLDivElement | null>>({});
+  const planSummaryRef = useRef<HTMLDivElement>(null);
+  const servicesSectionRef = useRef<HTMLDivElement>(null);
+  const prevItemCount = useRef(itemCount);
+  const [sidebarMode, setSidebarMode] = useState<'static' | 'fixed' | 'absolute-bottom'>('static');
+  const [sidebarTop, setSidebarTop] = useState(0);
+
+  // Auto-scroll to the service card when a new item is added
+  useEffect(() => {
+    if (itemCount > prevItemCount.current && items.length > 0) {
+      // A new item was added - find the most recently added service
+      const lastAddedItem = items[items.length - 1];
+      const cardRef = serviceCardRefs.current[lastAddedItem.serviceId];
+
+      if (cardRef) {
+        // Scroll the card into view, aligned with the top of the viewport
+        cardRef.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }
+    prevItemCount.current = itemCount;
+  }, [itemCount, items]);
+
+  // Control sidebar position based on scroll
+  useEffect(() => {
+    const handleScroll = () => {
+      if (servicesSectionRef.current) {
+        const rect = servicesSectionRef.current.getBoundingClientRect();
+        const sidebarHeight = planSummaryRef.current?.offsetHeight || 400;
+
+        // Calculate when services section top reaches viewport top (with 16px padding)
+        if (rect.top > 16) {
+          // Services section hasn't reached the top yet - sidebar stays in normal flow
+          setSidebarMode('static');
+          setSidebarTop(rect.top);
+        } else if (rect.bottom > sidebarHeight + 32) {
+          // Services section is at top and there's room for sidebar - fix it
+          setSidebarMode('fixed');
+        } else {
+          // Near bottom of services - position at bottom
+          setSidebarMode('absolute-bottom');
+        }
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll(); // Check initial state
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   return (
     <main className="min-h-screen bg-[var(--bg-primary)] bg-particles">
@@ -56,13 +112,13 @@ export default function BuildMyPlan() {
             <span className="text-sm text-[var(--text-secondary)] tracking-wide">13 Services • 3 Tiers • Unlimited Possibilities</span>
           </motion.div>
 
-          {/* Title - Larger, more impactful */}
-          <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold text-white font-serif mb-6 tracking-tight">
+          {/* Title - SkyFynd style: 64px hero, tight line-height */}
+          <h1 className="font-serif mb-6" style={{ fontSize: 'clamp(36px, 8vw, 64px)', fontWeight: 600, lineHeight: 1.05, letterSpacing: '-0.03em', color: '#FAFAFA' }}>
             Build Your{' '}
             <span className="gradient-text">Perfect Plan</span>
           </h1>
 
-          <p className="text-lg md:text-xl text-[var(--text-secondary)] max-w-2xl mx-auto mb-12 leading-relaxed">
+          <p className="max-w-2xl mx-auto mb-12" style={{ fontSize: 'clamp(17px, 3vw, 21px)', color: '#A1A1AA', lineHeight: 1.5 }}>
             Select services, choose your tier, and build a custom package tailored to your needs.
             Bundle more to save more.
           </p>
@@ -160,20 +216,22 @@ export default function BuildMyPlan() {
           </motion.p>
         )}
 
-        {/* Grid Layout - Better proportions */}
-        <div className="grid lg:grid-cols-[1fr_380px] gap-10 xl:gap-12">
-          {/* Services Grid */}
-          <div>
+        {/* Grid Layout - Services with sidebar */}
+        <div ref={servicesSectionRef} className="relative">
+          <div className="lg:pr-[412px]">
+            {/* Services Grid */}
             <motion.div
               layout
-              className="grid md:grid-cols-2 gap-6 lg:gap-8 items-start"
+              className="grid md:grid-cols-2 gap-6 lg:gap-8"
             >
               {filteredServices.map((service, index) => (
                 <motion.div
                   key={service.id}
+                  ref={(el) => { serviceCardRefs.current[service.id] = el; }}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: index * 0.1, duration: 0.5 }}
+                  className="scroll-mt-4"
                 >
                   <ServiceCard
                     service={service}
@@ -181,14 +239,36 @@ export default function BuildMyPlan() {
                     onToggleExpand={() => setExpandedServiceId(
                       expandedServiceId === service.id ? null : service.id
                     )}
+                    onScrollToCard={() => {
+                      const cardRef = serviceCardRefs.current[service.id];
+                      if (cardRef) {
+                        cardRef.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                      }
+                    }}
                   />
                 </motion.div>
               ))}
             </motion.div>
+
+            {/* Mobile Plan Summary - Shows below services on mobile */}
+            <div className="lg:hidden mt-10">
+              <PlanSummary onRequestQuote={() => setIsQuoteFormOpen(true)} />
+            </div>
           </div>
 
-          {/* Plan Summary Sidebar */}
-          <div className="lg:sticky lg:top-8 lg:self-start">
+          {/* Plan Summary Sidebar - Positioned relative to services section */}
+          <div
+            ref={planSummaryRef}
+            className={`
+              hidden lg:block w-[380px] max-h-[calc(100vh-4rem)] overflow-y-auto z-30
+              ${sidebarMode === 'fixed'
+                ? 'fixed top-4 right-6 xl:right-[calc((100vw-1280px)/2+24px)]'
+                : sidebarMode === 'absolute-bottom'
+                ? 'absolute bottom-0 right-0'
+                : 'absolute top-0 right-0'
+              }
+            `}
+          >
             <PlanSummary onRequestQuote={() => setIsQuoteFormOpen(true)} />
           </div>
         </div>
