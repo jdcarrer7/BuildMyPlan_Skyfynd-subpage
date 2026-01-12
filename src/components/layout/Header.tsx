@@ -290,7 +290,6 @@ function DesktopNav() {
       <nav style={navStyles.desktop}>
         <NavLink text="Projects" to={`${SKYFYND_BASE_URL}/projects`} fontSize={16} isExternal />
         <NavLink text="Services" to={`${SKYFYND_BASE_URL}/websites`} fontSize={16} isExternal />
-        <NavLink text="Pricing" to={`${SKYFYND_BASE_URL}/pricing`} fontSize={16} isExternal />
         <NavLink text="Plans" to="/" fontSize={16} isActive />
         <NavLink text="About" to={`${SKYFYND_BASE_URL}/about`} fontSize={16} isExternal />
       </nav>
@@ -308,7 +307,6 @@ function TabletNav() {
       <nav style={navStyles.tablet}>
         <NavLink text="Projects" to={`${SKYFYND_BASE_URL}/projects`} fontSize={20} isExternal />
         <NavLink text="Services" to={`${SKYFYND_BASE_URL}/websites`} fontSize={20} isExternal />
-        <NavLink text="Pricing" to={`${SKYFYND_BASE_URL}/pricing`} fontSize={20} isExternal />
         <NavLink text="Plans" to="/" fontSize={20} isActive />
         <NavLink text="About" to={`${SKYFYND_BASE_URL}/about`} fontSize={20} isExternal />
       </nav>
@@ -366,7 +364,6 @@ function MobileMenu() {
   const menuItems = [
     { t: "Projects", to: `${SKYFYND_BASE_URL}/projects`, isExternal: true },
     { t: "Services", to: `${SKYFYND_BASE_URL}/websites`, isExternal: true },
-    { t: "Pricing", to: `${SKYFYND_BASE_URL}/pricing`, isExternal: true },
     { t: "Plans", to: "/", isActive: true },
     { t: "About", to: `${SKYFYND_BASE_URL}/about`, isExternal: true },
     { t: "Contact", to: `${SKYFYND_BASE_URL}/contact`, isExternal: true, isContact: true },
