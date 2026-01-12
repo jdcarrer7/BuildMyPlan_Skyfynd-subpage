@@ -9,6 +9,8 @@ import CategoryTabs from '@/components/CategoryTabs';
 import ServiceCard from '@/components/ServiceCard';
 import PlanSummary from '@/components/PlanSummary';
 import QuoteForm from '@/components/QuoteForm';
+import Header from '@/components/layout/Header';
+import Footer from '@/components/layout/Footer';
 import { Sparkles, ArrowRight, Percent, FileText } from 'lucide-react';
 import Link from 'next/link';
 
@@ -87,9 +89,11 @@ export default function BuildMyPlan() {
   }, []);
 
   return (
-    <main className="min-h-screen bg-[var(--bg-primary)] bg-particles">
+    <>
+      <Header />
+      <main className="min-h-screen bg-[var(--bg-primary)] bg-particles" style={{ paddingTop: '100px' }}>
       {/* Header - More generous spacing */}
-      <header className="relative pt-20 pb-16 md:pt-32 md:pb-24 px-6 text-center overflow-hidden">
+      <header className="relative pt-20 pb-16 md:pt-12 md:pb-24 px-6 text-center overflow-hidden">
         {/* Ambient Background Glow */}
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
           <div className="w-[800px] h-[600px] bg-gradient-to-b from-[var(--accent-purple)]/8 via-[var(--accent-fuchsia)]/5 to-transparent rounded-full blur-[100px]" />
@@ -307,18 +311,8 @@ export default function BuildMyPlan() {
 
       {/* Quote Form Modal */}
       <QuoteForm isOpen={isQuoteFormOpen} onClose={() => setIsQuoteFormOpen(false)} />
-
-      {/* Footer - Subtle, minimal */}
-      <footer className="border-t border-[var(--border-subtle)] py-12 px-6">
-        <div className="max-w-7xl mx-auto text-center">
-          <p className="text-[var(--text-muted)] text-sm">
-            &copy; {new Date().getFullYear()} SkyFynd. All rights reserved.
-          </p>
-          <p className="text-[var(--text-muted)] text-xs mt-3 opacity-70">
-            Prices are starting points. Final pricing may vary based on project scope.
-          </p>
-        </div>
-      </footer>
     </main>
+      <Footer />
+    </>
   );
 }
