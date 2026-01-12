@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import Link from "next/link";
 
 // Base URL for the main Skyfynd site
-const SKYFYND_BASE_URL = "http://localhost:5176";
+const SKYFYND_BASE_URL = "https://skyfynd.io";
 
 // Custom hook to detect window width
 function useWindowWidth() {
