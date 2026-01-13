@@ -516,7 +516,7 @@ const headerStyles: Record<string, React.CSSProperties> = {
   inner: {
     margin: '0 auto',
     padding: '12px 24px',
-    maxWidth: '1400px',
+    maxWidth: '1280px',
   },
   container: {
     position: 'relative',
