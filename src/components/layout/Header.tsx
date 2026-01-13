@@ -221,6 +221,11 @@ function ContactButton({ size = 'default' }: { size?: 'default' | 'tablet' | 'mo
             box-shadow: 0 0 25px rgba(139, 92, 246, 0.6), 0 0 50px rgba(236, 72, 153, 0.3);
           }
         }
+        @keyframes navShimmer {
+          0% { background-position: 0% 50%; }
+          50% { background-position: 100% 50%; }
+          100% { background-position: 0% 50%; }
+        }
       `}</style>
       <a
         href={`${SKYFYND_BASE_URL}/contact`}
@@ -255,6 +260,34 @@ function ContactButton({ size = 'default' }: { size?: 'default' | 'tablet' | 'mo
           textDecoration: 'none',
         }}
       >
+        {/* Shimmer effect */}
+        <span
+          style={{
+            position: 'absolute',
+            inset: 0,
+            background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent)',
+            transform: isHovered ? 'translateX(100%)' : 'translateX(-100%)',
+            transition: 'transform 0.6s ease',
+            pointerEvents: 'none',
+          }}
+        />
+
+        {/* Gradient border glow */}
+        <span
+          style={{
+            position: 'absolute',
+            inset: -1,
+            borderRadius: 15,
+            background: 'linear-gradient(135deg, #A78BFA, #EC4899, #F59E0B, #A78BFA)',
+            backgroundSize: '300% 300%',
+            animation: isHovered ? 'navShimmer 2s ease infinite' : 'none',
+            opacity: isHovered ? 0.6 : 0,
+            transition: 'opacity 0.3s ease',
+            zIndex: -1,
+            filter: 'blur(2px)',
+          }}
+        />
+
         <span
           style={{
             display: 'flex',
@@ -475,7 +508,7 @@ const mobileMenuStyles: Record<string, React.CSSProperties> = {
   overlay1: {
     position: 'absolute',
     inset: 0,
-    background: 'rgba(10, 10, 15, 0.95)',
+    background: 'rgba(10, 10, 11, 0.95)',
     backdropFilter: 'blur(20px)',
     border: '1px solid rgba(255, 255, 255, 0.1)',
     borderRadius: '16px',
@@ -503,32 +536,129 @@ const mobileMenuStyles: Record<string, React.CSSProperties> = {
   },
 };
 
-// Main header styles
+// NavBarShell - Glass effect container matching main site
+function NavBarShell({ children, width }: { children: React.ReactNode; width: string }) {
+  return (
+    <div style={{ ...navBarShellStyles.container, width }}>
+      {/* Main nav bar glass */}
+      <div style={navBarShellStyles.glass}>
+        {/* Iridescent wash background */}
+        <div style={navBarShellStyles.wash} />
+        {/* Glass highlight */}
+        <div style={navBarShellStyles.highlight} />
+        {/* Noise texture */}
+        <div style={navBarShellStyles.noise} />
+      </div>
+
+      {/* Inner content */}
+      <div style={{ position: 'relative', zIndex: 10, display: 'flex', alignItems: 'center', height: '100%' }}>
+        {children}
+      </div>
+    </div>
+  );
+}
+
+const navBarShellStyles: Record<string, React.CSSProperties> = {
+  container: {
+    position: 'relative',
+    margin: '0 auto',
+  },
+  glass: {
+    position: 'absolute',
+    inset: 0,
+    overflow: 'hidden',
+    borderRadius: '20px',
+    backdropFilter: 'blur(28px)',
+    WebkitBackdropFilter: 'blur(28px)',
+    border: '1px solid rgba(255, 255, 255, 0.08)',
+    background: 'rgba(10, 10, 11, 0.85)',
+  },
+  wash: {
+    position: 'absolute',
+    inset: '-30%',
+    background: `
+      radial-gradient(circle at 20% 30%, rgba(139, 92, 246, 0.1), transparent 55%),
+      radial-gradient(circle at 80% 20%, rgba(96, 165, 250, 0.08), transparent 55%),
+      radial-gradient(circle at 70% 85%, rgba(250, 204, 21, 0.05), transparent 60%)
+    `,
+    filter: 'blur(22px)',
+    pointerEvents: 'none',
+  },
+  highlight: {
+    position: 'absolute',
+    inset: 0,
+    background: 'linear-gradient(to bottom, rgba(255,255,255,0.04), transparent 50%)',
+    pointerEvents: 'none',
+  },
+  noise: {
+    position: 'absolute',
+    inset: 0,
+    backgroundImage: 'radial-gradient(rgba(255,255,255,0.08) 1px, transparent 1px)',
+    backgroundSize: '3px 3px',
+    opacity: 0.06,
+    mixBlendMode: 'overlay',
+    pointerEvents: 'none',
+  },
+};
+
+// Header styles
 const headerStyles: Record<string, React.CSSProperties> = {
-  header: {
+  desktop: {
+    width: '100%',
+    padding: '20px 0',
     position: 'fixed',
     top: 0,
     left: 0,
     right: 0,
     zIndex: 1000,
-    transition: 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+    transition: 'transform 0.3s ease, opacity 0.3s ease',
   },
-  inner: {
-    margin: '0 auto',
-    padding: '12px 24px',
-    maxWidth: '1280px',
-  },
-  container: {
-    position: 'relative',
+  desktopInner: {
     display: 'flex',
+    height: 70,
+    alignItems: 'center',
+    padding: '0 32px',
+    width: '100%',
+    position: 'relative',
+  },
+  tablet: {
+    width: '100%',
+    padding: '16px 0',
+    position: 'fixed',
+    top: 0,
+    left: 0,
+    right: 0,
+    zIndex: 1000,
+    transition: 'transform 0.3s ease, opacity 0.3s ease',
+  },
+  tabletInner: {
+    display: 'flex',
+    height: 60,
     alignItems: 'center',
     justifyContent: 'space-between',
-    padding: '14px 24px',
-    borderRadius: '18px',
-    background: 'rgba(10, 10, 15, 0.85)',
-    backdropFilter: 'blur(20px)',
-    border: '1px solid rgba(255, 255, 255, 0.08)',
-    boxShadow: '0 8px 32px rgba(0, 0, 0, 0.4)',
+    padding: '0 24px',
+    width: '100%',
+    boxSizing: 'border-box',
+    position: 'relative',
+  },
+  mobile: {
+    width: '100%',
+    padding: '12px 0',
+    position: 'fixed',
+    top: 0,
+    left: 0,
+    right: 0,
+    zIndex: 1000,
+    transition: 'transform 0.3s ease, opacity 0.3s ease',
+  },
+  mobileInner: {
+    display: 'flex',
+    width: '100%',
+    height: 50,
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    padding: '0 16px',
+    boxSizing: 'border-box',
   },
 };
 
@@ -541,22 +671,54 @@ export default function Header() {
   const isTablet = width >= 768 && width < 1280;
   const isMobile = width < 768;
 
-  return (
-    <header
-      style={{
-        ...headerStyles.header,
+  if (isMobile) {
+    return (
+      <header style={{
+        ...headerStyles.mobile,
         transform: isVisible ? 'translateY(0)' : 'translateY(-100%)',
-      }}
-    >
-      <div style={headerStyles.inner}>
-        <div style={headerStyles.container}>
-          <Company size={isTablet ? 52 : 48} textSize={isTablet ? 24 : 20} />
+        opacity: isVisible ? 1 : 0,
+      }}>
+        <NavBarShell width="min(calc(100% - 32px), 430px)">
+          <div style={headerStyles.mobileInner}>
+            <Company size={36} textSize={20} />
+            <nav style={{ display: 'flex', alignItems: 'center', zIndex: 10 }}>
+              <MobileMenu />
+            </nav>
+          </div>
+        </NavBarShell>
+      </header>
+    );
+  }
 
-          {isDesktop && <DesktopNav />}
-          {isTablet && <TabletNav />}
-          {isMobile && <MobileMenu />}
+  if (isTablet) {
+    return (
+      <header style={{
+        ...headerStyles.tablet,
+        transform: isVisible ? 'translateY(0)' : 'translateY(-100%)',
+        opacity: isVisible ? 1 : 0,
+      }}>
+        <NavBarShell width="min(95%, 900px)">
+          <div style={headerStyles.tabletInner}>
+            <Company size={44} textSize={20} />
+            <TabletNav />
+          </div>
+        </NavBarShell>
+      </header>
+    );
+  }
+
+  return (
+    <header style={{
+      ...headerStyles.desktop,
+      transform: isVisible ? 'translateY(0)' : 'translateY(-100%)',
+      opacity: isVisible ? 1 : 0,
+    }}>
+      <NavBarShell width="1200px">
+        <div style={headerStyles.desktopInner}>
+          <Company size={48} textSize={20} />
+          <DesktopNav />
         </div>
-      </div>
+      </NavBarShell>
     </header>
   );
 }
