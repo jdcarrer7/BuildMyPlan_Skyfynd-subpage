@@ -40,11 +40,7 @@ export default function BuildMyPlan() {
 
   // Refs for service cards to enable auto-scroll
   const serviceCardRefs = useRef<Record<string, HTMLDivElement | null>>({});
-  const planSummaryRef = useRef<HTMLDivElement>(null);
-  const servicesSectionRef = useRef<HTMLDivElement>(null);
   const prevItemCount = useRef(itemCount);
-  const [sidebarMode, setSidebarMode] = useState<'static' | 'fixed' | 'absolute-bottom'>('static');
-  const [sidebarTop, setSidebarTop] = useState(0);
 
   // Auto-scroll to the service card when a new item is added
   useEffect(() => {
@@ -60,33 +56,6 @@ export default function BuildMyPlan() {
     }
     prevItemCount.current = itemCount;
   }, [itemCount, items]);
-
-  // Control sidebar position based on scroll
-  useEffect(() => {
-    const handleScroll = () => {
-      if (servicesSectionRef.current) {
-        const rect = servicesSectionRef.current.getBoundingClientRect();
-        const sidebarHeight = planSummaryRef.current?.offsetHeight || 400;
-
-        // Calculate when services section top reaches viewport top (with 16px padding)
-        if (rect.top > 16) {
-          // Services section hasn't reached the top yet - sidebar stays in normal flow
-          setSidebarMode('static');
-          setSidebarTop(rect.top);
-        } else if (rect.bottom > sidebarHeight + 32) {
-          // Services section is at top and there's room for sidebar - fix it
-          setSidebarMode('fixed');
-        } else {
-          // Near bottom of services - position at bottom
-          setSidebarMode('absolute-bottom');
-        }
-      }
-    };
-
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    handleScroll(); // Check initial state
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
 
   return (
     <>
@@ -223,10 +192,10 @@ export default function BuildMyPlan() {
           </motion.p>
         )}
 
-        {/* Grid Layout - Services with sidebar */}
-        <div ref={servicesSectionRef} className="relative">
-          <div className="lg:pr-[412px]">
-            {/* Services Grid */}
+        {/* Grid Layout - Services with sidebar using flexbox for sticky support */}
+        <div className="lg:flex lg:gap-8 lg:items-start">
+          {/* Services Grid */}
+          <div className="flex-1 min-w-0">
             <motion.div
               layout
               className="grid md:grid-cols-2 gap-6 lg:gap-8"
@@ -263,18 +232,9 @@ export default function BuildMyPlan() {
             </div>
           </div>
 
-          {/* Plan Summary Sidebar - Positioned relative to services section */}
+          {/* Plan Summary Sidebar - CSS sticky positioning */}
           <div
-            ref={planSummaryRef}
-            className={`
-              hidden lg:block w-[380px] max-h-[calc(100vh-4rem)] overflow-y-auto z-30
-              ${sidebarMode === 'fixed'
-                ? 'fixed top-4 right-6 xl:right-[calc((100vw-1280px)/2+24px)]'
-                : sidebarMode === 'absolute-bottom'
-                ? 'absolute bottom-0 right-0'
-                : 'absolute top-0 right-0'
-              }
-            `}
+            className="hidden lg:block w-[380px] flex-shrink-0 sticky top-4 max-h-[calc(100vh-2rem)] overflow-y-auto z-30"
           >
             <PlanSummary onRequestQuote={() => setIsQuoteFormOpen(true)} />
           </div>
