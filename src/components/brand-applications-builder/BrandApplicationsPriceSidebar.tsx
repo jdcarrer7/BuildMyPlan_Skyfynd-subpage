@@ -88,7 +88,7 @@ export default function BrandApplicationsPriceSidebar({ currentStep, onGoToSumma
       className="card p-6 sticky top-6"
     >
       <div className="flex items-center gap-2 mb-4">
-        <Calculator className="w-5 h-5 text-[var(--accent-purple)]" />
+        <Calculator className="w-5 h-5 text-[var(--accent-blue)]" />
         <h3 className="text-lg font-semibold text-white">Your Estimate</h3>
       </div>
 
@@ -121,7 +121,7 @@ export default function BrandApplicationsPriceSidebar({ currentStep, onGoToSumma
         {hasBusinessEssentials && (
           <div className="space-y-2">
             <div className="flex items-center gap-2 mb-2">
-              <FileText className="w-4 h-4 text-[var(--accent-purple)]" />
+              <FileText className="w-4 h-4 text-[var(--accent-blue)]" />
               <span className="text-sm font-medium text-white">Business Essentials</span>
             </div>
             {stationery && stationery !== 'none' && (
@@ -147,7 +147,7 @@ export default function BrandApplicationsPriceSidebar({ currentStep, onGoToSumma
         {hasDigitalSocial && (
           <div className="space-y-2">
             <div className="flex items-center gap-2 mb-2">
-              <Globe className="w-4 h-4 text-[var(--accent-pink)]" />
+              <Globe className="w-4 h-4 text-[var(--accent-teal)]" />
               <span className="text-sm font-medium text-white">Digital & Social</span>
             </div>
             {digital && digital !== 'none' && (
@@ -191,7 +191,7 @@ export default function BrandApplicationsPriceSidebar({ currentStep, onGoToSumma
         {hasPhysicalApplications && (
           <div className="space-y-2">
             <div className="flex items-center gap-2 mb-2">
-              <MapPin className="w-4 h-4 text-[var(--accent-purple)]" />
+              <MapPin className="w-4 h-4 text-[var(--accent-blue)]" />
               <span className="text-sm font-medium text-white">Physical Applications</span>
             </div>
             {signage && signage !== 'none' && (
@@ -223,7 +223,7 @@ export default function BrandApplicationsPriceSidebar({ currentStep, onGoToSumma
         {selectedAddOns.length > 0 && (
           <div className="space-y-2">
             <div className="flex items-center gap-2 mb-2">
-              <Sparkles className="w-4 h-4 text-[var(--accent-purple)]" />
+              <Sparkles className="w-4 h-4 text-[var(--accent-blue)]" />
               <span className="text-sm font-medium text-white">Add-Ons</span>
             </div>
             <div className="flex justify-between text-sm pl-6">
@@ -256,9 +256,9 @@ export default function BrandApplicationsPriceSidebar({ currentStep, onGoToSumma
         )}
 
         {/* Total Investment */}
-        <div className="pt-3 mt-3 border-t-2 border-[var(--accent-purple)]/50">
+        <div className="pt-3 mt-3 border-t-2 border-[var(--accent-blue)]/50">
           <div className="flex items-center gap-2 mb-2">
-            <TrendingUp className="w-4 h-4 text-[var(--accent-purple)]" />
+            <TrendingUp className="w-4 h-4 text-[var(--accent-blue)]" />
             <span className="text-sm text-[var(--text-muted)]">Total Investment</span>
           </div>
           <motion.div
@@ -279,7 +279,7 @@ export default function BrandApplicationsPriceSidebar({ currentStep, onGoToSumma
       {currentStep < 12 && applicationGoal && stationery && (
         <motion.button
           onClick={onGoToSummary}
-          className="w-full mt-6 flex items-center justify-center gap-2 px-4 py-3 rounded-lg bg-[var(--bg-secondary)] border border-[var(--border-subtle)] text-[var(--text-secondary)] hover:border-[var(--accent-purple)] hover:text-white transition-all"
+          className="w-full mt-6 flex items-center justify-center gap-2 px-4 py-3 rounded-lg bg-[var(--bg-secondary)] border border-[var(--border-subtle)] text-[var(--text-secondary)] hover:border-[var(--accent-blue)] hover:text-white transition-all"
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
         >

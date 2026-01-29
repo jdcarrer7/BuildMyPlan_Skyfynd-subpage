@@ -32,7 +32,7 @@ export default function Step3Screens() {
                 className={`
                   w-full p-5 rounded-lg text-left transition-all duration-300 h-full
                   ${isSelected
-                    ? 'bg-gradient-to-br from-[var(--accent-purple)] to-[var(--accent-pink)] text-white'
+                    ? 'bg-gradient-to-br from-[var(--accent-blue)] to-[var(--accent-teal)] text-white'
                     : 'bg-[var(--bg-secondary)] text-[var(--text-secondary)] hover:bg-[var(--bg-card-hover)] hover:text-white border border-[var(--border-subtle)]'
                   }
                 `}
@@ -43,7 +43,7 @@ export default function Step3Screens() {
                 >
                   <div className="flex items-start justify-between mb-3">
                     <div className="flex items-center gap-2">
-                      <Layers className={`w-5 h-5 ${isSelected ? 'text-white' : 'text-[var(--accent-purple)]'}`} />
+                      <Layers className={`w-5 h-5 ${isSelected ? 'text-white' : 'text-[var(--accent-blue)]'}`} />
                       <span className="font-semibold text-lg">{option.label}</span>
                     </div>
                     {isSelected && (
@@ -55,7 +55,7 @@ export default function Step3Screens() {
                   <p className={`text-sm mb-3 ${isSelected ? 'text-white/70' : 'text-[var(--text-muted)]'}`}>
                     {option.description || option.tooltip}
                   </p>
-                  <div className={`text-2xl font-bold ${isSelected ? 'text-white' : 'text-[var(--accent-purple)]'}`}>
+                  <div className={`text-2xl font-bold ${isSelected ? 'text-white' : 'text-[var(--accent-blue)]'}`}>
                     {option.price === null ? 'Custom Quote' : `$${option.price.toLocaleString()}`}
                   </div>
                 </button>
@@ -72,7 +72,7 @@ export default function Step3Screens() {
           className="mt-6 p-4 bg-[var(--bg-secondary)] border border-[var(--border-subtle)] rounded-lg"
         >
           <div className="flex items-start gap-3">
-            <Layers className="w-5 h-5 text-[var(--accent-purple)] shrink-0 mt-0.5" />
+            <Layers className="w-5 h-5 text-[var(--accent-blue)] shrink-0 mt-0.5" />
             <div>
               <p className="text-sm text-white font-medium mb-1">What counts as a screen?</p>
               <p className="text-sm text-[var(--text-secondary)]">

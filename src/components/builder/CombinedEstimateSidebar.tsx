@@ -146,7 +146,7 @@ export default function CombinedEstimateSidebar({ currentService, onRequestQuote
       className="card p-6 sticky top-6"
     >
       <div className="flex items-center gap-2 mb-4">
-        <Calculator className="w-5 h-5 text-[var(--accent-purple)]" />
+        <Calculator className="w-5 h-5 text-[var(--accent-blue)]" />
         <h3 className="text-xl font-semibold text-white">
           {isMultipleServices ? 'Combined Estimate' : 'Total Estimate'}
         </h3>
@@ -174,9 +174,9 @@ export default function CombinedEstimateSidebar({ currentService, onRequestQuote
           return (
             <div key={service.type}>
               {/* Service Section */}
-              <div className={`${isCurrentService ? 'bg-[var(--accent-purple)]/10 -mx-2 px-2 py-2 rounded-lg' : ''}`}>
+              <div className={`${isCurrentService ? 'bg-[var(--accent-blue)]/10 -mx-2 px-2 py-2 rounded-lg' : ''}`}>
                 <div className="flex items-center gap-2 mb-2">
-                  <Icon className={`w-4 h-4 ${isCurrentService ? 'text-[var(--accent-purple)]' : 'text-[var(--text-muted)]'}`} />
+                  <Icon className={`w-4 h-4 ${isCurrentService ? 'text-[var(--accent-blue)]' : 'text-[var(--text-muted)]'}`} />
                   <span className={`text-sm font-medium ${isCurrentService ? 'text-white' : 'text-[var(--text-secondary)]'}`}>
                     {details.label}
                   </span>
@@ -193,7 +193,7 @@ export default function CombinedEstimateSidebar({ currentService, onRequestQuote
                   {details.monthly > 0 && (
                     <div className="flex justify-between text-sm">
                       <span className="text-[var(--text-muted)]">Monthly Subtotal</span>
-                      <span className="text-[var(--accent-pink)]">
+                      <span className="text-[var(--accent-teal)]">
                         ${details.monthly.toLocaleString()}/mo
                       </span>
                     </div>
@@ -211,7 +211,7 @@ export default function CombinedEstimateSidebar({ currentService, onRequestQuote
       </div>
 
       {/* Grand Totals */}
-      <div className="mt-6 pt-4 border-t-2 border-[var(--accent-purple)]/50">
+      <div className="mt-6 pt-4 border-t-2 border-[var(--accent-blue)]/50">
         <div className="flex justify-between items-center mb-2">
           <span className="text-white font-bold">One-time Total</span>
           <motion.span
@@ -227,7 +227,7 @@ export default function CombinedEstimateSidebar({ currentService, onRequestQuote
         {combinedTotals.monthlyTotal > 0 && (
           <div className="flex justify-between items-center">
             <span className="text-white font-bold">Monthly Total</span>
-            <span className="text-lg font-semibold text-[var(--accent-pink)]">
+            <span className="text-lg font-semibold text-[var(--accent-teal)]">
               ${combinedTotals.monthlyTotal.toLocaleString()}/mo
             </span>
           </div>

@@ -55,8 +55,8 @@ export default function Step7Timeline() {
                   ${isSelected
                     ? hasRushFee
                       ? 'bg-[var(--accent-orange)]/10 border-2 border-[var(--accent-orange)]'
-                      : 'bg-[var(--accent-purple)]/10 border-2 border-[var(--accent-purple)]'
-                    : 'bg-[var(--bg-secondary)] border border-[var(--border-subtle)] hover:border-[var(--accent-purple)]/50'
+                      : 'bg-[var(--accent-blue)]/10 border-2 border-[var(--accent-blue)]'
+                    : 'bg-[var(--bg-secondary)] border border-[var(--border-subtle)] hover:border-[var(--accent-blue)]/50'
                   }
                 `}
               >
@@ -68,7 +68,7 @@ export default function Step7Timeline() {
                       ${isSelected
                         ? hasRushFee
                           ? 'bg-[var(--accent-orange)]/20 text-[var(--accent-orange)]'
-                          : 'bg-[var(--accent-purple)]/20 text-[var(--accent-purple)]'
+                          : 'bg-[var(--accent-blue)]/20 text-[var(--accent-blue)]'
                         : 'bg-[var(--bg-card)] text-[var(--text-muted)]'
                       }
                     `}
@@ -110,7 +110,7 @@ export default function Step7Timeline() {
                         ${isSelected
                           ? hasRushFee
                             ? 'border-[var(--accent-orange)] bg-[var(--accent-orange)]'
-                            : 'border-[var(--accent-purple)] bg-[var(--accent-purple)]'
+                            : 'border-[var(--accent-blue)] bg-[var(--accent-blue)]'
                           : 'border-[var(--border-subtle)]'
                         }
                       `}
@@ -123,7 +123,7 @@ export default function Step7Timeline() {
                         e.stopPropagation();
                         setTooltipId(tooltipId === option.id ? null : option.id);
                       }}
-                      className="p-1 rounded-full hover:bg-[var(--accent-purple)]/20 transition-colors"
+                      className="p-1 rounded-full hover:bg-[var(--accent-blue)]/20 transition-colors"
                     >
                       <Info className="w-4 h-4 text-[var(--text-muted)]" />
                     </button>

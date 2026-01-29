@@ -22,7 +22,7 @@ export default function Step8AIFeatures() {
     <div className="card p-6">
       <div className="mb-6">
         <div className="flex items-center gap-2 mb-2">
-          <Sparkles className="w-6 h-6 text-[var(--accent-purple)]" />
+          <Sparkles className="w-6 h-6 text-[var(--accent-blue)]" />
           <h2 className="text-2xl font-semibold text-white font-serif">
             AI-Powered Features
           </h2>
@@ -51,7 +51,7 @@ export default function Step8AIFeatures() {
               className={`
                 rounded-lg overflow-hidden transition-all duration-300
                 ${isSelected
-                  ? 'bg-[var(--accent-purple)]/10 border border-[var(--accent-purple)]/50'
+                  ? 'bg-[var(--accent-blue)]/10 border border-[var(--accent-blue)]/50'
                   : 'bg-[var(--bg-secondary)] border border-[var(--border-subtle)]'
                 }
               `}
@@ -64,8 +64,8 @@ export default function Step8AIFeatures() {
                     className={`
                       w-6 h-6 rounded border-2 flex items-center justify-center transition-all
                       ${isSelected
-                        ? 'border-[var(--accent-purple)] bg-[var(--accent-purple)]'
-                        : 'border-[var(--border-subtle)] hover:border-[var(--accent-purple)]'
+                        ? 'border-[var(--accent-blue)] bg-[var(--accent-blue)]'
+                        : 'border-[var(--border-subtle)] hover:border-[var(--accent-blue)]'
                       }
                     `}
                   >
@@ -85,11 +85,11 @@ export default function Step8AIFeatures() {
                     </div>
                     {isSelected && selectedSetup && (
                       <div className="flex flex-wrap gap-2 mt-1">
-                        <span className="text-sm text-[var(--accent-purple)]">
+                        <span className="text-sm text-[var(--accent-blue)]">
                           Setup: {selectedSetup.label} ({selectedSetup.price === null ? 'Quote' : `$${selectedSetup.price}`})
                         </span>
                         {selectedUsage && selectedUsage.price !== null && selectedUsage.price > 0 && (
-                          <span className="text-sm text-[var(--accent-pink)]">
+                          <span className="text-sm text-[var(--accent-teal)]">
                             + ${selectedUsage.price}/mo
                           </span>
                         )}
@@ -138,7 +138,7 @@ export default function Step8AIFeatures() {
                                 className={`
                                   p-3 rounded-lg text-left transition-all flex items-center justify-between
                                   ${isOptionSelected
-                                    ? 'bg-[var(--accent-purple)] text-white'
+                                    ? 'bg-[var(--accent-blue)] text-white'
                                     : 'bg-[var(--bg-card)] text-[var(--text-secondary)] hover:bg-[var(--bg-card-hover)]'
                                   }
                                 `}
@@ -173,7 +173,7 @@ export default function Step8AIFeatures() {
                                 className={`
                                   p-3 rounded-lg text-left transition-all flex items-center justify-between
                                   ${isOptionSelected
-                                    ? 'bg-[var(--accent-pink)] text-white'
+                                    ? 'bg-[var(--accent-teal)] text-white'
                                     : 'bg-[var(--bg-card)] text-[var(--text-secondary)] hover:bg-[var(--bg-card-hover)]'
                                   }
                                 `}

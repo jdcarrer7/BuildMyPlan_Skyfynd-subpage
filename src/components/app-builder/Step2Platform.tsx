@@ -32,7 +32,7 @@ export default function Step2Platform() {
                 className={`
                   w-full p-4 rounded-lg text-left transition-all duration-300 flex items-center justify-between
                   ${isSelected
-                    ? 'bg-gradient-to-br from-[var(--accent-purple)] to-[var(--accent-pink)] text-white'
+                    ? 'bg-gradient-to-br from-[var(--accent-blue)] to-[var(--accent-teal)] text-white'
                     : 'bg-[var(--bg-secondary)] text-[var(--text-secondary)] hover:bg-[var(--bg-card-hover)] hover:text-white border border-[var(--border-subtle)]'
                   }
                 `}
@@ -77,7 +77,7 @@ export default function Step2Platform() {
           className="mt-6 p-4 bg-[var(--bg-secondary)] border border-[var(--border-subtle)] rounded-lg"
         >
           <p className="text-sm text-[var(--text-secondary)]">
-            <span className="text-[var(--accent-purple)] font-medium">Tip: </span>
+            <span className="text-[var(--accent-blue)] font-medium">Tip: </span>
             {platformOptions.find(o => o.id === platform)?.id === 'cross-platform'
               ? 'Cross-platform is a cost-effective way to reach both iOS and Android users with a single codebase.'
               : platformOptions.find(o => o.id === platform)?.id === 'native-both'

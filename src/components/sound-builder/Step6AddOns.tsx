@@ -59,7 +59,7 @@ export default function Step6AddOns() {
         return (
           <div key={category.id} className="space-y-4">
             <div className="flex items-center gap-2">
-              <Icon className="w-5 h-5 text-[var(--accent-purple)]" />
+              <Icon className="w-5 h-5 text-[var(--accent-blue)]" />
               <h3 className="text-lg font-medium text-white">{category.label}</h3>
             </div>
 
@@ -76,8 +76,8 @@ export default function Step6AddOns() {
                       className={`
                         w-full p-3 rounded-lg text-left transition-all group
                         ${isSelected
-                          ? 'bg-gradient-to-br from-[var(--accent-purple)]/20 to-[var(--accent-pink)]/20 border-2 border-[var(--accent-purple)]'
-                          : 'bg-[var(--bg-card)] border border-[var(--border-subtle)] hover:border-[var(--accent-purple)]/50'
+                          ? 'bg-gradient-to-br from-[var(--accent-blue)]/20 to-[var(--accent-teal)]/20 border-2 border-[var(--accent-blue)]'
+                          : 'bg-[var(--bg-card)] border border-[var(--border-subtle)] hover:border-[var(--accent-blue)]/50'
                         }
                       `}
                       whileHover={{ scale: 1.02 }}
@@ -89,12 +89,12 @@ export default function Step6AddOns() {
                         </span>
                         <div className="flex items-center gap-1">
                           {isSelected && (
-                            <div className="w-4 h-4 rounded-full bg-[var(--accent-purple)] flex items-center justify-center">
+                            <div className="w-4 h-4 rounded-full bg-[var(--accent-blue)] flex items-center justify-center">
                               <Check className="w-2.5 h-2.5 text-white" />
                             </div>
                           )}
                           <span
-                            className="p-0.5 text-[var(--text-muted)] hover:text-[var(--accent-purple)] transition-colors cursor-pointer"
+                            className="p-0.5 text-[var(--text-muted)] hover:text-[var(--accent-blue)] transition-colors cursor-pointer"
                             onClick={(e) => {
                               e.stopPropagation();
                               setTooltipOpen(tooltipOpen === tooltipId ? null : tooltipId);
@@ -133,11 +133,11 @@ export default function Step6AddOns() {
                         </button>
                         <div className="space-y-3 text-sm">
                           <div>
-                            <span className="text-[var(--accent-purple)] font-medium">What it is:</span>
+                            <span className="text-[var(--accent-blue)] font-medium">What it is:</span>
                             <p className="text-[var(--text-secondary)] mt-1">{option.tooltip.whatItIs}</p>
                           </div>
                           <div>
-                            <span className="text-[var(--accent-pink)] font-medium">Ideal if:</span>
+                            <span className="text-[var(--accent-teal)] font-medium">Ideal if:</span>
                             <p className="text-[var(--text-secondary)] mt-1">{option.tooltip.idealIf}</p>
                           </div>
                           {option.tooltip.examples && (
@@ -160,7 +160,7 @@ export default function Step6AddOns() {
       {/* Sound Design Add-ons (multi-select) */}
       <div className="space-y-4">
         <div className="flex items-center gap-2">
-          <Wand2 className="w-5 h-5 text-[var(--accent-purple)]" />
+          <Wand2 className="w-5 h-5 text-[var(--accent-blue)]" />
           <h3 className="text-lg font-medium text-white">Sound Design Add-ons</h3>
           <span className="text-sm text-[var(--text-muted)]">(Select multiple)</span>
         </div>
@@ -177,8 +177,8 @@ export default function Step6AddOns() {
                   className={`
                     w-full p-3 rounded-lg text-left transition-all group
                     ${isSelected
-                      ? 'bg-gradient-to-br from-[var(--accent-purple)]/20 to-[var(--accent-pink)]/20 border-2 border-[var(--accent-purple)]'
-                      : 'bg-[var(--bg-card)] border border-[var(--border-subtle)] hover:border-[var(--accent-purple)]/50'
+                      ? 'bg-gradient-to-br from-[var(--accent-blue)]/20 to-[var(--accent-teal)]/20 border-2 border-[var(--accent-blue)]'
+                      : 'bg-[var(--bg-card)] border border-[var(--border-subtle)] hover:border-[var(--accent-blue)]/50'
                     }
                   `}
                   whileHover={{ scale: 1.02 }}
@@ -190,12 +190,12 @@ export default function Step6AddOns() {
                     </span>
                     <div className="flex items-center gap-1">
                       {isSelected && (
-                        <div className="w-4 h-4 rounded-full bg-[var(--accent-purple)] flex items-center justify-center">
+                        <div className="w-4 h-4 rounded-full bg-[var(--accent-blue)] flex items-center justify-center">
                           <Check className="w-2.5 h-2.5 text-white" />
                         </div>
                       )}
                       <span
-                        className="p-0.5 text-[var(--text-muted)] hover:text-[var(--accent-purple)] transition-colors cursor-pointer"
+                        className="p-0.5 text-[var(--text-muted)] hover:text-[var(--accent-blue)] transition-colors cursor-pointer"
                         onClick={(e) => {
                           e.stopPropagation();
                           setTooltipOpen(tooltipOpen === tooltipId ? null : tooltipId);
@@ -224,11 +224,11 @@ export default function Step6AddOns() {
                     </button>
                     <div className="space-y-3 text-sm">
                       <div>
-                        <span className="text-[var(--accent-purple)] font-medium">What it is:</span>
+                        <span className="text-[var(--accent-blue)] font-medium">What it is:</span>
                         <p className="text-[var(--text-secondary)] mt-1">{option.tooltip.whatItIs}</p>
                       </div>
                       <div>
-                        <span className="text-[var(--accent-pink)] font-medium">Ideal if:</span>
+                        <span className="text-[var(--accent-teal)] font-medium">Ideal if:</span>
                         <p className="text-[var(--text-secondary)] mt-1">{option.tooltip.idealIf}</p>
                       </div>
                       <div>

@@ -14,7 +14,7 @@ export default function Step5Sound() {
     <div className="card p-6">
       <div className="mb-6">
         <div className="flex items-center gap-2 mb-2">
-          <Volume2 className="w-6 h-6 text-[var(--accent-purple)]" />
+          <Volume2 className="w-6 h-6 text-[var(--accent-blue)]" />
           <h2 className="text-2xl font-semibold text-white font-serif">
             What audio do you need with your animation?
           </h2>
@@ -37,15 +37,15 @@ export default function Step5Sound() {
                 className={`
                   w-full p-4 rounded-lg border-2 text-left transition-all flex items-center justify-between
                   ${isSelected
-                    ? 'border-[var(--accent-purple)] bg-[var(--accent-purple)]/10'
-                    : 'border-[var(--border-subtle)] bg-[var(--bg-secondary)] hover:border-[var(--accent-purple)]/50'
+                    ? 'border-[var(--accent-blue)] bg-[var(--accent-blue)]/10'
+                    : 'border-[var(--border-subtle)] bg-[var(--bg-secondary)] hover:border-[var(--accent-blue)]/50'
                   }
                 `}
               >
                 <div className="flex items-center gap-3">
                   <div className={`
                     w-6 h-6 rounded-full border-2 flex items-center justify-center
-                    ${isSelected ? 'border-[var(--accent-purple)] bg-[var(--accent-purple)]' : 'border-[var(--border-subtle)]'}
+                    ${isSelected ? 'border-[var(--accent-blue)] bg-[var(--accent-blue)]' : 'border-[var(--border-subtle)]'}
                   `}>
                     {isSelected && <Check className="w-4 h-4 text-white" />}
                   </div>
@@ -63,7 +63,7 @@ export default function Step5Sound() {
                       e.stopPropagation();
                       setTooltipOpen(tooltipOpen === option.id ? null : option.id);
                     }}
-                    className="p-1 text-[var(--text-muted)] hover:text-[var(--accent-purple)] transition-colors cursor-pointer"
+                    className="p-1 text-[var(--text-muted)] hover:text-[var(--accent-blue)] transition-colors cursor-pointer"
                   >
                     <HelpCircle className="w-5 h-5" />
                   </span>
@@ -84,11 +84,11 @@ export default function Step5Sound() {
                   </button>
                   <div className="space-y-3 text-sm">
                     <div>
-                      <span className="text-[var(--accent-purple)] font-medium">What it is:</span>
+                      <span className="text-[var(--accent-blue)] font-medium">What it is:</span>
                       <p className="text-[var(--text-secondary)] mt-1">{option.tooltip.whatItIs}</p>
                     </div>
                     <div>
-                      <span className="text-[var(--accent-pink)] font-medium">Ideal if:</span>
+                      <span className="text-[var(--accent-teal)] font-medium">Ideal if:</span>
                       <p className="text-[var(--text-secondary)] mt-1">{option.tooltip.idealIf}</p>
                     </div>
                     <div>

@@ -99,7 +99,7 @@ export default function BuildMyMediaPage() {
             <span className="text-sm">Back to Services</span>
           </Link>
           <div className="flex items-center gap-2">
-            <Megaphone className="w-6 h-6 text-[var(--accent-purple)]" />
+            <Megaphone className="w-6 h-6 text-[var(--accent-blue)]" />
             <h1 className="text-2xl font-semibold gradient-text font-serif">
               Build My Media
             </h1>

@@ -36,7 +36,7 @@ export default function PaidMediaStepIndicator({
 
       {/* Progress Bar Fill */}
       <motion.div
-        className="absolute top-5 left-0 h-0.5 bg-gradient-to-r from-[var(--accent-purple)] to-[var(--accent-pink)]"
+        className="absolute top-5 left-0 h-0.5 bg-gradient-to-r from-[var(--accent-blue)] to-[var(--accent-teal)]"
         initial={{ width: 0 }}
         animate={{ width: `${progress}%` }}
         transition={{ duration: 0.3 }}
@@ -63,7 +63,7 @@ export default function PaidMediaStepIndicator({
                   relative w-10 h-10 rounded-full flex items-center justify-center
                   transition-all duration-300 z-10
                   ${isCompleted
-                    ? 'bg-gradient-to-br from-[var(--accent-purple)] to-[var(--accent-pink)] cursor-pointer hover:scale-110'
+                    ? 'bg-gradient-to-br from-[var(--accent-blue)] to-[var(--accent-teal)] cursor-pointer hover:scale-110'
                     : isCurrent
                     ? 'bg-[var(--accent-orange)] text-black'
                     : 'bg-[var(--bg-secondary)] text-[var(--text-muted)]'
@@ -96,7 +96,7 @@ export default function PaidMediaStepIndicator({
 
       {/* Service Badge */}
       <div className="absolute -top-8 left-1/2 -translate-x-1/2 flex items-center gap-2 px-3 py-1 bg-[var(--bg-secondary)] rounded-full border border-[var(--border-subtle)]">
-        <Megaphone className="w-3 h-3 text-[var(--accent-purple)]" />
+        <Megaphone className="w-3 h-3 text-[var(--accent-blue)]" />
         <span className="text-xs text-[var(--text-secondary)]">Paid Media Builder</span>
       </div>
     </div>

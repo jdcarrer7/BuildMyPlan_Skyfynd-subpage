@@ -32,7 +32,7 @@ export default function Step4Design() {
                 className={`
                   w-full p-4 rounded-lg text-left transition-all duration-300
                   ${isSelected
-                    ? 'bg-gradient-to-br from-[var(--accent-purple)] to-[var(--accent-pink)] text-white'
+                    ? 'bg-gradient-to-br from-[var(--accent-blue)] to-[var(--accent-teal)] text-white'
                     : 'bg-[var(--bg-secondary)] text-[var(--text-secondary)] hover:bg-[var(--bg-card-hover)] hover:text-white border border-[var(--border-subtle)]'
                   }
                 `}
@@ -43,9 +43,9 @@ export default function Step4Design() {
                 >
                   <div className={`
                     w-10 h-10 rounded-lg flex items-center justify-center
-                    ${isSelected ? 'bg-white/20' : 'bg-[var(--accent-purple)]/20'}
+                    ${isSelected ? 'bg-white/20' : 'bg-[var(--accent-blue)]/20'}
                   `}>
-                    <Palette className={`w-5 h-5 ${isSelected ? 'text-white' : 'text-[var(--accent-purple)]'}`} />
+                    <Palette className={`w-5 h-5 ${isSelected ? 'text-white' : 'text-[var(--accent-blue)]'}`} />
                   </div>
                   <div className="flex-1 text-left">
                     <div className="flex items-center gap-2">

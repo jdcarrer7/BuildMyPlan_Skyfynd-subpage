@@ -66,7 +66,7 @@ export default function ContentStrategyPriceSidebar({ currentStep, onGoToSummary
       className="card p-6 sticky top-6"
     >
       <div className="flex items-center gap-2 mb-4">
-        <Calculator className="w-5 h-5 text-[var(--accent-purple)]" />
+        <Calculator className="w-5 h-5 text-[var(--accent-blue)]" />
         <h3 className="text-lg font-semibold text-white">Your Estimate</h3>
       </div>
 
@@ -94,7 +94,7 @@ export default function ContentStrategyPriceSidebar({ currentStep, onGoToSummary
         {/* Strategy Foundation */}
         {(depth || audit || audience || channels || seo) && (
           <div className="pt-2 border-t border-[var(--border-subtle)]">
-            <p className="text-xs text-[var(--accent-purple)] font-medium mb-2">Strategy Foundation</p>
+            <p className="text-xs text-[var(--accent-blue)] font-medium mb-2">Strategy Foundation</p>
             {depth && (
               <div className="flex justify-between text-sm">
                 <span className="text-[var(--text-muted)]">Depth</span>
@@ -131,7 +131,7 @@ export default function ContentStrategyPriceSidebar({ currentStep, onGoToSummary
         {/* Planning & Operations */}
         {(editorial || governance || measurement) && (
           <div className="pt-2 border-t border-[var(--border-subtle)]">
-            <p className="text-xs text-[var(--accent-pink)] font-medium mb-2">Planning & Operations</p>
+            <p className="text-xs text-[var(--accent-teal)] font-medium mb-2">Planning & Operations</p>
             {editorial && (
               <div className="flex justify-between text-sm">
                 <span className="text-[var(--text-muted)]">Editorial</span>
@@ -213,9 +213,9 @@ export default function ContentStrategyPriceSidebar({ currentStep, onGoToSummary
         </div>
 
         {/* Total Investment */}
-        <div className="pt-3 mt-3 border-t-2 border-[var(--accent-purple)]/50">
+        <div className="pt-3 mt-3 border-t-2 border-[var(--accent-blue)]/50">
           <div className="flex items-center gap-2 mb-2">
-            <TrendingUp className="w-4 h-4 text-[var(--accent-purple)]" />
+            <TrendingUp className="w-4 h-4 text-[var(--accent-blue)]" />
             <span className="text-sm text-[var(--text-muted)]">Total Investment</span>
           </div>
           <motion.div
@@ -236,7 +236,7 @@ export default function ContentStrategyPriceSidebar({ currentStep, onGoToSummary
       {currentStep < 12 && contentGoal && depth && (
         <motion.button
           onClick={onGoToSummary}
-          className="w-full mt-6 flex items-center justify-center gap-2 px-4 py-3 rounded-lg bg-[var(--bg-secondary)] border border-[var(--border-subtle)] text-[var(--text-secondary)] hover:border-[var(--accent-purple)] hover:text-white transition-all"
+          className="w-full mt-6 flex items-center justify-center gap-2 px-4 py-3 rounded-lg bg-[var(--bg-secondary)] border border-[var(--border-subtle)] text-[var(--text-secondary)] hover:border-[var(--accent-blue)] hover:text-white transition-all"
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
         >

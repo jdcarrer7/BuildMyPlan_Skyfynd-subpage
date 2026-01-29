@@ -40,8 +40,8 @@ export default function Step9AddOns() {
                   className={`
                     w-full p-4 rounded-xl text-left transition-all group
                     ${isSelected
-                      ? 'bg-gradient-to-br from-[var(--accent-purple)]/20 to-[var(--accent-pink)]/20 border-2 border-[var(--accent-purple)]'
-                      : 'bg-[var(--bg-card)] border border-[var(--border-subtle)] hover:border-[var(--accent-purple)]/50'
+                      ? 'bg-gradient-to-br from-[var(--accent-blue)]/20 to-[var(--accent-teal)]/20 border-2 border-[var(--accent-blue)]'
+                      : 'bg-[var(--bg-card)] border border-[var(--border-subtle)] hover:border-[var(--accent-blue)]/50'
                     }
                   `}
                   whileHover={{ scale: 1.02 }}
@@ -53,12 +53,12 @@ export default function Step9AddOns() {
                     </span>
                     <div className="flex items-center gap-2">
                       {isSelected && (
-                        <div className="w-5 h-5 rounded-full bg-[var(--accent-purple)] flex items-center justify-center">
+                        <div className="w-5 h-5 rounded-full bg-[var(--accent-blue)] flex items-center justify-center">
                           <Check className="w-3 h-3 text-white" />
                         </div>
                       )}
                       <span
-                        className="p-1 text-[var(--text-muted)] hover:text-[var(--accent-purple)] transition-colors cursor-pointer"
+                        className="p-1 text-[var(--text-muted)] hover:text-[var(--accent-blue)] transition-colors cursor-pointer"
                         onClick={(e) => {
                           e.stopPropagation();
                           setActiveTooltip(activeTooltip === `testing-${option.id}` ? null : `testing-${option.id}`);
@@ -96,11 +96,11 @@ export default function Step9AddOns() {
                     </button>
                     <div className="space-y-3 text-sm">
                       <div>
-                        <span className="text-[var(--accent-purple)] font-medium">What it is:</span>
+                        <span className="text-[var(--accent-blue)] font-medium">What it is:</span>
                         <p className="text-[var(--text-secondary)] mt-1">{option.tooltip.whatItIs}</p>
                       </div>
                       <div>
-                        <span className="text-[var(--accent-pink)] font-medium">Ideal if:</span>
+                        <span className="text-[var(--accent-teal)] font-medium">Ideal if:</span>
                         <p className="text-[var(--text-secondary)] mt-1">{option.tooltip.idealIf}</p>
                       </div>
                       {option.tooltip.examples && (
@@ -132,8 +132,8 @@ export default function Step9AddOns() {
                   className={`
                     w-full p-4 rounded-xl text-left transition-all group
                     ${isSelected
-                      ? 'bg-gradient-to-br from-[var(--accent-purple)]/20 to-[var(--accent-pink)]/20 border-2 border-[var(--accent-purple)]'
-                      : 'bg-[var(--bg-card)] border border-[var(--border-subtle)] hover:border-[var(--accent-purple)]/50'
+                      ? 'bg-gradient-to-br from-[var(--accent-blue)]/20 to-[var(--accent-teal)]/20 border-2 border-[var(--accent-blue)]'
+                      : 'bg-[var(--bg-card)] border border-[var(--border-subtle)] hover:border-[var(--accent-blue)]/50'
                     }
                   `}
                   whileHover={{ scale: 1.02 }}
@@ -145,12 +145,12 @@ export default function Step9AddOns() {
                     </span>
                     <div className="flex items-center gap-2">
                       {isSelected && (
-                        <div className="w-5 h-5 rounded-full bg-[var(--accent-purple)] flex items-center justify-center">
+                        <div className="w-5 h-5 rounded-full bg-[var(--accent-blue)] flex items-center justify-center">
                           <Check className="w-3 h-3 text-white" />
                         </div>
                       )}
                       <span
-                        className="p-1 text-[var(--text-muted)] hover:text-[var(--accent-purple)] transition-colors cursor-pointer"
+                        className="p-1 text-[var(--text-muted)] hover:text-[var(--accent-blue)] transition-colors cursor-pointer"
                         onClick={(e) => {
                           e.stopPropagation();
                           setActiveTooltip(activeTooltip === `platform-${option.id}` ? null : `platform-${option.id}`);
@@ -188,11 +188,11 @@ export default function Step9AddOns() {
                     </button>
                     <div className="space-y-3 text-sm">
                       <div>
-                        <span className="text-[var(--accent-purple)] font-medium">What it is:</span>
+                        <span className="text-[var(--accent-blue)] font-medium">What it is:</span>
                         <p className="text-[var(--text-secondary)] mt-1">{option.tooltip.whatItIs}</p>
                       </div>
                       <div>
-                        <span className="text-[var(--accent-pink)] font-medium">Ideal if:</span>
+                        <span className="text-[var(--accent-teal)] font-medium">Ideal if:</span>
                         <p className="text-[var(--text-secondary)] mt-1">{option.tooltip.idealIf}</p>
                       </div>
                       {option.tooltip.examples && (
@@ -225,8 +225,8 @@ export default function Step9AddOns() {
                   className={`
                     w-full p-4 rounded-xl text-left transition-all group
                     ${isSelected
-                      ? 'bg-gradient-to-br from-[var(--accent-purple)]/20 to-[var(--accent-pink)]/20 border-2 border-[var(--accent-purple)]'
-                      : 'bg-[var(--bg-card)] border border-[var(--border-subtle)] hover:border-[var(--accent-purple)]/50'
+                      ? 'bg-gradient-to-br from-[var(--accent-blue)]/20 to-[var(--accent-teal)]/20 border-2 border-[var(--accent-blue)]'
+                      : 'bg-[var(--bg-card)] border border-[var(--border-subtle)] hover:border-[var(--accent-blue)]/50'
                     }
                   `}
                   whileHover={{ scale: 1.02 }}
@@ -238,16 +238,16 @@ export default function Step9AddOns() {
                     </span>
                     <div className="flex items-center gap-2">
                       {isSelected ? (
-                        <div className="w-5 h-5 rounded-full bg-[var(--accent-purple)] flex items-center justify-center">
+                        <div className="w-5 h-5 rounded-full bg-[var(--accent-blue)] flex items-center justify-center">
                           <Check className="w-3 h-3 text-white" />
                         </div>
                       ) : (
-                        <div className="w-5 h-5 rounded-full border border-[var(--border-subtle)] flex items-center justify-center group-hover:border-[var(--accent-purple)]/50">
-                          <Plus className="w-3 h-3 text-[var(--text-muted)] group-hover:text-[var(--accent-purple)]" />
+                        <div className="w-5 h-5 rounded-full border border-[var(--border-subtle)] flex items-center justify-center group-hover:border-[var(--accent-blue)]/50">
+                          <Plus className="w-3 h-3 text-[var(--text-muted)] group-hover:text-[var(--accent-blue)]" />
                         </div>
                       )}
                       <span
-                        className="p-1 text-[var(--text-muted)] hover:text-[var(--accent-purple)] transition-colors cursor-pointer"
+                        className="p-1 text-[var(--text-muted)] hover:text-[var(--accent-blue)] transition-colors cursor-pointer"
                         onClick={(e) => {
                           e.stopPropagation();
                           setActiveTooltip(activeTooltip === `additional-${option.id}` ? null : `additional-${option.id}`);
@@ -284,11 +284,11 @@ export default function Step9AddOns() {
                     </button>
                     <div className="space-y-3 text-sm">
                       <div>
-                        <span className="text-[var(--accent-purple)] font-medium">What it is:</span>
+                        <span className="text-[var(--accent-blue)] font-medium">What it is:</span>
                         <p className="text-[var(--text-secondary)] mt-1">{option.tooltip.whatItIs}</p>
                       </div>
                       <div>
-                        <span className="text-[var(--accent-pink)] font-medium">Ideal if:</span>
+                        <span className="text-[var(--accent-teal)] font-medium">Ideal if:</span>
                         <p className="text-[var(--text-secondary)] mt-1">{option.tooltip.idealIf}</p>
                       </div>
                       {option.tooltip.examples && (
@@ -316,12 +316,12 @@ export default function Step9AddOns() {
           <p className="text-sm text-[var(--text-secondary)]">
             <span className="text-white font-medium">Add-ons selected:</span>
             {testing !== 'none' && (
-              <span className="ml-2 px-2 py-1 bg-[var(--accent-purple)]/20 rounded text-[var(--accent-purple)] text-xs">
+              <span className="ml-2 px-2 py-1 bg-[var(--accent-blue)]/20 rounded text-[var(--accent-blue)] text-xs">
                 A/B Testing
               </span>
             )}
             {platform !== 'client' && (
-              <span className="ml-2 px-2 py-1 bg-[var(--accent-pink)]/20 rounded text-[var(--accent-pink)] text-xs">
+              <span className="ml-2 px-2 py-1 bg-[var(--accent-teal)]/20 rounded text-[var(--accent-teal)] text-xs">
                 Platform Mgmt
               </span>
             )}

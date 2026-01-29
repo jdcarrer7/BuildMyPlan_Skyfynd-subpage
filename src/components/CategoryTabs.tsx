@@ -45,12 +45,12 @@ export default function CategoryTabs({
             {isActive && (
               <motion.div
                 layoutId="activeTab"
-                className="absolute inset-0 rounded-full border border-[var(--accent-purple)]/40"
-                style={{ background: 'linear-gradient(135deg, rgba(139, 92, 246, 0.5) 0%, rgba(236, 72, 153, 0.5) 100%)' }}
+                className="absolute inset-0 rounded-full border border-[var(--accent-blue)]/40"
+                style={{ background: 'linear-gradient(135deg, rgba(139, 92, 246, 0.4) 0%, rgba(59, 130, 246, 0.5) 50%, rgba(16, 185, 129, 0.4) 100%)' }}
                 transition={{ type: 'spring', bounce: 0.15, duration: 0.5 }}
               />
             )}
-            <span className="relative z-10">
+            <span className="relative z-10 flex items-center">
               {categoryIcons[category.id]}
             </span>
             <span className="relative z-10">{category.name}</span>

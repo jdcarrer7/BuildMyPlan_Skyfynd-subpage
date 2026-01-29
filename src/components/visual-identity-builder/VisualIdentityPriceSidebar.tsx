@@ -88,7 +88,7 @@ export default function VisualIdentityPriceSidebar({ currentStep, onGoToSummary 
       className="card p-6 sticky top-6"
     >
       <div className="flex items-center gap-2 mb-4">
-        <Calculator className="w-5 h-5 text-[var(--accent-purple)]" />
+        <Calculator className="w-5 h-5 text-[var(--accent-blue)]" />
         <h3 className="text-lg font-semibold text-white">Your Estimate</h3>
       </div>
 
@@ -121,7 +121,7 @@ export default function VisualIdentityPriceSidebar({ currentStep, onGoToSummary 
         {hasCoreIdentity && (
           <div className="space-y-2">
             <div className="flex items-center gap-2 mb-2">
-              <Sparkles className="w-4 h-4 text-[var(--accent-purple)]" />
+              <Sparkles className="w-4 h-4 text-[var(--accent-blue)]" />
               <span className="text-sm font-medium text-white">Core Identity</span>
             </div>
             {logo && logo !== 'none' && (
@@ -153,7 +153,7 @@ export default function VisualIdentityPriceSidebar({ currentStep, onGoToSummary 
         {hasVisualElements && (
           <div className="space-y-2">
             <div className="flex items-center gap-2 mb-2">
-              <Camera className="w-4 h-4 text-[var(--accent-pink)]" />
+              <Camera className="w-4 h-4 text-[var(--accent-teal)]" />
               <span className="text-sm font-medium text-white">Visual Elements</span>
             </div>
             {photography && photography !== 'none' && (
@@ -217,7 +217,7 @@ export default function VisualIdentityPriceSidebar({ currentStep, onGoToSummary 
         {selectedAddOns.length > 0 && (
           <div className="space-y-2">
             <div className="flex items-center gap-2 mb-2">
-              <Package className="w-4 h-4 text-[var(--accent-purple)]" />
+              <Package className="w-4 h-4 text-[var(--accent-blue)]" />
               <span className="text-sm font-medium text-white">Add-Ons</span>
             </div>
             <div className="flex justify-between text-sm pl-6">
@@ -250,9 +250,9 @@ export default function VisualIdentityPriceSidebar({ currentStep, onGoToSummary 
         )}
 
         {/* Total Investment */}
-        <div className="pt-3 mt-3 border-t-2 border-[var(--accent-purple)]/50">
+        <div className="pt-3 mt-3 border-t-2 border-[var(--accent-blue)]/50">
           <div className="flex items-center gap-2 mb-2">
-            <TrendingUp className="w-4 h-4 text-[var(--accent-purple)]" />
+            <TrendingUp className="w-4 h-4 text-[var(--accent-blue)]" />
             <span className="text-sm text-[var(--text-muted)]">Total Investment</span>
           </div>
           <motion.div
@@ -273,7 +273,7 @@ export default function VisualIdentityPriceSidebar({ currentStep, onGoToSummary 
       {currentStep < 13 && visualIdentityGoal && logo && (
         <motion.button
           onClick={onGoToSummary}
-          className="w-full mt-6 flex items-center justify-center gap-2 px-4 py-3 rounded-lg bg-[var(--bg-secondary)] border border-[var(--border-subtle)] text-[var(--text-secondary)] hover:border-[var(--accent-purple)] hover:text-white transition-all"
+          className="w-full mt-6 flex items-center justify-center gap-2 px-4 py-3 rounded-lg bg-[var(--bg-secondary)] border border-[var(--border-subtle)] text-[var(--text-secondary)] hover:border-[var(--accent-blue)] hover:text-white transition-all"
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
         >

@@ -38,7 +38,7 @@ export default function Step7Features() {
               className={`
                 rounded-lg overflow-hidden transition-all duration-300
                 ${isSelected
-                  ? 'bg-[var(--accent-purple)]/10 border border-[var(--accent-purple)]/50'
+                  ? 'bg-[var(--accent-blue)]/10 border border-[var(--accent-blue)]/50'
                   : 'bg-[var(--bg-secondary)] border border-[var(--border-subtle)]'
                 }
               `}
@@ -51,8 +51,8 @@ export default function Step7Features() {
                     className={`
                       w-6 h-6 rounded border-2 flex items-center justify-center transition-all
                       ${isSelected
-                        ? 'border-[var(--accent-purple)] bg-[var(--accent-purple)]'
-                        : 'border-[var(--border-subtle)] hover:border-[var(--accent-purple)]'
+                        ? 'border-[var(--accent-blue)] bg-[var(--accent-blue)]'
+                        : 'border-[var(--border-subtle)] hover:border-[var(--accent-blue)]'
                       }
                     `}
                   >
@@ -68,7 +68,7 @@ export default function Step7Features() {
                       {feature.name}
                     </h3>
                     {isSelected && selectedOption && (
-                      <p className="text-sm text-[var(--accent-purple)]">
+                      <p className="text-sm text-[var(--accent-blue)]">
                         {selectedOption.label} - {selectedOption.price === null ? 'Custom Quote' : `$${selectedOption.price}`}
                       </p>
                     )}
@@ -113,7 +113,7 @@ export default function Step7Features() {
                               className={`
                                 p-3 rounded-lg text-left transition-all flex items-center justify-between
                                 ${isOptionSelected
-                                  ? 'bg-[var(--accent-purple)] text-white'
+                                  ? 'bg-[var(--accent-blue)] text-white'
                                   : 'bg-[var(--bg-card)] text-[var(--text-secondary)] hover:bg-[var(--bg-card-hover)]'
                                 }
                               `}

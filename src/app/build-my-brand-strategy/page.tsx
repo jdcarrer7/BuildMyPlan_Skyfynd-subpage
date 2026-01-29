@@ -109,7 +109,7 @@ export default function BuildMyBrandStrategyPage() {
             <span className="text-sm">Back to Services</span>
           </Link>
           <div className="flex items-center gap-2">
-            <Target className="w-5 h-5 text-[var(--accent-purple)]" />
+            <Target className="w-5 h-5 text-[var(--accent-blue)]" />
             <h1 className="text-2xl font-semibold gradient-text font-serif">
               Build My Brand Strategy
             </h1>

@@ -20,7 +20,7 @@ export default function Step6AddOns() {
     <div className="card p-6">
       <div className="mb-6">
         <div className="flex items-center gap-2 mb-2">
-          <Package className="w-6 h-6 text-[var(--accent-purple)]" />
+          <Package className="w-6 h-6 text-[var(--accent-blue)]" />
           <h2 className="text-2xl font-semibold text-white font-serif">
             Select any additional services you need
           </h2>
@@ -48,7 +48,7 @@ export default function Step6AddOns() {
               className={`
                 rounded-lg overflow-hidden transition-all duration-300
                 ${isSelected
-                  ? 'bg-[var(--accent-purple)]/10 border border-[var(--accent-purple)]/50'
+                  ? 'bg-[var(--accent-blue)]/10 border border-[var(--accent-blue)]/50'
                   : 'bg-[var(--bg-secondary)] border border-[var(--border-subtle)]'
                 }
               `}
@@ -63,8 +63,8 @@ export default function Step6AddOns() {
                       w-6 h-6 rounded border-2 flex items-center justify-center transition-all
                       ${isRevisions ? 'cursor-default' : ''}
                       ${isSelected
-                        ? 'border-[var(--accent-purple)] bg-[var(--accent-purple)]'
-                        : 'border-[var(--border-subtle)] hover:border-[var(--accent-purple)]'
+                        ? 'border-[var(--accent-blue)] bg-[var(--accent-blue)]'
+                        : 'border-[var(--border-subtle)] hover:border-[var(--accent-blue)]'
                       }
                     `}
                   >
@@ -80,7 +80,7 @@ export default function Step6AddOns() {
                       {category.name}
                     </h3>
                     {isSelected && currentTier && (
-                      <p className="text-sm text-[var(--accent-purple)]">
+                      <p className="text-sm text-[var(--accent-blue)]">
                         {currentTier.label} — {currentTier.included ? 'Included' : `+$${currentTier.price}`}
                       </p>
                     )}
@@ -122,7 +122,7 @@ export default function Step6AddOns() {
                               className={`
                                 p-3 rounded-lg text-left transition-all flex items-center justify-between
                                 ${isTierSelected
-                                  ? 'bg-[var(--accent-purple)] text-white'
+                                  ? 'bg-[var(--accent-blue)] text-white'
                                   : 'bg-[var(--bg-card)] text-[var(--text-secondary)] hover:bg-[var(--bg-card-hover)]'
                                 }
                               `}

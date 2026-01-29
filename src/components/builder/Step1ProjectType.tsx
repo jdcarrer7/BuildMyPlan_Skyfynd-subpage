@@ -44,7 +44,7 @@ export default function Step1ProjectType() {
                 className={`
                   w-full p-4 rounded-lg text-left transition-all duration-300 flex items-center justify-between
                   ${isSelected
-                    ? 'bg-gradient-to-br from-[var(--accent-purple)] to-[var(--accent-pink)] text-white'
+                    ? 'bg-gradient-to-br from-[var(--accent-blue)] to-[var(--accent-teal)] text-white'
                     : 'bg-[var(--bg-secondary)] text-[var(--text-secondary)] hover:bg-[var(--bg-card-hover)] hover:text-white border border-[var(--border-subtle)]'
                   }
                 `}
@@ -63,7 +63,7 @@ export default function Step1ProjectType() {
                   }}
                   className={`
                     p-1 rounded-full transition-colors
-                    ${isSelected ? 'hover:bg-white/20' : 'hover:bg-[var(--accent-purple)]/20'}
+                    ${isSelected ? 'hover:bg-white/20' : 'hover:bg-[var(--accent-blue)]/20'}
                   `}
                 >
                   <Info className="w-4 h-4" />
@@ -96,11 +96,11 @@ export default function Step1ProjectType() {
             </div>
             <div className="space-y-2 text-sm">
               <p>
-                <span className="text-[var(--accent-purple)] font-medium">What it is: </span>
+                <span className="text-[var(--accent-blue)] font-medium">What it is: </span>
                 <span className="text-[var(--text-secondary)]">{selectedTooltip.whatItIs}</span>
               </p>
               <p>
-                <span className="text-[var(--accent-pink)] font-medium">Ideal if: </span>
+                <span className="text-[var(--accent-teal)] font-medium">Ideal if: </span>
                 <span className="text-[var(--text-secondary)]">{selectedTooltip.idealIf}</span>
               </p>
               <p>

@@ -196,7 +196,7 @@ export default function AnimationQuoteForm({ onBack }: AnimationQuoteFormProps) 
         {/* Name */}
         <div>
           <label className="flex items-center gap-2 text-sm font-medium text-white mb-2">
-            <User className="w-4 h-4 text-[var(--accent-purple)]" />
+            <User className="w-4 h-4 text-[var(--accent-blue)]" />
             Full Name *
           </label>
           <input
@@ -208,7 +208,7 @@ export default function AnimationQuoteForm({ onBack }: AnimationQuoteFormProps) 
               text-white placeholder:text-[var(--text-muted)]
               ${errors.name
                 ? 'border-red-500 focus:border-red-500'
-                : 'border-[var(--border-subtle)] focus:border-[var(--accent-purple)]'
+                : 'border-[var(--border-subtle)] focus:border-[var(--accent-blue)]'
               }
               focus:outline-none
             `}
@@ -222,7 +222,7 @@ export default function AnimationQuoteForm({ onBack }: AnimationQuoteFormProps) 
         {/* Email */}
         <div>
           <label className="flex items-center gap-2 text-sm font-medium text-white mb-2">
-            <Mail className="w-4 h-4 text-[var(--accent-purple)]" />
+            <Mail className="w-4 h-4 text-[var(--accent-blue)]" />
             Email Address *
           </label>
           <input
@@ -234,7 +234,7 @@ export default function AnimationQuoteForm({ onBack }: AnimationQuoteFormProps) 
               text-white placeholder:text-[var(--text-muted)]
               ${errors.email
                 ? 'border-red-500 focus:border-red-500'
-                : 'border-[var(--border-subtle)] focus:border-[var(--accent-purple)]'
+                : 'border-[var(--border-subtle)] focus:border-[var(--accent-blue)]'
               }
               focus:outline-none
             `}
@@ -248,14 +248,14 @@ export default function AnimationQuoteForm({ onBack }: AnimationQuoteFormProps) 
         {/* Company */}
         <div>
           <label className="flex items-center gap-2 text-sm font-medium text-white mb-2">
-            <Building2 className="w-4 h-4 text-[var(--accent-purple)]" />
+            <Building2 className="w-4 h-4 text-[var(--accent-blue)]" />
             Company (Optional)
           </label>
           <input
             type="text"
             value={customerInfo.company}
             onChange={(e) => setCustomerInfo({ company: e.target.value })}
-            className="w-full px-4 py-3 rounded-lg bg-[var(--bg-secondary)] border border-[var(--border-subtle)] focus:border-[var(--accent-purple)] focus:outline-none transition-colors text-white placeholder:text-[var(--text-muted)]"
+            className="w-full px-4 py-3 rounded-lg bg-[var(--bg-secondary)] border border-[var(--border-subtle)] focus:border-[var(--accent-blue)] focus:outline-none transition-colors text-white placeholder:text-[var(--text-muted)]"
             placeholder="Your Company Inc."
           />
         </div>
@@ -263,14 +263,14 @@ export default function AnimationQuoteForm({ onBack }: AnimationQuoteFormProps) 
         {/* Phone */}
         <div>
           <label className="flex items-center gap-2 text-sm font-medium text-white mb-2">
-            <Phone className="w-4 h-4 text-[var(--accent-purple)]" />
+            <Phone className="w-4 h-4 text-[var(--accent-blue)]" />
             Phone (Optional)
           </label>
           <input
             type="tel"
             value={customerInfo.phone}
             onChange={(e) => setCustomerInfo({ phone: e.target.value })}
-            className="w-full px-4 py-3 rounded-lg bg-[var(--bg-secondary)] border border-[var(--border-subtle)] focus:border-[var(--accent-purple)] focus:outline-none transition-colors text-white placeholder:text-[var(--text-muted)]"
+            className="w-full px-4 py-3 rounded-lg bg-[var(--bg-secondary)] border border-[var(--border-subtle)] focus:border-[var(--accent-blue)] focus:outline-none transition-colors text-white placeholder:text-[var(--text-muted)]"
             placeholder="+1 (555) 000-0000"
           />
         </div>
@@ -278,14 +278,14 @@ export default function AnimationQuoteForm({ onBack }: AnimationQuoteFormProps) 
         {/* Notes */}
         <div>
           <label className="flex items-center gap-2 text-sm font-medium text-white mb-2">
-            <MessageSquare className="w-4 h-4 text-[var(--accent-purple)]" />
+            <MessageSquare className="w-4 h-4 text-[var(--accent-blue)]" />
             Project Brief (Optional)
           </label>
           <textarea
             value={customerInfo.notes}
             onChange={(e) => setCustomerInfo({ notes: e.target.value })}
             rows={4}
-            className="w-full px-4 py-3 rounded-lg bg-[var(--bg-secondary)] border border-[var(--border-subtle)] focus:border-[var(--accent-purple)] focus:outline-none transition-colors text-white placeholder:text-[var(--text-muted)] resize-none"
+            className="w-full px-4 py-3 rounded-lg bg-[var(--bg-secondary)] border border-[var(--border-subtle)] focus:border-[var(--accent-blue)] focus:outline-none transition-colors text-white placeholder:text-[var(--text-muted)] resize-none"
             placeholder="Describe your animation project, goals, or any specific requirements..."
           />
         </div>

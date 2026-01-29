@@ -63,7 +63,7 @@ function Company({ size = 48, textSize = 20 }: { size?: number; textSize?: numbe
         <img
           alt="Skyfynd logo"
           style={companyStyles.logo}
-          src="https://i.imgur.com/JDBBgAT.png"
+          src="https://media-skyfynd.jdcarrero7.workers.dev/Skyfynd+Landing+Page/Skyfynd+Logo/Skyfynd+logo.png"
         />
       </div>
       <div style={companyStyles.textWrapper}>
@@ -92,11 +92,11 @@ const companyStyles: Record<string, React.CSSProperties> = {
   },
   logo: {
     position: 'absolute',
-    inset: 0,
-    height: '100%',
-    width: '100%',
+    inset: '10%',
+    height: '80%',
+    width: '80%',
     maxWidth: 'none',
-    objectFit: 'cover',
+    objectFit: 'contain',
     pointerEvents: 'none',
   },
   textWrapper: {
@@ -117,13 +117,36 @@ const companyStyles: Record<string, React.CSSProperties> = {
   },
 };
 
+// Small plus icon for dropdown indicator - matching main site
+const PlusIcon = ({ isHovered }: { isHovered: boolean }) => (
+  <svg
+    width="10"
+    height="10"
+    viewBox="0 0 10 10"
+    fill="none"
+    style={{
+      marginLeft: 4,
+      opacity: isHovered ? 1 : 0.6,
+      transition: 'opacity 0.2s ease',
+    }}
+  >
+    <path
+      d="M5 2v6M2 5h6"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+    />
+  </svg>
+);
+
 // Nav link component
-function NavLink({ text, to, fontSize = 16, isExternal = false, isActive = false }: {
+function NavLink({ text, to, fontSize = 16, isExternal = false, isActive = false, hasDropdown = false }: {
   text: string;
   to: string;
   fontSize?: number;
   isExternal?: boolean;
   isActive?: boolean;
+  hasDropdown?: boolean;
 }) {
   const [isHovered, setIsHovered] = useState(false);
 
@@ -132,33 +155,49 @@ function NavLink({ text, to, fontSize = 16, isExternal = false, isActive = false
     display: 'inline-flex',
     alignItems: 'center',
     justifyContent: 'center',
-    padding: '10px 20px',
-    borderRadius: '12px',
+    padding: hasDropdown ? '10px 16px 10px 20px' : '10px 20px',
+    borderRadius: '14px',
     background: isActive
-      ? 'linear-gradient(135deg, rgba(139, 92, 246, 0.25), rgba(139, 92, 246, 0.15))'
+      ? 'linear-gradient(135deg, rgba(139, 92, 246, 0.2), rgba(59, 130, 246, 0.15), rgba(16, 185, 129, 0.1))'
       : isHovered
-        ? 'linear-gradient(135deg, rgba(255,255,255,0.12), rgba(255,255,255,0.06))'
+        ? 'linear-gradient(135deg, rgba(59, 130, 246, 0.3), rgba(16, 185, 129, 0.2))'
         : 'transparent',
     border: isActive
       ? '1px solid rgba(139, 92, 246, 0.4)'
       : isHovered
-        ? '1px solid rgba(255,255,255,0.15)'
+        ? '1px solid rgba(96, 165, 250, 0.5)'
         : '1px solid transparent',
     WebkitFontSmoothing: 'antialiased',
     fontWeight: 600,
     transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
     textDecoration: 'none',
     fontSize,
-    color: isActive ? '#A78BFA' : (isHovered ? '#FAFAFA' : 'rgba(250,250,250,0.8)'),
-    transform: isHovered ? 'translateY(-2px)' : 'translateY(0)',
+    color: isHovered ? '#FAFAFA' : 'rgba(250,250,250,0.8)',
+    transform: isHovered ? 'translateY(-2px) scale(1.02)' : 'translateY(0) scale(1)',
     boxShadow: isHovered
-      ? '0 4px 12px rgba(0, 0, 0, 0.2), 0 0 20px rgba(139, 92, 246, 0.1)'
+      ? '0 8px 24px rgba(59, 130, 246, 0.4), 0 0 40px rgba(16, 185, 129, 0.2)'
       : 'none',
     overflow: 'hidden',
   };
 
   const innerContent = (
     <>
+      {/* Gradient border glow on hover - exact match to main site */}
+      <span
+        style={{
+          position: 'absolute',
+          inset: -1,
+          borderRadius: 15,
+          background: 'linear-gradient(135deg, #60A5FA, #10B981, #FBBF24, #F97316, #EF4444, #60A5FA)',
+          backgroundSize: '300% 300%',
+          animation: isHovered ? 'navShimmer 2s ease infinite' : 'none',
+          opacity: isHovered ? 0.6 : 0,
+          transition: 'opacity 0.3s ease',
+          zIndex: -1,
+          filter: 'blur(2px)',
+        }}
+      />
+      {/* Inner shimmer effect on hover */}
       <span
         style={{
           position: 'absolute',
@@ -169,7 +208,21 @@ function NavLink({ text, to, fontSize = 16, isExternal = false, isActive = false
           pointerEvents: 'none',
         }}
       />
-      <span style={{ position: 'relative', zIndex: 1 }}>{text}</span>
+      <span style={{
+        position: 'relative',
+        zIndex: 1,
+        display: 'flex',
+        alignItems: 'center',
+        ...(isActive ? {
+          background: 'linear-gradient(135deg, #8B5CF6 0%, #3B82F6 50%, #10B981 100%)',
+          WebkitBackgroundClip: 'text',
+          backgroundClip: 'text',
+          WebkitTextFillColor: 'transparent',
+        } : {})
+      }}>
+        {text}
+        {hasDropdown && <PlusIcon isHovered={isHovered} />}
+      </span>
     </>
   );
 
@@ -215,10 +268,10 @@ function ContactButton({ size = 'default' }: { size?: 'default' | 'tablet' | 'mo
       <style>{`
         @keyframes contactPulse {
           0%, 100% {
-            box-shadow: 0 0 20px rgba(139, 92, 246, 0.4), 0 0 40px rgba(236, 72, 153, 0.2);
+            box-shadow: 0 0 20px rgba(59, 130, 246, 0.4), 0 0 40px rgba(16, 185, 129, 0.2);
           }
           50% {
-            box-shadow: 0 0 25px rgba(139, 92, 246, 0.6), 0 0 50px rgba(236, 72, 153, 0.3);
+            box-shadow: 0 0 25px rgba(59, 130, 246, 0.6), 0 0 50px rgba(16, 185, 129, 0.3);
           }
         }
         @keyframes navShimmer {
@@ -240,11 +293,11 @@ function ContactButton({ size = 'default' }: { size?: 'default' | 'tablet' | 'mo
           padding: s.padding,
           borderRadius: '14px',
           background: isHovered
-            ? 'linear-gradient(135deg, rgba(139, 92, 246, 0.35), rgba(236, 72, 153, 0.25))'
-            : 'linear-gradient(135deg, rgba(139, 92, 246, 0.2), rgba(236, 72, 153, 0.15))',
+            ? 'linear-gradient(135deg, rgba(59, 130, 246, 0.35), rgba(16, 185, 129, 0.25))'
+            : 'linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(16, 185, 129, 0.15))',
           border: isHovered
             ? '1px solid rgba(167, 139, 250, 0.6)'
-            : '1px solid rgba(139, 92, 246, 0.3)',
+            : '1px solid rgba(59, 130, 246, 0.3)',
           cursor: 'pointer',
           fontFamily: 'inherit',
           fontWeight: 600,
@@ -253,8 +306,8 @@ function ContactButton({ size = 'default' }: { size?: 'default' | 'tablet' | 'mo
           transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
           transform: isHovered ? 'translateY(-2px) scale(1.02)' : 'translateY(0) scale(1)',
           boxShadow: isHovered
-            ? '0 8px 24px rgba(139, 92, 246, 0.4), 0 0 40px rgba(236, 72, 153, 0.2)'
-            : '0 4px 16px rgba(139, 92, 246, 0.2)',
+            ? '0 8px 24px rgba(59, 130, 246, 0.4), 0 0 40px rgba(16, 185, 129, 0.2)'
+            : '0 4px 16px rgba(59, 130, 246, 0.2)',
           animation: 'contactPulse 3s ease-in-out infinite',
           overflow: 'hidden',
           textDecoration: 'none',
@@ -278,7 +331,7 @@ function ContactButton({ size = 'default' }: { size?: 'default' | 'tablet' | 'mo
             position: 'absolute',
             inset: -1,
             borderRadius: 15,
-            background: 'linear-gradient(135deg, #A78BFA, #EC4899, #F59E0B, #A78BFA)',
+            background: 'linear-gradient(135deg, #60A5FA, #10B981, #FBBF24, #F97316, #EF4444, #60A5FA)',
             backgroundSize: '300% 300%',
             animation: isHovered ? 'navShimmer 2s ease infinite' : 'none',
             opacity: isHovered ? 0.6 : 0,
@@ -322,9 +375,9 @@ function DesktopNav() {
     <>
       <nav style={navStyles.desktop}>
         <NavLink text="Projects" to={`${SKYFYND_BASE_URL}/projects`} fontSize={16} isExternal />
-        <NavLink text="Services" to={`${SKYFYND_BASE_URL}/websites`} fontSize={16} isExternal />
+        <NavLink text="Services" to={`${SKYFYND_BASE_URL}/websites`} fontSize={16} isExternal hasDropdown />
         <NavLink text="Plans" to="/" fontSize={16} isActive />
-        <NavLink text="About" to={`${SKYFYND_BASE_URL}/about`} fontSize={16} isExternal />
+        <NavLink text="About" to={`${SKYFYND_BASE_URL}/about`} fontSize={16} isExternal hasDropdown />
       </nav>
       <div style={navStyles.contactWrapper}>
         <ContactButton size="default" />
@@ -339,9 +392,9 @@ function TabletNav() {
     <>
       <nav style={navStyles.tablet}>
         <NavLink text="Projects" to={`${SKYFYND_BASE_URL}/projects`} fontSize={20} isExternal />
-        <NavLink text="Services" to={`${SKYFYND_BASE_URL}/websites`} fontSize={20} isExternal />
+        <NavLink text="Services" to={`${SKYFYND_BASE_URL}/websites`} fontSize={20} isExternal hasDropdown />
         <NavLink text="Plans" to="/" fontSize={20} isActive />
-        <NavLink text="About" to={`${SKYFYND_BASE_URL}/about`} fontSize={20} isExternal />
+        <NavLink text="About" to={`${SKYFYND_BASE_URL}/about`} fontSize={20} isExternal hasDropdown />
       </nav>
       <div style={navStyles.contactWrapperTablet}>
         <ContactButton size="tablet" />
@@ -396,9 +449,9 @@ function MobileMenu() {
 
   const menuItems = [
     { t: "Projects", to: `${SKYFYND_BASE_URL}/projects`, isExternal: true },
-    { t: "Services", to: `${SKYFYND_BASE_URL}/websites`, isExternal: true },
+    { t: "Services", to: `${SKYFYND_BASE_URL}/websites`, isExternal: true, hasDropdown: true },
     { t: "Plans", to: "/", isActive: true },
-    { t: "About", to: `${SKYFYND_BASE_URL}/about`, isExternal: true },
+    { t: "About", to: `${SKYFYND_BASE_URL}/about`, isExternal: true, hasDropdown: true },
     { t: "Contact", to: `${SKYFYND_BASE_URL}/contact`, isExternal: true, isContact: true },
   ];
 
@@ -412,8 +465,8 @@ function MobileMenu() {
           justifyContent: 'center',
           alignItems: 'center',
           padding: 8,
-          background: isOpen ? 'rgba(139, 92, 246, 0.2)' : 'transparent',
-          border: isOpen ? '1px solid rgba(139, 92, 246, 0.3)' : '1px solid transparent',
+          background: isOpen ? 'rgba(59, 130, 246, 0.2)' : 'transparent',
+          border: isOpen ? '1px solid rgba(59, 130, 246, 0.3)' : '1px solid transparent',
           borderRadius: 10,
           cursor: 'pointer',
           transition: 'all 0.2s ease',
@@ -421,7 +474,7 @@ function MobileMenu() {
       >
         <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
           {isOpen ? (
-            <path d="M6 6L18 18M6 18L18 6" stroke="#A78BFA" strokeWidth="2" strokeLinecap="round" />
+            <path d="M6 6L18 18M6 18L18 6" stroke="#60A5FA" strokeWidth="2" strokeLinecap="round" />
           ) : (
             <path d="M4 6H20M4 12H20M4 18H20" stroke="#FAFAFA" strokeWidth="2" strokeLinecap="round" />
           )}
@@ -449,15 +502,15 @@ function MobileMenu() {
                         justifyContent: 'flex-start',
                         gap: 10,
                         width: '100%',
-                        background: 'linear-gradient(135deg, rgba(139, 92, 246, 0.15), rgba(236, 72, 153, 0.1))',
-                        border: '1px solid rgba(139, 92, 246, 0.25)',
+                        background: 'linear-gradient(135deg, rgba(59, 130, 246, 0.15), rgba(16, 185, 129, 0.1))',
+                        border: '1px solid rgba(59, 130, 246, 0.25)',
                         textDecoration: 'none',
                       }}
                     >
                       <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
                         <path
                           d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"
-                          stroke="#A78BFA"
+                          stroke="#60A5FA"
                           strokeWidth="1.5"
                           strokeLinecap="round"
                           strokeLinejoin="round"
@@ -476,15 +529,29 @@ function MobileMenu() {
                   onClick={() => setIsOpen(false)}
                   style={{
                     ...mobileMenuStyles.link,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
                     background: isActive
-                      ? 'linear-gradient(135deg, rgba(139, 92, 246, 0.3), rgba(236, 72, 153, 0.2))'
+                      ? 'linear-gradient(135deg, rgba(139, 92, 246, 0.2), rgba(59, 130, 246, 0.15), rgba(16, 185, 129, 0.1))'
                       : 'transparent',
                     border: isActive ? '1px solid rgba(139, 92, 246, 0.4)' : '1px solid transparent',
-                    color: isActive ? '#A78BFA' : 'rgba(255, 255, 255, 0.9)',
                     textDecoration: 'none',
                   }}
                 >
-                  {item.t}
+                  <span style={isActive ? {
+                    background: 'linear-gradient(135deg, #8B5CF6 0%, #3B82F6 50%, #10B981 100%)',
+                    WebkitBackgroundClip: 'text',
+                    backgroundClip: 'text',
+                    WebkitTextFillColor: 'transparent',
+                  } : { color: 'rgba(255, 255, 255, 0.9)' }}>
+                    {item.t}
+                  </span>
+                  {item.hasDropdown && (
+                    <svg width="10" height="10" viewBox="0 0 10 10" fill="none" style={{ opacity: 0.6 }}>
+                      <path d="M5 2v6M2 5h6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+                    </svg>
+                  )}
                 </a>
               );
             })}
@@ -516,7 +583,7 @@ const mobileMenuStyles: Record<string, React.CSSProperties> = {
   overlay2: {
     position: 'absolute',
     inset: 0,
-    background: 'linear-gradient(135deg, rgba(139, 92, 246, 0.08) 0%, rgba(236, 72, 153, 0.05) 100%)',
+    background: 'linear-gradient(135deg, rgba(59, 130, 246, 0.08) 0%, rgba(16, 185, 129, 0.05) 100%)',
     borderRadius: '16px',
   },
   link: {
@@ -542,12 +609,10 @@ function NavBarShell({ children, width }: { children: React.ReactNode; width: st
     <div style={{ ...navBarShellStyles.container, width }}>
       {/* Main nav bar glass */}
       <div style={navBarShellStyles.glass}>
-        {/* Iridescent wash background */}
-        <div style={navBarShellStyles.wash} />
-        {/* Glass highlight */}
-        <div style={navBarShellStyles.highlight} />
-        {/* Noise texture */}
-        <div style={navBarShellStyles.noise} />
+        {/* Inner gradient for depth */}
+        <div style={navBarShellStyles.innerGradient} />
+        {/* Top highlight edge */}
+        <div style={navBarShellStyles.topHighlight} />
       </div>
 
       {/* Inner content */}
@@ -568,35 +633,25 @@ const navBarShellStyles: Record<string, React.CSSProperties> = {
     inset: 0,
     overflow: 'hidden',
     borderRadius: '20px',
-    backdropFilter: 'blur(28px)',
-    WebkitBackdropFilter: 'blur(28px)',
-    border: '1px solid rgba(255, 255, 255, 0.08)',
-    background: 'rgba(10, 10, 11, 0.85)',
+    border: '1px solid rgba(255, 255, 255, 0.1)',
+    background: 'linear-gradient(180deg, rgba(17, 17, 19, 0.95) 0%, rgba(10, 10, 11, 0.98) 100%)',
+    backdropFilter: 'blur(20px)',
+    WebkitBackdropFilter: 'blur(20px)',
+    boxShadow: '0 4px 30px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.05)',
   },
-  wash: {
-    position: 'absolute',
-    inset: '-30%',
-    background: `
-      radial-gradient(circle at 20% 30%, rgba(139, 92, 246, 0.1), transparent 55%),
-      radial-gradient(circle at 80% 20%, rgba(96, 165, 250, 0.08), transparent 55%),
-      radial-gradient(circle at 70% 85%, rgba(250, 204, 21, 0.05), transparent 60%)
-    `,
-    filter: 'blur(22px)',
-    pointerEvents: 'none',
-  },
-  highlight: {
+  innerGradient: {
     position: 'absolute',
     inset: 0,
-    background: 'linear-gradient(to bottom, rgba(255,255,255,0.04), transparent 50%)',
+    background: 'linear-gradient(135deg, rgba(139, 92, 246, 0.03) 0%, rgba(59, 130, 246, 0.02) 50%, rgba(16, 185, 129, 0.02) 100%)',
     pointerEvents: 'none',
   },
-  noise: {
+  topHighlight: {
     position: 'absolute',
-    inset: 0,
-    backgroundImage: 'radial-gradient(rgba(255,255,255,0.08) 1px, transparent 1px)',
-    backgroundSize: '3px 3px',
-    opacity: 0.06,
-    mixBlendMode: 'overlay',
+    top: 0,
+    left: '10%',
+    right: '10%',
+    height: '1px',
+    background: 'linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.08) 50%, transparent 100%)',
     pointerEvents: 'none',
   },
 };

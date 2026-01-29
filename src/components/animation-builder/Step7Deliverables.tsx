@@ -22,7 +22,7 @@ export default function Step7Deliverables() {
     <div className="card p-6">
       <div className="mb-6">
         <div className="flex items-center gap-2 mb-2">
-          <FileVideo className="w-6 h-6 text-[var(--accent-purple)]" />
+          <FileVideo className="w-6 h-6 text-[var(--accent-blue)]" />
           <h2 className="text-2xl font-semibold text-white font-serif">
             What file formats do you need?
           </h2>
@@ -35,7 +35,7 @@ export default function Step7Deliverables() {
       {/* Video Formats */}
       <div className="mb-8">
         <h3 className="text-lg font-medium text-white mb-3 flex items-center gap-2">
-          <FileVideo className="w-5 h-5 text-[var(--accent-purple)]" />
+          <FileVideo className="w-5 h-5 text-[var(--accent-blue)]" />
           Video Formats
         </h3>
         <div className="grid gap-2">
@@ -52,15 +52,15 @@ export default function Step7Deliverables() {
                     w-full p-3 rounded-lg border text-left transition-all flex items-center justify-between
                     ${isMP4 ? 'cursor-default' : ''}
                     ${isSelected
-                      ? 'border-[var(--accent-purple)] bg-[var(--accent-purple)]/10'
-                      : 'border-[var(--border-subtle)] bg-[var(--bg-secondary)] hover:border-[var(--accent-purple)]/50'
+                      ? 'border-[var(--accent-blue)] bg-[var(--accent-blue)]/10'
+                      : 'border-[var(--border-subtle)] bg-[var(--bg-secondary)] hover:border-[var(--accent-blue)]/50'
                     }
                   `}
                 >
                   <div className="flex items-center gap-3">
                     <div className={`
                       w-5 h-5 rounded border-2 flex items-center justify-center
-                      ${isSelected ? 'border-[var(--accent-purple)] bg-[var(--accent-purple)]' : 'border-[var(--border-subtle)]'}
+                      ${isSelected ? 'border-[var(--accent-blue)] bg-[var(--accent-blue)]' : 'border-[var(--border-subtle)]'}
                     `}>
                       {isSelected && <Check className="w-3 h-3 text-white" />}
                     </div>
@@ -77,7 +77,7 @@ export default function Step7Deliverables() {
                         e.stopPropagation();
                         setTooltipOpen(tooltipOpen === format.id ? null : format.id);
                       }}
-                      className="p-1 text-[var(--text-muted)] hover:text-[var(--accent-purple)] transition-colors"
+                      className="p-1 text-[var(--text-muted)] hover:text-[var(--accent-blue)] transition-colors"
                     >
                       <HelpCircle className="w-4 h-4" />
                     </button>
@@ -93,11 +93,11 @@ export default function Step7Deliverables() {
                     <button onClick={() => setTooltipOpen(null)} className="absolute top-2 right-2 text-[var(--text-muted)] hover:text-white text-xl leading-none">&times;</button>
                     <div className="space-y-3 text-sm">
                       <div>
-                        <span className="text-[var(--accent-purple)] font-medium">What it is:</span>
+                        <span className="text-[var(--accent-blue)] font-medium">What it is:</span>
                         <p className="text-[var(--text-secondary)] mt-1">{format.tooltip.whatItIs}</p>
                       </div>
                       <div>
-                        <span className="text-[var(--accent-pink)] font-medium">Ideal if:</span>
+                        <span className="text-[var(--accent-teal)] font-medium">Ideal if:</span>
                         <p className="text-[var(--text-secondary)] mt-1">{format.tooltip.idealIf}</p>
                       </div>
                       <div>
@@ -116,7 +116,7 @@ export default function Step7Deliverables() {
       {/* Aspect Ratios */}
       <div className="mb-8">
         <h3 className="text-lg font-medium text-white mb-3 flex items-center gap-2">
-          <Maximize className="w-5 h-5 text-[var(--accent-purple)]" />
+          <Maximize className="w-5 h-5 text-[var(--accent-blue)]" />
           Aspect Ratios
         </h3>
         <div className="grid gap-2">
@@ -130,15 +130,15 @@ export default function Step7Deliverables() {
                   className={`
                     w-full p-3 rounded-lg border text-left transition-all flex items-center justify-between
                     ${isSelected
-                      ? 'border-[var(--accent-purple)] bg-[var(--accent-purple)]/10'
-                      : 'border-[var(--border-subtle)] bg-[var(--bg-secondary)] hover:border-[var(--accent-purple)]/50'
+                      ? 'border-[var(--accent-blue)] bg-[var(--accent-blue)]/10'
+                      : 'border-[var(--border-subtle)] bg-[var(--bg-secondary)] hover:border-[var(--accent-blue)]/50'
                     }
                   `}
                 >
                   <div className="flex items-center gap-3">
                     <div className={`
                       w-5 h-5 rounded-full border-2 flex items-center justify-center
-                      ${isSelected ? 'border-[var(--accent-purple)] bg-[var(--accent-purple)]' : 'border-[var(--border-subtle)]'}
+                      ${isSelected ? 'border-[var(--accent-blue)] bg-[var(--accent-blue)]' : 'border-[var(--border-subtle)]'}
                     `}>
                       {isSelected && <Check className="w-3 h-3 text-white" />}
                     </div>
@@ -155,7 +155,7 @@ export default function Step7Deliverables() {
                         e.stopPropagation();
                         setTooltipOpen(tooltipOpen === `aspect-${option.id}` ? null : `aspect-${option.id}`);
                       }}
-                      className="p-1 text-[var(--text-muted)] hover:text-[var(--accent-purple)] transition-colors"
+                      className="p-1 text-[var(--text-muted)] hover:text-[var(--accent-blue)] transition-colors"
                     >
                       <HelpCircle className="w-4 h-4" />
                     </button>
@@ -171,11 +171,11 @@ export default function Step7Deliverables() {
                     <button onClick={() => setTooltipOpen(null)} className="absolute top-2 right-2 text-[var(--text-muted)] hover:text-white text-xl leading-none">&times;</button>
                     <div className="space-y-3 text-sm">
                       <div>
-                        <span className="text-[var(--accent-purple)] font-medium">What it is:</span>
+                        <span className="text-[var(--accent-blue)] font-medium">What it is:</span>
                         <p className="text-[var(--text-secondary)] mt-1">{option.tooltip.whatItIs}</p>
                       </div>
                       <div>
-                        <span className="text-[var(--accent-pink)] font-medium">Ideal if:</span>
+                        <span className="text-[var(--accent-teal)] font-medium">Ideal if:</span>
                         <p className="text-[var(--text-secondary)] mt-1">{option.tooltip.idealIf}</p>
                       </div>
                       <div>
@@ -194,7 +194,7 @@ export default function Step7Deliverables() {
       {/* Source Files */}
       <div>
         <h3 className="text-lg font-medium text-white mb-3 flex items-center gap-2">
-          <FolderOpen className="w-5 h-5 text-[var(--accent-purple)]" />
+          <FolderOpen className="w-5 h-5 text-[var(--accent-blue)]" />
           Source Files
         </h3>
         <div className="grid gap-2">
@@ -208,15 +208,15 @@ export default function Step7Deliverables() {
                   className={`
                     w-full p-3 rounded-lg border text-left transition-all flex items-center justify-between
                     ${isSelected
-                      ? 'border-[var(--accent-purple)] bg-[var(--accent-purple)]/10'
-                      : 'border-[var(--border-subtle)] bg-[var(--bg-secondary)] hover:border-[var(--accent-purple)]/50'
+                      ? 'border-[var(--accent-blue)] bg-[var(--accent-blue)]/10'
+                      : 'border-[var(--border-subtle)] bg-[var(--bg-secondary)] hover:border-[var(--accent-blue)]/50'
                     }
                   `}
                 >
                   <div className="flex items-center gap-3">
                     <div className={`
                       w-5 h-5 rounded-full border-2 flex items-center justify-center
-                      ${isSelected ? 'border-[var(--accent-purple)] bg-[var(--accent-purple)]' : 'border-[var(--border-subtle)]'}
+                      ${isSelected ? 'border-[var(--accent-blue)] bg-[var(--accent-blue)]' : 'border-[var(--border-subtle)]'}
                     `}>
                       {isSelected && <Check className="w-3 h-3 text-white" />}
                     </div>
@@ -233,7 +233,7 @@ export default function Step7Deliverables() {
                         e.stopPropagation();
                         setTooltipOpen(tooltipOpen === `source-${option.id}` ? null : `source-${option.id}`);
                       }}
-                      className="p-1 text-[var(--text-muted)] hover:text-[var(--accent-purple)] transition-colors"
+                      className="p-1 text-[var(--text-muted)] hover:text-[var(--accent-blue)] transition-colors"
                     >
                       <HelpCircle className="w-4 h-4" />
                     </button>
@@ -249,11 +249,11 @@ export default function Step7Deliverables() {
                     <button onClick={() => setTooltipOpen(null)} className="absolute top-2 right-2 text-[var(--text-muted)] hover:text-white text-xl leading-none">&times;</button>
                     <div className="space-y-3 text-sm">
                       <div>
-                        <span className="text-[var(--accent-purple)] font-medium">What it is:</span>
+                        <span className="text-[var(--accent-blue)] font-medium">What it is:</span>
                         <p className="text-[var(--text-secondary)] mt-1">{option.tooltip.whatItIs}</p>
                       </div>
                       <div>
-                        <span className="text-[var(--accent-pink)] font-medium">Ideal if:</span>
+                        <span className="text-[var(--accent-teal)] font-medium">Ideal if:</span>
                         <p className="text-[var(--text-secondary)] mt-1">{option.tooltip.idealIf}</p>
                       </div>
                       <div>

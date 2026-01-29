@@ -42,8 +42,8 @@ export default function Step6Services() {
                 className={`
                   w-full p-4 rounded-lg text-left transition-all duration-300 relative
                   ${isSelected
-                    ? 'bg-[var(--accent-purple)]/10 border-2 border-[var(--accent-purple)]'
-                    : 'bg-[var(--bg-secondary)] border border-[var(--border-subtle)] hover:border-[var(--accent-purple)]/50'
+                    ? 'bg-[var(--accent-blue)]/10 border-2 border-[var(--accent-blue)]'
+                    : 'bg-[var(--bg-secondary)] border border-[var(--border-subtle)] hover:border-[var(--accent-blue)]/50'
                   }
                 `}
               >
@@ -53,7 +53,7 @@ export default function Step6Services() {
                     className={`
                       w-6 h-6 rounded border-2 flex items-center justify-center transition-all shrink-0 mt-0.5
                       ${isSelected
-                        ? 'border-[var(--accent-purple)] bg-[var(--accent-purple)]'
+                        ? 'border-[var(--accent-blue)] bg-[var(--accent-blue)]'
                         : 'border-[var(--border-subtle)]'
                       }
                     `}
@@ -82,7 +82,7 @@ export default function Step6Services() {
                     </div>
 
                     <div className="flex items-center gap-2 mt-1">
-                      <span className={`font-semibold ${isSelected ? 'text-[var(--accent-purple)]' : 'text-[var(--text-secondary)]'}`}>
+                      <span className={`font-semibold ${isSelected ? 'text-[var(--accent-blue)]' : 'text-[var(--text-secondary)]'}`}>
                         {service.startsAt && <span className="text-xs font-normal">from </span>}
                         ${service.price}
                         {service.recurring && <span className="text-sm font-normal">/mo</span>}
@@ -95,7 +95,7 @@ export default function Step6Services() {
                       e.stopPropagation();
                       setTooltipId(tooltipId === service.id ? null : service.id);
                     }}
-                    className="p-1 rounded-full hover:bg-[var(--accent-purple)]/20 transition-colors shrink-0"
+                    className="p-1 rounded-full hover:bg-[var(--accent-blue)]/20 transition-colors shrink-0"
                   >
                     <Info className="w-4 h-4 text-[var(--text-muted)]" />
                   </button>

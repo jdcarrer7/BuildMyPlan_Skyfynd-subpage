@@ -92,7 +92,7 @@ export default function Footer() {
 
       <div style={{
         ...styles.container,
-        padding: isMobile ? '0 16px' : '0 40px',
+        padding: isMobile ? '0 16px' : '0 24px',
       }}>
         {/* Main content grid */}
         <div style={{
@@ -114,18 +114,15 @@ export default function Footer() {
               <div style={styles.logoWrapper}>
                 <div style={styles.logoGlow} />
                 <div style={styles.logoIcon}>
-                  <svg width={isMobile ? "28" : "36"} height={isMobile ? "28" : "36"} viewBox="0 0 32 32" fill="none">
-                    <circle cx="16" cy="16" r="14" fill="url(#footerLogoGradient)" />
-                    <circle cx="16" cy="16" r="8" fill="white" fillOpacity="0.3" />
-                    <circle cx="16" cy="16" r="4" fill="white" fillOpacity="0.5" />
-                    <defs>
-                      <linearGradient id="footerLogoGradient" x1="0" y1="0" x2="32" y2="32">
-                        <stop offset="0%" stopColor="#A78BFA" />
-                        <stop offset="50%" stopColor="#EC4899" />
-                        <stop offset="100%" stopColor="#F59E0B" />
-                      </linearGradient>
-                    </defs>
-                  </svg>
+                  <img
+                    alt="Skyfynd logo"
+                    src="https://media-skyfynd.jdcarrero7.workers.dev/Skyfynd+Landing+Page/Skyfynd+Logo/Skyfynd+logo.png"
+                    style={{
+                      width: isMobile ? '29px' : '35px',
+                      height: isMobile ? '29px' : '35px',
+                      objectFit: 'contain',
+                    }}
+                  />
                 </div>
                 <span style={{
                   ...styles.logoText,
@@ -214,7 +211,7 @@ export default function Footer() {
                 ...styles.columnTitle,
                 fontSize: isMobile ? '14px' : isTablet ? '16px' : '13px',
               }}>
-                <span style={{...styles.columnTitleAccent, background: 'linear-gradient(135deg, #EC4899 0%, #F59E0B 100%)'}} />
+                <span style={{...styles.columnTitleAccent, background: 'linear-gradient(135deg, #3B82F6 0%, #10B981 100%)'}} />
                 Company
               </h4>
               <div style={{
@@ -298,7 +295,7 @@ const styles: Record<string, React.CSSProperties> = {
     left: '-5%',
     width: '400px',
     height: '400px',
-    background: 'radial-gradient(circle, rgba(139, 92, 246, 0.08) 0%, transparent 70%)',
+    background: 'radial-gradient(circle, rgba(59, 130, 246, 0.08) 0%, transparent 70%)',
     pointerEvents: 'none',
     filter: 'blur(40px)',
   },
@@ -308,7 +305,7 @@ const styles: Record<string, React.CSSProperties> = {
     right: '-10%',
     width: '500px',
     height: '500px',
-    background: 'radial-gradient(circle, rgba(236, 72, 153, 0.06) 0%, transparent 70%)',
+    background: 'radial-gradient(circle, rgba(16, 185, 129, 0.06) 0%, transparent 70%)',
     pointerEvents: 'none',
     filter: 'blur(60px)',
   },
@@ -320,12 +317,12 @@ const styles: Record<string, React.CSSProperties> = {
     width: '80%',
     maxWidth: '600px',
     height: '1px',
-    background: 'linear-gradient(90deg, transparent 0%, rgba(139, 92, 246, 0.5) 20%, rgba(236, 72, 153, 0.5) 50%, rgba(245, 158, 11, 0.5) 80%, transparent 100%)',
+    background: 'linear-gradient(90deg, transparent 0%, rgba(139, 92, 246, 0.5) 20%, rgba(59, 130, 246, 0.5) 50%, rgba(16, 185, 129, 0.5) 80%, transparent 100%)',
   },
   container: {
-    maxWidth: '1200px',
+    maxWidth: '1280px',
     margin: '0 auto',
-    padding: '0 40px',
+    padding: '0 24px',
     position: 'relative',
     zIndex: 1,
   },
@@ -339,7 +336,7 @@ const styles: Record<string, React.CSSProperties> = {
     position: 'relative',
     padding: '2px',
     borderRadius: '20px',
-    background: 'linear-gradient(135deg, rgba(139, 92, 246, 0.3) 0%, rgba(236, 72, 153, 0.2) 50%, rgba(139, 92, 246, 0.1) 100%)',
+    background: 'linear-gradient(135deg, rgba(139, 92, 246, 0.3) 0%, rgba(59, 130, 246, 0.25) 50%, rgba(16, 185, 129, 0.2) 100%)',
     maxWidth: '380px',
   },
   brandCardInner: {
@@ -362,7 +359,7 @@ const styles: Record<string, React.CSSProperties> = {
     transform: 'translateY(-50%)',
     width: '60px',
     height: '60px',
-    background: 'radial-gradient(circle, rgba(167, 139, 250, 0.4) 0%, transparent 70%)',
+    background: 'radial-gradient(circle, rgba(59, 130, 246, 0.4) 0%, transparent 70%)',
     filter: 'blur(15px)',
     pointerEvents: 'none',
   },
@@ -431,7 +428,7 @@ const styles: Record<string, React.CSSProperties> = {
     width: '3px',
     height: '14px',
     borderRadius: '2px',
-    background: 'linear-gradient(135deg, #8B5CF6 0%, #EC4899 100%)',
+    background: 'linear-gradient(135deg, #8B5CF6 0%, #3B82F6 50%, #10B981 100%)',
   },
   linksList: {
     display: 'flex',

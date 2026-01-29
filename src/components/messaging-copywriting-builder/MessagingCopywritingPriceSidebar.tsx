@@ -73,7 +73,7 @@ export default function MessagingCopywritingPriceSidebar({
       className="card p-6 sticky top-6"
     >
       <div className="flex items-center gap-2 mb-4">
-        <Calculator className="w-5 h-5 text-[var(--accent-purple)]" />
+        <Calculator className="w-5 h-5 text-[var(--accent-blue)]" />
         <h3 className="text-lg font-semibold text-white">Your Estimate</h3>
       </div>
 
@@ -101,7 +101,7 @@ export default function MessagingCopywritingPriceSidebar({
         {/* Messaging Foundation */}
         {(messaging || voice) && (messaging !== 'none' || voice !== 'none') && (
           <div className="pt-2 border-t border-[var(--border-subtle)]">
-            <p className="text-xs text-[var(--accent-purple)] font-medium mb-2">MESSAGING FOUNDATION</p>
+            <p className="text-xs text-[var(--accent-blue)] font-medium mb-2">MESSAGING FOUNDATION</p>
             {messaging && messaging !== 'none' && (
               <div className="flex justify-between text-sm">
                 <span className="text-[var(--text-muted)]">Messaging Framework</span>
@@ -126,7 +126,7 @@ export default function MessagingCopywritingPriceSidebar({
             content !== 'none' ||
             ux !== 'none') && (
             <div className="pt-2 border-t border-[var(--border-subtle)]">
-              <p className="text-xs text-[var(--accent-pink)] font-medium mb-2">COPY PRODUCTION</p>
+              <p className="text-xs text-[var(--accent-teal)] font-medium mb-2">COPY PRODUCTION</p>
               {website && website !== 'none' && (
                 <div className="flex justify-between text-sm">
                   <span className="text-[var(--text-muted)]">Website</span>
@@ -229,9 +229,9 @@ export default function MessagingCopywritingPriceSidebar({
 
         {/* One-Time Total */}
         {oneTimeTotal > 0 && (
-          <div className="pt-3 mt-3 border-t-2 border-[var(--accent-purple)]/50">
+          <div className="pt-3 mt-3 border-t-2 border-[var(--accent-blue)]/50">
             <div className="flex items-center gap-2 mb-2">
-              <TrendingUp className="w-4 h-4 text-[var(--accent-purple)]" />
+              <TrendingUp className="w-4 h-4 text-[var(--accent-blue)]" />
               <span className="text-sm text-[var(--text-muted)]">ONE-TIME TOTAL</span>
             </div>
             <motion.div
@@ -247,9 +247,9 @@ export default function MessagingCopywritingPriceSidebar({
 
         {/* Monthly Section */}
         {retainer && retainer !== 'none' && monthlyTotal > 0 && (
-          <div className="pt-3 mt-3 border-t-2 border-[var(--accent-pink)]/50">
+          <div className="pt-3 mt-3 border-t-2 border-[var(--accent-teal)]/50">
             <div className="flex items-center gap-2 mb-2">
-              <Repeat className="w-4 h-4 text-[var(--accent-pink)]" />
+              <Repeat className="w-4 h-4 text-[var(--accent-teal)]" />
               <span className="text-sm text-[var(--text-muted)]">MONTHLY</span>
             </div>
             <div className="flex items-baseline gap-1">
@@ -259,7 +259,7 @@ export default function MessagingCopywritingPriceSidebar({
               key={monthlyTotal}
               initial={{ scale: 1.1 }}
               animate={{ scale: 1 }}
-              className="text-2xl font-bold text-[var(--accent-pink)]"
+              className="text-2xl font-bold text-[var(--accent-teal)]"
             >
               ${monthlyTotal.toLocaleString()}
               <span className="text-base font-normal text-[var(--text-muted)]">/mo</span>
@@ -272,7 +272,7 @@ export default function MessagingCopywritingPriceSidebar({
       {currentStep < 13 && messagingGoal && messaging && (
         <motion.button
           onClick={onGoToSummary}
-          className="w-full mt-6 flex items-center justify-center gap-2 px-4 py-3 rounded-lg bg-[var(--bg-secondary)] border border-[var(--border-subtle)] text-[var(--text-secondary)] hover:border-[var(--accent-purple)] hover:text-white transition-all"
+          className="w-full mt-6 flex items-center justify-center gap-2 px-4 py-3 rounded-lg bg-[var(--bg-secondary)] border border-[var(--border-subtle)] text-[var(--text-secondary)] hover:border-[var(--accent-blue)] hover:text-white transition-all"
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
         >

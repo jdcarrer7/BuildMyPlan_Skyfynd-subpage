@@ -43,8 +43,8 @@ export default function Step9Services() {
                 className={`
                   w-full p-4 rounded-lg text-left transition-all duration-300 flex items-center justify-between
                   ${isSelected
-                    ? 'bg-[var(--accent-purple)]/20 border border-[var(--accent-purple)]'
-                    : 'bg-[var(--bg-secondary)] border border-[var(--border-subtle)] hover:border-[var(--accent-purple)]/50'
+                    ? 'bg-[var(--accent-blue)]/20 border border-[var(--accent-blue)]'
+                    : 'bg-[var(--bg-secondary)] border border-[var(--border-subtle)] hover:border-[var(--accent-blue)]/50'
                   }
                 `}
               >
@@ -52,7 +52,7 @@ export default function Step9Services() {
                   <div className={`
                     w-6 h-6 rounded border-2 flex items-center justify-center transition-all
                     ${isSelected
-                      ? 'border-[var(--accent-purple)] bg-[var(--accent-purple)]'
+                      ? 'border-[var(--accent-blue)] bg-[var(--accent-blue)]'
                       : 'border-[var(--border-subtle)]'
                     }
                   `}>
@@ -69,7 +69,7 @@ export default function Step9Services() {
                     <p className="text-sm text-[var(--text-muted)]">{service.description || service.tooltip}</p>
                   </div>
                 </div>
-                <span className={`font-semibold ${isSelected ? 'text-[var(--accent-purple)]' : 'text-white'}`}>
+                <span className={`font-semibold ${isSelected ? 'text-[var(--accent-blue)]' : 'text-white'}`}>
                   ${service.price.toLocaleString()}
                 </span>
               </motion.button>
@@ -95,8 +95,8 @@ export default function Step9Services() {
                 className={`
                   w-full p-4 rounded-lg text-left transition-all duration-300 flex items-center justify-between
                   ${isSelected
-                    ? 'bg-[var(--accent-pink)]/20 border border-[var(--accent-pink)]'
-                    : 'bg-[var(--bg-secondary)] border border-[var(--border-subtle)] hover:border-[var(--accent-pink)]/50'
+                    ? 'bg-[var(--accent-teal)]/20 border border-[var(--accent-teal)]'
+                    : 'bg-[var(--bg-secondary)] border border-[var(--border-subtle)] hover:border-[var(--accent-teal)]/50'
                   }
                 `}
               >
@@ -104,7 +104,7 @@ export default function Step9Services() {
                   <div className={`
                     w-6 h-6 rounded border-2 flex items-center justify-center transition-all
                     ${isSelected
-                      ? 'border-[var(--accent-pink)] bg-[var(--accent-pink)]'
+                      ? 'border-[var(--accent-teal)] bg-[var(--accent-teal)]'
                       : 'border-[var(--border-subtle)]'
                     }
                   `}>
@@ -121,7 +121,7 @@ export default function Step9Services() {
                     <p className="text-sm text-[var(--text-muted)]">{service.description || service.tooltip}</p>
                   </div>
                 </div>
-                <span className={`font-semibold ${isSelected ? 'text-[var(--accent-pink)]' : 'text-white'}`}>
+                <span className={`font-semibold ${isSelected ? 'text-[var(--accent-teal)]' : 'text-white'}`}>
                   ${service.price.toLocaleString()}/mo
                 </span>
               </motion.button>

@@ -189,7 +189,7 @@ export default function Step9Summary({ showQuoteForm = false, onCloseQuoteForm }
         </div>
         <button
           onClick={() => setStep(stepNumber)}
-          className="text-[var(--text-muted)] hover:text-[var(--accent-purple)] transition-colors"
+          className="text-[var(--text-muted)] hover:text-[var(--accent-blue)] transition-colors"
         >
           <Edit2 className="w-4 h-4" />
         </button>
@@ -209,7 +209,7 @@ export default function Step9Summary({ showQuoteForm = false, onCloseQuoteForm }
         {/* Header - Always visible */}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-[var(--accent-purple)] to-[var(--accent-pink)] flex items-center justify-center">
+            <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-[var(--accent-blue)] to-[var(--accent-teal)] flex items-center justify-center">
               <Globe className="w-5 h-5 text-white" />
             </div>
             <div>
@@ -224,7 +224,7 @@ export default function Step9Summary({ showQuoteForm = false, onCloseQuoteForm }
           <div className="flex gap-2">
             <button
               onClick={handleEdit}
-              className="flex items-center gap-2 px-4 py-2 rounded-lg bg-[var(--bg-secondary)] border border-[var(--border-subtle)] text-[var(--text-secondary)] hover:text-white hover:border-[var(--accent-purple)] transition-all"
+              className="flex items-center gap-2 px-4 py-2 rounded-lg bg-[var(--bg-secondary)] border border-[var(--border-subtle)] text-[var(--text-secondary)] hover:text-white hover:border-[var(--accent-blue)] transition-all"
             >
               <Edit2 className="w-4 h-4" />
               Edit
@@ -238,7 +238,7 @@ export default function Step9Summary({ showQuoteForm = false, onCloseQuoteForm }
             </button>
             <button
               onClick={() => toggleCard('website')}
-              className="flex items-center gap-2 px-4 py-2 rounded-lg bg-[var(--bg-secondary)] border border-[var(--border-subtle)] text-[var(--text-secondary)] hover:text-white hover:border-[var(--accent-purple)] transition-all"
+              className="flex items-center gap-2 px-4 py-2 rounded-lg bg-[var(--bg-secondary)] border border-[var(--border-subtle)] text-[var(--text-secondary)] hover:text-white hover:border-[var(--accent-blue)] transition-all"
             >
               {expandedCard === 'website' ? (
                 <>
@@ -267,12 +267,12 @@ export default function Step9Summary({ showQuoteForm = false, onCloseQuoteForm }
             >
               <div className="space-y-4 mt-6">
                 {/* Project Type */}
-                <SummarySection title="Project Type" icon={<FileText className="w-5 h-5 text-[var(--accent-purple)]" />} stepNumber={1}>
+                <SummarySection title="Project Type" icon={<FileText className="w-5 h-5 text-[var(--accent-blue)]" />} stepNumber={1}>
                   <p className="text-[var(--text-secondary)]">{projectTypeLabel}</p>
                 </SummarySection>
 
                 {/* Site Size */}
-                <SummarySection title="Site Size" icon={<Layers className="w-5 h-5 text-[var(--accent-purple)]" />} stepNumber={2}>
+                <SummarySection title="Site Size" icon={<Layers className="w-5 h-5 text-[var(--accent-blue)]" />} stepNumber={2}>
                   <div className="flex justify-between">
                     <span className="text-[var(--text-secondary)]">{siteSizeLabel}</span>
                     {formatPrice(siteSizePrice)}
@@ -280,7 +280,7 @@ export default function Step9Summary({ showQuoteForm = false, onCloseQuoteForm }
                 </SummarySection>
 
                 {/* Design */}
-                <SummarySection title="Design Style" icon={<Palette className="w-5 h-5 text-[var(--accent-purple)]" />} stepNumber={3}>
+                <SummarySection title="Design Style" icon={<Palette className="w-5 h-5 text-[var(--accent-blue)]" />} stepNumber={3}>
                   <div className="flex justify-between">
                     <span className="text-[var(--text-secondary)]">{designLabel}</span>
                     {formatPrice(designPrice)}
@@ -288,7 +288,7 @@ export default function Step9Summary({ showQuoteForm = false, onCloseQuoteForm }
                 </SummarySection>
 
                 {/* CMS */}
-                <SummarySection title="Content Management" icon={<Database className="w-5 h-5 text-[var(--accent-purple)]" />} stepNumber={4}>
+                <SummarySection title="Content Management" icon={<Database className="w-5 h-5 text-[var(--accent-blue)]" />} stepNumber={4}>
                   <div className="flex justify-between">
                     <span className="text-[var(--text-secondary)]">{cmsLabel}</span>
                     {cmsPrice === 0 ? (
@@ -300,7 +300,7 @@ export default function Step9Summary({ showQuoteForm = false, onCloseQuoteForm }
                 </SummarySection>
 
                 {/* Features */}
-                <SummarySection title="Features" icon={<Wrench className="w-5 h-5 text-[var(--accent-purple)]" />} stepNumber={5}>
+                <SummarySection title="Features" icon={<Wrench className="w-5 h-5 text-[var(--accent-blue)]" />} stepNumber={5}>
                   {selectedFeatures.length === 0 ? (
                     <p className="text-[var(--text-muted)] text-sm">No features selected</p>
                   ) : (
@@ -328,7 +328,7 @@ export default function Step9Summary({ showQuoteForm = false, onCloseQuoteForm }
                 </SummarySection>
 
                 {/* AI Features */}
-                <SummarySection title="AI Features" icon={<Sparkles className="w-5 h-5 text-[var(--accent-purple)]" />} stepNumber={6}>
+                <SummarySection title="AI Features" icon={<Sparkles className="w-5 h-5 text-[var(--accent-blue)]" />} stepNumber={6}>
                   {selectedAIFeatures.length === 0 ? (
                     <p className="text-[var(--text-muted)] text-sm">No AI features selected</p>
                   ) : (
@@ -356,7 +356,7 @@ export default function Step9Summary({ showQuoteForm = false, onCloseQuoteForm }
                                 <span className="text-[var(--text-muted)]">
                                   Usage: {usageOption?.label}
                                 </span>
-                                <span className="text-[var(--accent-pink)]">+${f.usagePrice}/mo</span>
+                                <span className="text-[var(--accent-teal)]">+${f.usagePrice}/mo</span>
                               </div>
                             )}
                             {f.usagePrice === 0 && (
@@ -375,7 +375,7 @@ export default function Step9Summary({ showQuoteForm = false, onCloseQuoteForm }
                 </SummarySection>
 
                 {/* Additional Services */}
-                <SummarySection title="Additional Services" icon={<Check className="w-5 h-5 text-[var(--accent-purple)]" />} stepNumber={7}>
+                <SummarySection title="Additional Services" icon={<Check className="w-5 h-5 text-[var(--accent-blue)]" />} stepNumber={7}>
                   {selectedServices.length === 0 ? (
                     <p className="text-[var(--text-muted)] text-sm">No additional services selected</p>
                   ) : (
@@ -399,7 +399,7 @@ export default function Step9Summary({ showQuoteForm = false, onCloseQuoteForm }
                 </SummarySection>
 
                 {/* Timeline */}
-                <SummarySection title="Timeline" icon={<Clock className="w-5 h-5 text-[var(--accent-purple)]" />} stepNumber={8}>
+                <SummarySection title="Timeline" icon={<Clock className="w-5 h-5 text-[var(--accent-blue)]" />} stepNumber={8}>
                   <div className="flex justify-between">
                     <span className="text-[var(--text-secondary)]">{timelineLabel}</span>
                     {rushFee > 0 ? (
@@ -417,7 +417,7 @@ export default function Step9Summary({ showQuoteForm = false, onCloseQuoteForm }
         </AnimatePresence>
 
         {/* Totals - Always visible */}
-        <div className="mt-6 p-4 bg-gradient-to-r from-[var(--accent-purple)]/20 to-[var(--accent-pink)]/20 border border-[var(--accent-purple)]/30 rounded-lg">
+        <div className="mt-6 p-4 bg-gradient-to-r from-[var(--accent-blue)]/20 to-[var(--accent-teal)]/20 border border-[var(--accent-blue)]/30 rounded-lg">
           {hasCustomQuote ? (
             <div className="flex items-start gap-3">
               <AlertCircle className="w-5 h-5 text-[var(--accent-orange)] shrink-0 mt-0.5" />
@@ -444,7 +444,7 @@ export default function Step9Summary({ showQuoteForm = false, onCloseQuoteForm }
               <div className="flex justify-between items-center mt-2 pt-2 border-t border-[var(--border-subtle)]">
                 <span className="text-white font-semibold">Monthly Total</span>
                 {monthlyRecurring > 0 ? (
-                  <span className="text-lg font-semibold text-[var(--accent-pink)]">${monthlyRecurring}/mo</span>
+                  <span className="text-lg font-semibold text-[var(--accent-teal)]">${monthlyRecurring}/mo</span>
                 ) : (
                   <span className="text-[var(--text-muted)] text-lg">$0/mo</span>
                 )}
@@ -471,7 +471,7 @@ export default function Step9Summary({ showQuoteForm = false, onCloseQuoteForm }
             {/* Header - Always visible */}
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-[var(--accent-purple)] to-[var(--accent-pink)] flex items-center justify-center">
+                <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-[var(--accent-blue)] to-[var(--accent-teal)] flex items-center justify-center">
                   <Smartphone className="w-5 h-5 text-white" />
                 </div>
                 <div>
@@ -486,7 +486,7 @@ export default function Step9Summary({ showQuoteForm = false, onCloseQuoteForm }
               <div className="flex gap-2">
                 <Link
                   href={serviceMetadata[service.type].builderPath}
-                  className="flex items-center gap-2 px-4 py-2 rounded-lg bg-[var(--bg-secondary)] border border-[var(--border-subtle)] text-[var(--text-secondary)] hover:text-white hover:border-[var(--accent-purple)] transition-all"
+                  className="flex items-center gap-2 px-4 py-2 rounded-lg bg-[var(--bg-secondary)] border border-[var(--border-subtle)] text-[var(--text-secondary)] hover:text-white hover:border-[var(--accent-blue)] transition-all"
                 >
                   <Edit2 className="w-4 h-4" />
                   Edit
@@ -500,7 +500,7 @@ export default function Step9Summary({ showQuoteForm = false, onCloseQuoteForm }
                 </button>
                 <button
                   onClick={() => toggleCard('app')}
-                  className="flex items-center gap-2 px-4 py-2 rounded-lg bg-[var(--bg-secondary)] border border-[var(--border-subtle)] text-[var(--text-secondary)] hover:text-white hover:border-[var(--accent-purple)] transition-all"
+                  className="flex items-center gap-2 px-4 py-2 rounded-lg bg-[var(--bg-secondary)] border border-[var(--border-subtle)] text-[var(--text-secondary)] hover:text-white hover:border-[var(--accent-blue)] transition-all"
                 >
                   {isOpen ? (
                     <>
@@ -532,10 +532,10 @@ export default function Step9Summary({ showQuoteForm = false, onCloseQuoteForm }
                     <div className="p-4 bg-[var(--bg-secondary)] rounded-lg">
                       <div className="flex items-center justify-between mb-3">
                         <div className="flex items-center gap-2">
-                          <FileText className="w-5 h-5 text-[var(--accent-purple)]" />
+                          <FileText className="w-5 h-5 text-[var(--accent-blue)]" />
                           <h3 className="font-medium text-white">App Type</h3>
                         </div>
-                        <Link href="/build-my-app?step=1" className="text-[var(--text-muted)] hover:text-[var(--accent-purple)] transition-colors">
+                        <Link href="/build-my-app?step=1" className="text-[var(--text-muted)] hover:text-[var(--accent-blue)] transition-colors">
                           <Edit2 className="w-4 h-4" />
                         </Link>
                       </div>
@@ -546,10 +546,10 @@ export default function Step9Summary({ showQuoteForm = false, onCloseQuoteForm }
                     <div className="p-4 bg-[var(--bg-secondary)] rounded-lg">
                       <div className="flex items-center justify-between mb-3">
                         <div className="flex items-center gap-2">
-                          <Smartphone className="w-5 h-5 text-[var(--accent-purple)]" />
+                          <Smartphone className="w-5 h-5 text-[var(--accent-blue)]" />
                           <h3 className="font-medium text-white">Platform</h3>
                         </div>
-                        <Link href="/build-my-app?step=2" className="text-[var(--text-muted)] hover:text-[var(--accent-purple)] transition-colors">
+                        <Link href="/build-my-app?step=2" className="text-[var(--text-muted)] hover:text-[var(--accent-blue)] transition-colors">
                           <Edit2 className="w-4 h-4" />
                         </Link>
                       </div>
@@ -563,10 +563,10 @@ export default function Step9Summary({ showQuoteForm = false, onCloseQuoteForm }
                     <div className="p-4 bg-[var(--bg-secondary)] rounded-lg">
                       <div className="flex items-center justify-between mb-3">
                         <div className="flex items-center gap-2">
-                          <Layers className="w-5 h-5 text-[var(--accent-purple)]" />
+                          <Layers className="w-5 h-5 text-[var(--accent-blue)]" />
                           <h3 className="font-medium text-white">Screens</h3>
                         </div>
-                        <Link href="/build-my-app?step=3" className="text-[var(--text-muted)] hover:text-[var(--accent-purple)] transition-colors">
+                        <Link href="/build-my-app?step=3" className="text-[var(--text-muted)] hover:text-[var(--accent-blue)] transition-colors">
                           <Edit2 className="w-4 h-4" />
                         </Link>
                       </div>
@@ -580,10 +580,10 @@ export default function Step9Summary({ showQuoteForm = false, onCloseQuoteForm }
                     <div className="p-4 bg-[var(--bg-secondary)] rounded-lg">
                       <div className="flex items-center justify-between mb-3">
                         <div className="flex items-center gap-2">
-                          <Palette className="w-5 h-5 text-[var(--accent-purple)]" />
+                          <Palette className="w-5 h-5 text-[var(--accent-blue)]" />
                           <h3 className="font-medium text-white">Design</h3>
                         </div>
-                        <Link href="/build-my-app?step=4" className="text-[var(--text-muted)] hover:text-[var(--accent-purple)] transition-colors">
+                        <Link href="/build-my-app?step=4" className="text-[var(--text-muted)] hover:text-[var(--accent-blue)] transition-colors">
                           <Edit2 className="w-4 h-4" />
                         </Link>
                       </div>
@@ -597,10 +597,10 @@ export default function Step9Summary({ showQuoteForm = false, onCloseQuoteForm }
                     <div className="p-4 bg-[var(--bg-secondary)] rounded-lg">
                       <div className="flex items-center justify-between mb-3">
                         <div className="flex items-center gap-2">
-                          <Shield className="w-5 h-5 text-[var(--accent-purple)]" />
+                          <Shield className="w-5 h-5 text-[var(--accent-blue)]" />
                           <h3 className="font-medium text-white">Authentication</h3>
                         </div>
-                        <Link href="/build-my-app?step=5" className="text-[var(--text-muted)] hover:text-[var(--accent-purple)] transition-colors">
+                        <Link href="/build-my-app?step=5" className="text-[var(--text-muted)] hover:text-[var(--accent-blue)] transition-colors">
                           <Edit2 className="w-4 h-4" />
                         </Link>
                       </div>
@@ -614,10 +614,10 @@ export default function Step9Summary({ showQuoteForm = false, onCloseQuoteForm }
                     <div className="p-4 bg-[var(--bg-secondary)] rounded-lg">
                       <div className="flex items-center justify-between mb-3">
                         <div className="flex items-center gap-2">
-                          <Server className="w-5 h-5 text-[var(--accent-purple)]" />
+                          <Server className="w-5 h-5 text-[var(--accent-blue)]" />
                           <h3 className="font-medium text-white">Backend</h3>
                         </div>
-                        <Link href="/build-my-app?step=6" className="text-[var(--text-muted)] hover:text-[var(--accent-purple)] transition-colors">
+                        <Link href="/build-my-app?step=6" className="text-[var(--text-muted)] hover:text-[var(--accent-blue)] transition-colors">
                           <Edit2 className="w-4 h-4" />
                         </Link>
                       </div>
@@ -631,10 +631,10 @@ export default function Step9Summary({ showQuoteForm = false, onCloseQuoteForm }
                     <div className="p-4 bg-[var(--bg-secondary)] rounded-lg">
                       <div className="flex items-center justify-between mb-3">
                         <div className="flex items-center gap-2">
-                          <Zap className="w-5 h-5 text-[var(--accent-purple)]" />
+                          <Zap className="w-5 h-5 text-[var(--accent-blue)]" />
                           <h3 className="font-medium text-white">Features</h3>
                         </div>
-                        <Link href="/build-my-app?step=7" className="text-[var(--text-muted)] hover:text-[var(--accent-purple)] transition-colors">
+                        <Link href="/build-my-app?step=7" className="text-[var(--text-muted)] hover:text-[var(--accent-blue)] transition-colors">
                           <Edit2 className="w-4 h-4" />
                         </Link>
                       </div>
@@ -668,10 +668,10 @@ export default function Step9Summary({ showQuoteForm = false, onCloseQuoteForm }
                     <div className="p-4 bg-[var(--bg-secondary)] rounded-lg">
                       <div className="flex items-center justify-between mb-3">
                         <div className="flex items-center gap-2">
-                          <Sparkles className="w-5 h-5 text-[var(--accent-purple)]" />
+                          <Sparkles className="w-5 h-5 text-[var(--accent-blue)]" />
                           <h3 className="font-medium text-white">AI Features</h3>
                         </div>
-                        <Link href="/build-my-app?step=8" className="text-[var(--text-muted)] hover:text-[var(--accent-purple)] transition-colors">
+                        <Link href="/build-my-app?step=8" className="text-[var(--text-muted)] hover:text-[var(--accent-blue)] transition-colors">
                           <Edit2 className="w-4 h-4" />
                         </Link>
                       </div>
@@ -702,7 +702,7 @@ export default function Step9Summary({ showQuoteForm = false, onCloseQuoteForm }
                                     <span className="text-[var(--text-muted)]">
                                       Usage: {usageOption?.label}
                                     </span>
-                                    <span className="text-[var(--accent-pink)]">+${f.usagePrice}/mo</span>
+                                    <span className="text-[var(--accent-teal)]">+${f.usagePrice}/mo</span>
                                   </div>
                                 )}
                                 {f.usagePrice === 0 && (
@@ -724,10 +724,10 @@ export default function Step9Summary({ showQuoteForm = false, onCloseQuoteForm }
                     <div className="p-4 bg-[var(--bg-secondary)] rounded-lg">
                       <div className="flex items-center justify-between mb-3">
                         <div className="flex items-center gap-2">
-                          <Check className="w-5 h-5 text-[var(--accent-purple)]" />
+                          <Check className="w-5 h-5 text-[var(--accent-blue)]" />
                           <h3 className="font-medium text-white">Additional Services</h3>
                         </div>
-                        <Link href="/build-my-app?step=9" className="text-[var(--text-muted)] hover:text-[var(--accent-purple)] transition-colors">
+                        <Link href="/build-my-app?step=9" className="text-[var(--text-muted)] hover:text-[var(--accent-blue)] transition-colors">
                           <Edit2 className="w-4 h-4" />
                         </Link>
                       </div>
@@ -757,10 +757,10 @@ export default function Step9Summary({ showQuoteForm = false, onCloseQuoteForm }
                     <div className="p-4 bg-[var(--bg-secondary)] rounded-lg">
                       <div className="flex items-center justify-between mb-3">
                         <div className="flex items-center gap-2">
-                          <Clock className="w-5 h-5 text-[var(--accent-purple)]" />
+                          <Clock className="w-5 h-5 text-[var(--accent-blue)]" />
                           <h3 className="font-medium text-white">Timeline</h3>
                         </div>
-                        <Link href="/build-my-app?step=10" className="text-[var(--text-muted)] hover:text-[var(--accent-purple)] transition-colors">
+                        <Link href="/build-my-app?step=10" className="text-[var(--text-muted)] hover:text-[var(--accent-blue)] transition-colors">
                           <Edit2 className="w-4 h-4" />
                         </Link>
                       </div>
@@ -781,7 +781,7 @@ export default function Step9Summary({ showQuoteForm = false, onCloseQuoteForm }
             </AnimatePresence>
 
             {/* Totals - Always visible */}
-            <div className="mt-6 p-4 bg-gradient-to-r from-[var(--accent-purple)]/20 to-[var(--accent-pink)]/20 border border-[var(--accent-purple)]/30 rounded-lg">
+            <div className="mt-6 p-4 bg-gradient-to-r from-[var(--accent-blue)]/20 to-[var(--accent-teal)]/20 border border-[var(--accent-blue)]/30 rounded-lg">
               {config.hasCustomQuote ? (
                 <div className="flex items-start gap-3">
                   <AlertCircle className="w-5 h-5 text-[var(--accent-orange)] shrink-0 mt-0.5" />
@@ -800,7 +800,7 @@ export default function Step9Summary({ showQuoteForm = false, onCloseQuoteForm }
                   <div className="flex justify-between items-center mt-2 pt-2 border-t border-[var(--border-subtle)]">
                     <span className="text-white font-semibold">Monthly Total</span>
                     {config.monthlyTotal > 0 ? (
-                      <span className="text-lg font-semibold text-[var(--accent-pink)]">${config.monthlyTotal}/mo</span>
+                      <span className="text-lg font-semibold text-[var(--accent-teal)]">${config.monthlyTotal}/mo</span>
                     ) : (
                       <span className="text-[var(--text-muted)] text-lg">$0/mo</span>
                     )}
@@ -823,7 +823,7 @@ export default function Step9Summary({ showQuoteForm = false, onCloseQuoteForm }
           <div key={service.type} className="card p-6">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-[var(--accent-purple)] to-[var(--accent-pink)] flex items-center justify-center">
+                <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-[var(--accent-blue)] to-[var(--accent-teal)] flex items-center justify-center">
                   <Film className="w-5 h-5 text-white" />
                 </div>
                 <div>
@@ -838,7 +838,7 @@ export default function Step9Summary({ showQuoteForm = false, onCloseQuoteForm }
               <div className="flex gap-2">
                 <Link
                   href={serviceMetadata[service.type].builderPath}
-                  className="flex items-center gap-2 px-4 py-2 rounded-lg bg-[var(--bg-secondary)] border border-[var(--border-subtle)] text-[var(--text-secondary)] hover:text-white hover:border-[var(--accent-purple)] transition-all"
+                  className="flex items-center gap-2 px-4 py-2 rounded-lg bg-[var(--bg-secondary)] border border-[var(--border-subtle)] text-[var(--text-secondary)] hover:text-white hover:border-[var(--accent-blue)] transition-all"
                 >
                   <Edit2 className="w-4 h-4" />
                   Edit
@@ -852,7 +852,7 @@ export default function Step9Summary({ showQuoteForm = false, onCloseQuoteForm }
                 </button>
                 <button
                   onClick={() => toggleCard('animation')}
-                  className="flex items-center gap-2 px-4 py-2 rounded-lg bg-[var(--bg-secondary)] border border-[var(--border-subtle)] text-[var(--text-secondary)] hover:text-white hover:border-[var(--accent-purple)] transition-all"
+                  className="flex items-center gap-2 px-4 py-2 rounded-lg bg-[var(--bg-secondary)] border border-[var(--border-subtle)] text-[var(--text-secondary)] hover:text-white hover:border-[var(--accent-blue)] transition-all"
                 >
                   {isOpen ? (
                     <>
@@ -881,14 +881,14 @@ export default function Step9Summary({ showQuoteForm = false, onCloseQuoteForm }
                   <div className="space-y-4 mt-6">
                     <div className="p-4 bg-[var(--bg-secondary)] rounded-lg">
                       <div className="flex items-center gap-2 mb-3">
-                        <Film className="w-5 h-5 text-[var(--accent-purple)]" />
+                        <Film className="w-5 h-5 text-[var(--accent-blue)]" />
                         <h3 className="font-medium text-white">Animation Type</h3>
                       </div>
                       <p className="text-[var(--text-secondary)]">{animTypeLabel}</p>
                     </div>
                     <div className="p-4 bg-[var(--bg-secondary)] rounded-lg">
                       <div className="flex items-center gap-2 mb-3">
-                        <Clock className="w-5 h-5 text-[var(--accent-purple)]" />
+                        <Clock className="w-5 h-5 text-[var(--accent-blue)]" />
                         <h3 className="font-medium text-white">Timeline</h3>
                       </div>
                       <div className="flex justify-between">
@@ -907,7 +907,7 @@ export default function Step9Summary({ showQuoteForm = false, onCloseQuoteForm }
               )}
             </AnimatePresence>
 
-            <div className="mt-6 p-4 bg-gradient-to-r from-[var(--accent-purple)]/20 to-[var(--accent-pink)]/20 border border-[var(--accent-purple)]/30 rounded-lg">
+            <div className="mt-6 p-4 bg-gradient-to-r from-[var(--accent-blue)]/20 to-[var(--accent-teal)]/20 border border-[var(--accent-blue)]/30 rounded-lg">
               {config.hasCustomQuote ? (
                 <div className="flex items-start gap-3">
                   <AlertCircle className="w-5 h-5 text-[var(--accent-orange)] shrink-0 mt-0.5" />
@@ -939,7 +939,7 @@ export default function Step9Summary({ showQuoteForm = false, onCloseQuoteForm }
           <div key={service.type} className="card p-6">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-[var(--accent-purple)] to-[var(--accent-pink)] flex items-center justify-center">
+                <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-[var(--accent-blue)] to-[var(--accent-teal)] flex items-center justify-center">
                   <Image className="w-5 h-5 text-white" />
                 </div>
                 <div>
@@ -954,7 +954,7 @@ export default function Step9Summary({ showQuoteForm = false, onCloseQuoteForm }
               <div className="flex gap-2">
                 <Link
                   href={serviceMetadata[service.type].builderPath}
-                  className="flex items-center gap-2 px-4 py-2 rounded-lg bg-[var(--bg-secondary)] border border-[var(--border-subtle)] text-[var(--text-secondary)] hover:text-white hover:border-[var(--accent-purple)] transition-all"
+                  className="flex items-center gap-2 px-4 py-2 rounded-lg bg-[var(--bg-secondary)] border border-[var(--border-subtle)] text-[var(--text-secondary)] hover:text-white hover:border-[var(--accent-blue)] transition-all"
                 >
                   <Edit2 className="w-4 h-4" />
                   Edit
@@ -968,7 +968,7 @@ export default function Step9Summary({ showQuoteForm = false, onCloseQuoteForm }
                 </button>
                 <button
                   onClick={() => toggleCard('image')}
-                  className="flex items-center gap-2 px-4 py-2 rounded-lg bg-[var(--bg-secondary)] border border-[var(--border-subtle)] text-[var(--text-secondary)] hover:text-white hover:border-[var(--accent-purple)] transition-all"
+                  className="flex items-center gap-2 px-4 py-2 rounded-lg bg-[var(--bg-secondary)] border border-[var(--border-subtle)] text-[var(--text-secondary)] hover:text-white hover:border-[var(--accent-blue)] transition-all"
                 >
                   {isOpen ? (
                     <>
@@ -997,14 +997,14 @@ export default function Step9Summary({ showQuoteForm = false, onCloseQuoteForm }
                   <div className="space-y-4 mt-6">
                     <div className="p-4 bg-[var(--bg-secondary)] rounded-lg">
                       <div className="flex items-center gap-2 mb-3">
-                        <Image className="w-5 h-5 text-[var(--accent-purple)]" />
+                        <Image className="w-5 h-5 text-[var(--accent-blue)]" />
                         <h3 className="font-medium text-white">Image Type</h3>
                       </div>
                       <p className="text-[var(--text-secondary)]">{imageTypeLabel}</p>
                     </div>
                     <div className="p-4 bg-[var(--bg-secondary)] rounded-lg">
                       <div className="flex items-center gap-2 mb-3">
-                        <Clock className="w-5 h-5 text-[var(--accent-purple)]" />
+                        <Clock className="w-5 h-5 text-[var(--accent-blue)]" />
                         <h3 className="font-medium text-white">Timeline</h3>
                       </div>
                       <div className="flex justify-between">
@@ -1023,7 +1023,7 @@ export default function Step9Summary({ showQuoteForm = false, onCloseQuoteForm }
               )}
             </AnimatePresence>
 
-            <div className="mt-6 p-4 bg-gradient-to-r from-[var(--accent-purple)]/20 to-[var(--accent-pink)]/20 border border-[var(--accent-purple)]/30 rounded-lg">
+            <div className="mt-6 p-4 bg-gradient-to-r from-[var(--accent-blue)]/20 to-[var(--accent-teal)]/20 border border-[var(--accent-blue)]/30 rounded-lg">
               {config.hasCustomQuote ? (
                 <div className="flex items-start gap-3">
                   <AlertCircle className="w-5 h-5 text-[var(--accent-orange)] shrink-0 mt-0.5" />
@@ -1055,7 +1055,7 @@ export default function Step9Summary({ showQuoteForm = false, onCloseQuoteForm }
           <div key={service.type} className="card p-6">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-[var(--accent-purple)] to-[var(--accent-pink)] flex items-center justify-center">
+                <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-[var(--accent-blue)] to-[var(--accent-teal)] flex items-center justify-center">
                   <Music className="w-5 h-5 text-white" />
                 </div>
                 <div>
@@ -1070,7 +1070,7 @@ export default function Step9Summary({ showQuoteForm = false, onCloseQuoteForm }
               <div className="flex gap-2">
                 <Link
                   href={serviceMetadata[service.type].builderPath}
-                  className="flex items-center gap-2 px-4 py-2 rounded-lg bg-[var(--bg-secondary)] border border-[var(--border-subtle)] text-[var(--text-secondary)] hover:text-white hover:border-[var(--accent-purple)] transition-all"
+                  className="flex items-center gap-2 px-4 py-2 rounded-lg bg-[var(--bg-secondary)] border border-[var(--border-subtle)] text-[var(--text-secondary)] hover:text-white hover:border-[var(--accent-blue)] transition-all"
                 >
                   <Edit2 className="w-4 h-4" />
                   Edit
@@ -1084,7 +1084,7 @@ export default function Step9Summary({ showQuoteForm = false, onCloseQuoteForm }
                 </button>
                 <button
                   onClick={() => toggleCard('sound')}
-                  className="flex items-center gap-2 px-4 py-2 rounded-lg bg-[var(--bg-secondary)] border border-[var(--border-subtle)] text-[var(--text-secondary)] hover:text-white hover:border-[var(--accent-purple)] transition-all"
+                  className="flex items-center gap-2 px-4 py-2 rounded-lg bg-[var(--bg-secondary)] border border-[var(--border-subtle)] text-[var(--text-secondary)] hover:text-white hover:border-[var(--accent-blue)] transition-all"
                 >
                   {isOpen ? (
                     <>
@@ -1113,14 +1113,14 @@ export default function Step9Summary({ showQuoteForm = false, onCloseQuoteForm }
                   <div className="space-y-4 mt-6">
                     <div className="p-4 bg-[var(--bg-secondary)] rounded-lg">
                       <div className="flex items-center gap-2 mb-3">
-                        <Music className="w-5 h-5 text-[var(--accent-purple)]" />
+                        <Music className="w-5 h-5 text-[var(--accent-blue)]" />
                         <h3 className="font-medium text-white">Sound Type</h3>
                       </div>
                       <p className="text-[var(--text-secondary)]">{soundTypeLabel}</p>
                     </div>
                     <div className="p-4 bg-[var(--bg-secondary)] rounded-lg">
                       <div className="flex items-center gap-2 mb-3">
-                        <Clock className="w-5 h-5 text-[var(--accent-purple)]" />
+                        <Clock className="w-5 h-5 text-[var(--accent-blue)]" />
                         <h3 className="font-medium text-white">Timeline</h3>
                       </div>
                       <div className="flex justify-between">
@@ -1139,7 +1139,7 @@ export default function Step9Summary({ showQuoteForm = false, onCloseQuoteForm }
               )}
             </AnimatePresence>
 
-            <div className="mt-6 p-4 bg-gradient-to-r from-[var(--accent-purple)]/20 to-[var(--accent-pink)]/20 border border-[var(--accent-purple)]/30 rounded-lg">
+            <div className="mt-6 p-4 bg-gradient-to-r from-[var(--accent-blue)]/20 to-[var(--accent-teal)]/20 border border-[var(--accent-blue)]/30 rounded-lg">
               {config.hasCustomQuote ? (
                 <div className="flex items-start gap-3">
                   <AlertCircle className="w-5 h-5 text-[var(--accent-orange)] shrink-0 mt-0.5" />
@@ -1171,7 +1171,7 @@ export default function Step9Summary({ showQuoteForm = false, onCloseQuoteForm }
           <div key={service.type} className="card p-6">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-[var(--accent-purple)] to-[var(--accent-pink)] flex items-center justify-center">
+                <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-[var(--accent-blue)] to-[var(--accent-teal)] flex items-center justify-center">
                   <Megaphone className="w-5 h-5 text-white" />
                 </div>
                 <div>
@@ -1186,7 +1186,7 @@ export default function Step9Summary({ showQuoteForm = false, onCloseQuoteForm }
               <div className="flex gap-2">
                 <Link
                   href={serviceMetadata[service.type].builderPath}
-                  className="flex items-center gap-2 px-4 py-2 rounded-lg bg-[var(--bg-secondary)] border border-[var(--border-subtle)] text-[var(--text-secondary)] hover:text-white hover:border-[var(--accent-purple)] transition-all"
+                  className="flex items-center gap-2 px-4 py-2 rounded-lg bg-[var(--bg-secondary)] border border-[var(--border-subtle)] text-[var(--text-secondary)] hover:text-white hover:border-[var(--accent-blue)] transition-all"
                 >
                   <Edit2 className="w-4 h-4" />
                   Edit
@@ -1200,7 +1200,7 @@ export default function Step9Summary({ showQuoteForm = false, onCloseQuoteForm }
                 </button>
                 <button
                   onClick={() => toggleCard('paid-media')}
-                  className="flex items-center gap-2 px-4 py-2 rounded-lg bg-[var(--bg-secondary)] border border-[var(--border-subtle)] text-[var(--text-secondary)] hover:text-white hover:border-[var(--accent-purple)] transition-all"
+                  className="flex items-center gap-2 px-4 py-2 rounded-lg bg-[var(--bg-secondary)] border border-[var(--border-subtle)] text-[var(--text-secondary)] hover:text-white hover:border-[var(--accent-blue)] transition-all"
                 >
                   {isOpen ? (
                     <>
@@ -1229,14 +1229,14 @@ export default function Step9Summary({ showQuoteForm = false, onCloseQuoteForm }
                   <div className="space-y-4 mt-6">
                     <div className="p-4 bg-[var(--bg-secondary)] rounded-lg">
                       <div className="flex items-center gap-2 mb-3">
-                        <Megaphone className="w-5 h-5 text-[var(--accent-purple)]" />
+                        <Megaphone className="w-5 h-5 text-[var(--accent-blue)]" />
                         <h3 className="font-medium text-white">Campaign Type</h3>
                       </div>
                       <p className="text-[var(--text-secondary)]">{campaignTypeLabel}</p>
                     </div>
                     <div className="p-4 bg-[var(--bg-secondary)] rounded-lg">
                       <div className="flex items-center gap-2 mb-3">
-                        <Clock className="w-5 h-5 text-[var(--accent-purple)]" />
+                        <Clock className="w-5 h-5 text-[var(--accent-blue)]" />
                         <h3 className="font-medium text-white">Duration</h3>
                       </div>
                       <p className="text-[var(--text-secondary)]">{paidMediaDurationLabel}</p>
@@ -1246,7 +1246,7 @@ export default function Step9Summary({ showQuoteForm = false, onCloseQuoteForm }
               )}
             </AnimatePresence>
 
-            <div className="mt-6 p-4 bg-gradient-to-r from-[var(--accent-purple)]/20 to-[var(--accent-pink)]/20 border border-[var(--accent-purple)]/30 rounded-lg">
+            <div className="mt-6 p-4 bg-gradient-to-r from-[var(--accent-blue)]/20 to-[var(--accent-teal)]/20 border border-[var(--accent-blue)]/30 rounded-lg">
               {config.hasCustomQuote ? (
                 <div className="flex items-start gap-3">
                   <AlertCircle className="w-5 h-5 text-[var(--accent-orange)] shrink-0 mt-0.5" />
@@ -1265,7 +1265,7 @@ export default function Step9Summary({ showQuoteForm = false, onCloseQuoteForm }
                   {config.monthlyTotal > 0 && (
                     <div className="flex justify-between items-center mt-2 pt-2 border-t border-[var(--border-subtle)]">
                       <span className="text-white font-semibold">Monthly Total</span>
-                      <span className="text-lg font-semibold text-[var(--accent-pink)]">${config.monthlyTotal.toFixed(2)}/mo</span>
+                      <span className="text-lg font-semibold text-[var(--accent-teal)]">${config.monthlyTotal.toFixed(2)}/mo</span>
                     </div>
                   )}
                 </>
@@ -1286,7 +1286,7 @@ export default function Step9Summary({ showQuoteForm = false, onCloseQuoteForm }
           <div key={service.type} className="card p-6">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-[var(--accent-purple)] to-[var(--accent-pink)] flex items-center justify-center">
+                <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-[var(--accent-blue)] to-[var(--accent-teal)] flex items-center justify-center">
                   <Share2 className="w-5 h-5 text-white" />
                 </div>
                 <div>
@@ -1301,7 +1301,7 @@ export default function Step9Summary({ showQuoteForm = false, onCloseQuoteForm }
               <div className="flex gap-2">
                 <Link
                   href={serviceMetadata[service.type].builderPath}
-                  className="flex items-center gap-2 px-4 py-2 rounded-lg bg-[var(--bg-secondary)] border border-[var(--border-subtle)] text-[var(--text-secondary)] hover:text-white hover:border-[var(--accent-purple)] transition-all"
+                  className="flex items-center gap-2 px-4 py-2 rounded-lg bg-[var(--bg-secondary)] border border-[var(--border-subtle)] text-[var(--text-secondary)] hover:text-white hover:border-[var(--accent-blue)] transition-all"
                 >
                   <Edit2 className="w-4 h-4" />
                   Edit
@@ -1315,7 +1315,7 @@ export default function Step9Summary({ showQuoteForm = false, onCloseQuoteForm }
                 </button>
                 <button
                   onClick={() => toggleCard('social-media')}
-                  className="flex items-center gap-2 px-4 py-2 rounded-lg bg-[var(--bg-secondary)] border border-[var(--border-subtle)] text-[var(--text-secondary)] hover:text-white hover:border-[var(--accent-purple)] transition-all"
+                  className="flex items-center gap-2 px-4 py-2 rounded-lg bg-[var(--bg-secondary)] border border-[var(--border-subtle)] text-[var(--text-secondary)] hover:text-white hover:border-[var(--accent-blue)] transition-all"
                 >
                   {isOpen ? (
                     <>
@@ -1344,14 +1344,14 @@ export default function Step9Summary({ showQuoteForm = false, onCloseQuoteForm }
                   <div className="space-y-4 mt-6">
                     <div className="p-4 bg-[var(--bg-secondary)] rounded-lg">
                       <div className="flex items-center gap-2 mb-3">
-                        <Share2 className="w-5 h-5 text-[var(--accent-purple)]" />
+                        <Share2 className="w-5 h-5 text-[var(--accent-blue)]" />
                         <h3 className="font-medium text-white">Management Goal</h3>
                       </div>
                       <p className="text-[var(--text-secondary)]">{socialGoalLabel}</p>
                     </div>
                     <div className="p-4 bg-[var(--bg-secondary)] rounded-lg">
                       <div className="flex items-center gap-2 mb-3">
-                        <Clock className="w-5 h-5 text-[var(--accent-purple)]" />
+                        <Clock className="w-5 h-5 text-[var(--accent-blue)]" />
                         <h3 className="font-medium text-white">Duration</h3>
                       </div>
                       <p className="text-[var(--text-secondary)]">{socialDurationLabel}</p>
@@ -1361,7 +1361,7 @@ export default function Step9Summary({ showQuoteForm = false, onCloseQuoteForm }
               )}
             </AnimatePresence>
 
-            <div className="mt-6 p-4 bg-gradient-to-r from-[var(--accent-purple)]/20 to-[var(--accent-pink)]/20 border border-[var(--accent-purple)]/30 rounded-lg">
+            <div className="mt-6 p-4 bg-gradient-to-r from-[var(--accent-blue)]/20 to-[var(--accent-teal)]/20 border border-[var(--accent-blue)]/30 rounded-lg">
               {config.hasCustomQuote ? (
                 <div className="flex items-start gap-3">
                   <AlertCircle className="w-5 h-5 text-[var(--accent-orange)] shrink-0 mt-0.5" />
@@ -1380,13 +1380,13 @@ export default function Step9Summary({ showQuoteForm = false, onCloseQuoteForm }
                   {config.monthlyTotal > 0 && (
                     <div className="flex justify-between items-center mt-2 pt-2 border-t border-[var(--border-subtle)]">
                       <span className="text-white font-semibold">Monthly Total</span>
-                      <span className="text-lg font-semibold text-[var(--accent-pink)]">${config.monthlyTotal.toFixed(2)}/mo</span>
+                      <span className="text-lg font-semibold text-[var(--accent-teal)]">${config.monthlyTotal.toFixed(2)}/mo</span>
                     </div>
                   )}
                   {config.totalInvestment > 0 && (
                     <div className="flex justify-between items-center mt-2 pt-2 border-t border-[var(--border-subtle)]">
                       <span className="text-white font-semibold">Total Investment ({config.durationMonths} mo)</span>
-                      <span className="text-lg font-semibold text-[var(--accent-pink)]">${config.totalInvestment.toLocaleString()}</span>
+                      <span className="text-lg font-semibold text-[var(--accent-teal)]">${config.totalInvestment.toLocaleString()}</span>
                     </div>
                   )}
                 </>
@@ -1407,7 +1407,7 @@ export default function Step9Summary({ showQuoteForm = false, onCloseQuoteForm }
           <div key={service.type} className="card p-6">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-[var(--accent-purple)] to-[var(--accent-pink)] flex items-center justify-center">
+                <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-[var(--accent-blue)] to-[var(--accent-teal)] flex items-center justify-center">
                   <Mail className="w-5 h-5 text-white" />
                 </div>
                 <div>
@@ -1422,7 +1422,7 @@ export default function Step9Summary({ showQuoteForm = false, onCloseQuoteForm }
               <div className="flex gap-2">
                 <Link
                   href={serviceMetadata[service.type].builderPath}
-                  className="flex items-center gap-2 px-4 py-2 rounded-lg bg-[var(--bg-secondary)] border border-[var(--border-subtle)] text-[var(--text-secondary)] hover:text-white hover:border-[var(--accent-purple)] transition-all"
+                  className="flex items-center gap-2 px-4 py-2 rounded-lg bg-[var(--bg-secondary)] border border-[var(--border-subtle)] text-[var(--text-secondary)] hover:text-white hover:border-[var(--accent-blue)] transition-all"
                 >
                   <Edit2 className="w-4 h-4" />
                   Edit
@@ -1436,7 +1436,7 @@ export default function Step9Summary({ showQuoteForm = false, onCloseQuoteForm }
                 </button>
                 <button
                   onClick={() => toggleCard('email-marketing')}
-                  className="flex items-center gap-2 px-4 py-2 rounded-lg bg-[var(--bg-secondary)] border border-[var(--border-subtle)] text-[var(--text-secondary)] hover:text-white hover:border-[var(--accent-purple)] transition-all"
+                  className="flex items-center gap-2 px-4 py-2 rounded-lg bg-[var(--bg-secondary)] border border-[var(--border-subtle)] text-[var(--text-secondary)] hover:text-white hover:border-[var(--accent-blue)] transition-all"
                 >
                   {isOpen ? (
                     <>
@@ -1465,14 +1465,14 @@ export default function Step9Summary({ showQuoteForm = false, onCloseQuoteForm }
                   <div className="space-y-4 mt-6">
                     <div className="p-4 bg-[var(--bg-secondary)] rounded-lg">
                       <div className="flex items-center gap-2 mb-3">
-                        <Mail className="w-5 h-5 text-[var(--accent-purple)]" />
+                        <Mail className="w-5 h-5 text-[var(--accent-blue)]" />
                         <h3 className="font-medium text-white">Email Goal</h3>
                       </div>
                       <p className="text-[var(--text-secondary)]">{emailGoalLabel}</p>
                     </div>
                     <div className="p-4 bg-[var(--bg-secondary)] rounded-lg">
                       <div className="flex items-center gap-2 mb-3">
-                        <Clock className="w-5 h-5 text-[var(--accent-purple)]" />
+                        <Clock className="w-5 h-5 text-[var(--accent-blue)]" />
                         <h3 className="font-medium text-white">Duration</h3>
                       </div>
                       <p className="text-[var(--text-secondary)]">{emailDurationLabel}</p>
@@ -1482,7 +1482,7 @@ export default function Step9Summary({ showQuoteForm = false, onCloseQuoteForm }
               )}
             </AnimatePresence>
 
-            <div className="mt-6 p-4 bg-gradient-to-r from-[var(--accent-purple)]/20 to-[var(--accent-pink)]/20 border border-[var(--accent-purple)]/30 rounded-lg">
+            <div className="mt-6 p-4 bg-gradient-to-r from-[var(--accent-blue)]/20 to-[var(--accent-teal)]/20 border border-[var(--accent-blue)]/30 rounded-lg">
               {config.hasCustomQuote ? (
                 <div className="flex items-start gap-3">
                   <AlertCircle className="w-5 h-5 text-[var(--accent-orange)] shrink-0 mt-0.5" />
@@ -1501,13 +1501,13 @@ export default function Step9Summary({ showQuoteForm = false, onCloseQuoteForm }
                   {config.monthlyTotal > 0 && (
                     <div className="flex justify-between items-center mt-2 pt-2 border-t border-[var(--border-subtle)]">
                       <span className="text-white font-semibold">Monthly Total</span>
-                      <span className="text-lg font-semibold text-[var(--accent-pink)]">${config.monthlyTotal.toFixed(2)}/mo</span>
+                      <span className="text-lg font-semibold text-[var(--accent-teal)]">${config.monthlyTotal.toFixed(2)}/mo</span>
                     </div>
                   )}
                   {config.totalInvestment > 0 && (
                     <div className="flex justify-between items-center mt-2 pt-2 border-t border-[var(--border-subtle)]">
                       <span className="text-white font-semibold">Total Investment ({config.durationMonths} mo)</span>
-                      <span className="text-lg font-semibold text-[var(--accent-pink)]">${config.totalInvestment.toLocaleString()}</span>
+                      <span className="text-lg font-semibold text-[var(--accent-teal)]">${config.totalInvestment.toLocaleString()}</span>
                     </div>
                   )}
                 </>
@@ -1526,7 +1526,7 @@ export default function Step9Summary({ showQuoteForm = false, onCloseQuoteForm }
           <div key={service.type} className="card p-6">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-[var(--accent-purple)] to-[var(--accent-pink)] flex items-center justify-center">
+                <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-[var(--accent-blue)] to-[var(--accent-teal)] flex items-center justify-center">
                   <Palette className="w-5 h-5 text-white" />
                 </div>
                 <div>
@@ -1541,7 +1541,7 @@ export default function Step9Summary({ showQuoteForm = false, onCloseQuoteForm }
               <div className="flex gap-2">
                 <Link
                   href={serviceMetadata[service.type].builderPath}
-                  className="flex items-center gap-2 px-4 py-2 rounded-lg bg-[var(--bg-secondary)] border border-[var(--border-subtle)] text-[var(--text-secondary)] hover:text-white hover:border-[var(--accent-purple)] transition-all"
+                  className="flex items-center gap-2 px-4 py-2 rounded-lg bg-[var(--bg-secondary)] border border-[var(--border-subtle)] text-[var(--text-secondary)] hover:text-white hover:border-[var(--accent-blue)] transition-all"
                 >
                   <Edit2 className="w-4 h-4" />
                   Edit
@@ -1555,7 +1555,7 @@ export default function Step9Summary({ showQuoteForm = false, onCloseQuoteForm }
                 </button>
                 <button
                   onClick={() => toggleCard('visual-identity')}
-                  className="flex items-center gap-2 px-4 py-2 rounded-lg bg-[var(--bg-secondary)] border border-[var(--border-subtle)] text-[var(--text-secondary)] hover:text-white hover:border-[var(--accent-purple)] transition-all"
+                  className="flex items-center gap-2 px-4 py-2 rounded-lg bg-[var(--bg-secondary)] border border-[var(--border-subtle)] text-[var(--text-secondary)] hover:text-white hover:border-[var(--accent-blue)] transition-all"
                 >
                   {isOpen ? (
                     <>
@@ -1584,7 +1584,7 @@ export default function Step9Summary({ showQuoteForm = false, onCloseQuoteForm }
                   <div className="space-y-4 mt-6">
                     <div className="p-4 bg-[var(--bg-secondary)] rounded-lg">
                       <div className="flex items-center gap-2 mb-3">
-                        <Palette className="w-5 h-5 text-[var(--accent-purple)]" />
+                        <Palette className="w-5 h-5 text-[var(--accent-blue)]" />
                         <h3 className="font-medium text-white">Visual Identity Type</h3>
                       </div>
                       <p className="text-[var(--text-secondary)]">Custom Design System</p>
@@ -1594,7 +1594,7 @@ export default function Step9Summary({ showQuoteForm = false, onCloseQuoteForm }
               )}
             </AnimatePresence>
 
-            <div className="mt-6 p-4 bg-gradient-to-r from-[var(--accent-purple)]/20 to-[var(--accent-pink)]/20 border border-[var(--accent-purple)]/30 rounded-lg">
+            <div className="mt-6 p-4 bg-gradient-to-r from-[var(--accent-blue)]/20 to-[var(--accent-teal)]/20 border border-[var(--accent-blue)]/30 rounded-lg">
               {config.hasCustomQuote ? (
                 <div className="flex items-start gap-3">
                   <AlertCircle className="w-5 h-5 text-[var(--accent-orange)] shrink-0 mt-0.5" />
@@ -1623,7 +1623,7 @@ export default function Step9Summary({ showQuoteForm = false, onCloseQuoteForm }
             className="w-full flex items-center justify-between p-2 rounded-lg hover:bg-[var(--bg-secondary)] transition-all"
           >
             <div className="flex items-center gap-3">
-              <Plus className="w-5 h-5 text-[var(--accent-purple)]" />
+              <Plus className="w-5 h-5 text-[var(--accent-blue)]" />
               <div className="text-left">
                 <h3 className="text-base font-semibold text-white">Add Another Service</h3>
                 <p className="text-[var(--text-muted)] text-xs">
@@ -1652,33 +1652,33 @@ export default function Step9Summary({ showQuoteForm = false, onCloseQuoteForm }
                     <Link
                       key={serviceType}
                       href={serviceMetadata[serviceType].builderPath}
-                      className="flex items-center justify-between p-3 bg-[var(--bg-secondary)] border border-[var(--border-subtle)] rounded-lg hover:border-[var(--accent-purple)] transition-all group"
+                      className="flex items-center justify-between p-3 bg-[var(--bg-secondary)] border border-[var(--border-subtle)] rounded-lg hover:border-[var(--accent-blue)] transition-all group"
                     >
                       <div className="flex items-center gap-3">
                         {serviceType === 'app' ? (
-                          <Smartphone className="w-4 h-4 text-[var(--text-muted)] group-hover:text-[var(--accent-purple)]" />
+                          <Smartphone className="w-4 h-4 text-[var(--text-muted)] group-hover:text-[var(--accent-blue)]" />
                         ) : serviceType === 'animation' ? (
-                          <Film className="w-4 h-4 text-[var(--text-muted)] group-hover:text-[var(--accent-purple)]" />
+                          <Film className="w-4 h-4 text-[var(--text-muted)] group-hover:text-[var(--accent-blue)]" />
                         ) : serviceType === 'image' ? (
-                          <Image className="w-4 h-4 text-[var(--text-muted)] group-hover:text-[var(--accent-purple)]" />
+                          <Image className="w-4 h-4 text-[var(--text-muted)] group-hover:text-[var(--accent-blue)]" />
                         ) : serviceType === 'sound' ? (
-                          <Music className="w-4 h-4 text-[var(--text-muted)] group-hover:text-[var(--accent-purple)]" />
+                          <Music className="w-4 h-4 text-[var(--text-muted)] group-hover:text-[var(--accent-blue)]" />
                         ) : serviceType === 'paid-media' ? (
-                          <Megaphone className="w-4 h-4 text-[var(--text-muted)] group-hover:text-[var(--accent-purple)]" />
+                          <Megaphone className="w-4 h-4 text-[var(--text-muted)] group-hover:text-[var(--accent-blue)]" />
                         ) : serviceType === 'social-media' ? (
-                          <Share2 className="w-4 h-4 text-[var(--text-muted)] group-hover:text-[var(--accent-purple)]" />
+                          <Share2 className="w-4 h-4 text-[var(--text-muted)] group-hover:text-[var(--accent-blue)]" />
                         ) : serviceType === 'email-marketing' ? (
-                          <Mail className="w-4 h-4 text-[var(--text-muted)] group-hover:text-[var(--accent-purple)]" />
+                          <Mail className="w-4 h-4 text-[var(--text-muted)] group-hover:text-[var(--accent-blue)]" />
                         ) : serviceType === 'brand-strategy' ? (
-                          <Target className="w-4 h-4 text-[var(--text-muted)] group-hover:text-[var(--accent-purple)]" />
+                          <Target className="w-4 h-4 text-[var(--text-muted)] group-hover:text-[var(--accent-blue)]" />
                         ) : serviceType === 'visual-identity' ? (
-                          <Palette className="w-4 h-4 text-[var(--text-muted)] group-hover:text-[var(--accent-purple)]" />
+                          <Palette className="w-4 h-4 text-[var(--text-muted)] group-hover:text-[var(--accent-blue)]" />
                         ) : (
-                          <Globe className="w-4 h-4 text-[var(--text-muted)] group-hover:text-[var(--accent-purple)]" />
+                          <Globe className="w-4 h-4 text-[var(--text-muted)] group-hover:text-[var(--accent-blue)]" />
                         )}
                         <span className="text-white text-sm font-medium">{serviceMetadata[serviceType].label}</span>
                       </div>
-                      <Plus className="w-4 h-4 text-[var(--text-muted)] group-hover:text-[var(--accent-purple)]" />
+                      <Plus className="w-4 h-4 text-[var(--text-muted)] group-hover:text-[var(--accent-blue)]" />
                     </Link>
                   ))}
                 </div>

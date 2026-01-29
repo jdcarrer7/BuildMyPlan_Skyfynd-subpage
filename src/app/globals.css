@@ -14,27 +14,35 @@
   --text-secondary: #A1A1AA;
   --text-muted: #71717A;
 
-  /* Accent Colors - SkyFynd purple/pink scheme */
+  /* Accent Colors - SkyFynd purple/blue/teal scheme */
   --accent-purple: #8B5CF6;
   --accent-purple-light: #A78BFA;
   --accent-purple-dark: #7C3AED;
-  --accent-pink: #EC4899;
   --accent-blue: #3B82F6;
+  --accent-blue-light: #60A5FA;
+  --accent-teal: #10B981;
+  --accent-amber: #F59E0B;
+  --accent-orange: #F97316;
+  --accent-red: #EF4444;
 
-  /* Legacy accent colors - mapped to purple/pink for compatibility */
-  --accent-orange: #8B5CF6;
+  /* Legacy accent colors - mapped to new scheme for compatibility */
   --accent-orange-hover: #7C3AED;
-  --accent-gold: #EC4899;
+  --accent-gold: #10B981;
   --accent-fuchsia: #A78BFA;
+  --accent-pink: #10B981;
 
-  /* Gradients - SkyFynd style */
-  --gradient-primary: linear-gradient(135deg, #8B5CF6 0%, #EC4899 100%);
+  /* Gradients - SkyFynd logo-inspired purple → blue → teal */
+  --gradient-primary: linear-gradient(135deg, #8B5CF6 0%, #3B82F6 50%, #10B981 100%);
   --gradient-purple-blue: linear-gradient(135deg, #8B5CF6 0%, #3B82F6 100%);
-  --gradient-soft: linear-gradient(135deg, rgba(139, 92, 246, 0.15) 0%, rgba(236, 72, 153, 0.15) 100%);
+  --gradient-soft: linear-gradient(135deg, rgba(139, 92, 246, 0.15) 0%, rgba(59, 130, 246, 0.12) 50%, rgba(16, 185, 129, 0.15) 100%);
   --gradient-card: linear-gradient(135deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.01) 100%);
-  --gradient-glow: radial-gradient(ellipse at center, rgba(139, 92, 246, 0.15) 0%, transparent 70%);
-  --gradient-blob: radial-gradient(circle, rgba(139, 92, 246, 0.12) 0%, transparent 70%);
-  --gradient-blob-pink: radial-gradient(circle, rgba(236, 72, 153, 0.08) 0%, transparent 70%);
+  --gradient-glow: radial-gradient(ellipse at center, rgba(59, 130, 246, 0.15) 0%, transparent 70%);
+  --gradient-blob: radial-gradient(circle, rgba(59, 130, 246, 0.12) 0%, transparent 70%);
+  --gradient-blob-teal: radial-gradient(circle, rgba(16, 185, 129, 0.08) 0%, transparent 70%);
+  --gradient-nav-glow: linear-gradient(135deg, #60A5FA, #10B981, #FBBF24, #F97316, #EF4444, #60A5FA);
+
+  /* Shadows - SkyFynd style with blue/teal glow */
+  --shadow-glow-hover: 0 8px 24px rgba(59, 130, 246, 0.4), 0 0 40px rgba(16, 185, 129, 0.2);
 
   /* Borders - SkyFynd style */
   --border-subtle: rgba(255, 255, 255, 0.06);
@@ -42,13 +50,15 @@
   --border-medium: rgba(255, 255, 255, 0.15);
   --border-accent: rgba(139, 92, 246, 0.3);
 
-  /* Shadows - SkyFynd style */
+  /* Shadows - SkyFynd style with blue/teal glow */
   --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
   --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.07);
   --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
   --shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.1);
-  --shadow-purple: 0 4px 14px rgba(139, 92, 246, 0.25);
-  --shadow-glow: 0 0 40px rgba(139, 92, 246, 0.12);
+  --shadow-purple: 0 4px 14px rgba(59, 130, 246, 0.25);
+  --shadow-glow: 0 0 40px rgba(59, 130, 246, 0.12);
+  --shadow-blue: 0 4px 14px rgba(59, 130, 246, 0.25);
+  --shadow-teal: 0 4px 14px rgba(16, 185, 129, 0.25);
 
   /* Font families - SkyFynd style */
   --font-serif: 'Source Serif Pro', Georgia, serif;
@@ -98,9 +108,13 @@
   --color-accent-purple: var(--accent-purple);
   --color-accent-purple-light: var(--accent-purple-light);
   --color-accent-purple-dark: var(--accent-purple-dark);
-  --color-accent-pink: var(--accent-pink);
   --color-accent-blue: var(--accent-blue);
+  --color-accent-blue-light: var(--accent-blue-light);
+  --color-accent-teal: var(--accent-teal);
+  --color-accent-amber: var(--accent-amber);
   --color-accent-orange: var(--accent-orange);
+  --color-accent-red: var(--accent-red);
+  --color-accent-pink: var(--accent-pink);
   --color-accent-gold: var(--accent-gold);
   --color-accent-fuchsia: var(--accent-fuchsia);
   --font-sans: var(--font-sans);
@@ -175,7 +189,7 @@ body {
   inset: 0;
   border-radius: 16px;
   padding: 1px;
-  background: linear-gradient(135deg, rgba(139, 92, 246, 0.3) 0%, rgba(236, 72, 153, 0.2) 100%);
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.3) 0%, rgba(59, 130, 246, 0.25) 50%, rgba(16, 185, 129, 0.2) 100%);
   -webkit-mask:
     linear-gradient(#fff 0 0) content-box,
     linear-gradient(#fff 0 0);
@@ -408,8 +422,8 @@ body {
   top: 0;
   left: 0;
   background:
-    radial-gradient(ellipse 80% 50% at 50% -10%, rgba(139, 92, 246, 0.08) 0%, transparent 50%),
-    radial-gradient(ellipse 60% 40% at 85% 20%, rgba(236, 72, 153, 0.05) 0%, transparent 40%),
+    radial-gradient(ellipse 80% 50% at 50% -10%, rgba(59, 130, 246, 0.08) 0%, transparent 50%),
+    radial-gradient(ellipse 60% 40% at 85% 20%, rgba(16, 185, 129, 0.05) 0%, transparent 40%),
     radial-gradient(ellipse 50% 30% at 15% 80%, rgba(139, 92, 246, 0.04) 0%, transparent 35%);
   pointer-events: none;
   z-index: 0;
@@ -436,12 +450,42 @@ body {
   position: absolute;
   inset: -1px;
   border-radius: inherit;
-  background: linear-gradient(135deg, rgba(139, 92, 246, 0.4) 0%, rgba(236, 72, 153, 0.2) 100%);
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.4) 0%, rgba(59, 130, 246, 0.3) 50%, rgba(16, 185, 129, 0.2) 100%);
   -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   -webkit-mask-composite: xor;
   mask-composite: exclude;
   padding: 1px;
   pointer-events: none;
+}
+
+/* Nav shimmer animation for gradient border glow */
+@keyframes navShimmer {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Nav glow utility class */
+.nav-glow {
+  position: relative;
+}
+
+.nav-glow::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  background: var(--gradient-nav-glow);
+  background-size: 300% 300%;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: -1;
+  filter: blur(4px);
+}
+
+.nav-glow:hover::before {
+  animation: navShimmer 2s ease infinite;
+  opacity: 0.7;
 }
 
 /* Glass effect for overlays - SkyFynd glassmorphism */

@@ -28,7 +28,7 @@ export default function AppPriceSidebar({ currentStep, onGoToSummary }: AppPrice
       className="card p-6 sticky top-6"
     >
       <div className="flex items-center gap-2 mb-4">
-        <Smartphone className="w-5 h-5 text-[var(--accent-purple)]" />
+        <Smartphone className="w-5 h-5 text-[var(--accent-blue)]" />
         <h3 className="text-lg font-semibold text-white">App Estimate</h3>
       </div>
 
@@ -95,7 +95,7 @@ export default function AppPriceSidebar({ currentStep, onGoToSummary }: AppPrice
       {currentStep !== undefined && currentStep !== SUMMARY_STEP && onGoToSummary && (
         <button
           onClick={onGoToSummary}
-          className="w-full mt-4 py-2.5 px-4 bg-[var(--bg-card-hover)] hover:bg-[var(--accent-purple)]/20 border border-[var(--border-subtle)] hover:border-[var(--accent-purple)]/50 rounded-lg text-sm font-medium text-[var(--text-secondary)] hover:text-white transition-all flex items-center justify-center gap-2 group"
+          className="w-full mt-4 py-2.5 px-4 bg-[var(--bg-card-hover)] hover:bg-[var(--accent-blue)]/20 border border-[var(--border-subtle)] hover:border-[var(--accent-blue)]/50 rounded-lg text-sm font-medium text-[var(--text-secondary)] hover:text-white transition-all flex items-center justify-center gap-2 group"
         >
           Go to Summary
           <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />

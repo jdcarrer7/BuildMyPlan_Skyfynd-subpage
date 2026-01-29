@@ -44,7 +44,7 @@ export default function Step4CMS() {
                 className={`
                   w-full p-6 rounded-lg text-center transition-all duration-300 relative
                   ${isSelected
-                    ? 'bg-gradient-to-br from-[var(--accent-purple)] to-[var(--accent-pink)] text-white'
+                    ? 'bg-gradient-to-br from-[var(--accent-blue)] to-[var(--accent-teal)] text-white'
                     : 'bg-[var(--bg-secondary)] text-[var(--text-secondary)] hover:bg-[var(--bg-card-hover)] hover:text-white border border-[var(--border-subtle)]'
                   }
                 `}
@@ -60,7 +60,7 @@ export default function Step4CMS() {
                   className="w-full"
                 >
                   <div className="flex justify-center mb-3">
-                    <div className={`p-3 rounded-full ${isSelected ? 'bg-white/20' : 'bg-[var(--accent-purple)]/20'}`}>
+                    <div className={`p-3 rounded-full ${isSelected ? 'bg-white/20' : 'bg-[var(--accent-blue)]/20'}`}>
                       {cmsIcons[option.id]}
                     </div>
                   </div>
@@ -78,7 +78,7 @@ export default function Step4CMS() {
                   }}
                   className={`
                     inline-flex items-center gap-1 text-xs transition-colors
-                    ${isSelected ? 'text-white/70 hover:text-white' : 'text-[var(--text-muted)] hover:text-[var(--accent-purple)]'}
+                    ${isSelected ? 'text-white/70 hover:text-white' : 'text-[var(--text-muted)] hover:text-[var(--accent-blue)]'}
                   `}
                 >
                   <Info className="w-3 h-3" />

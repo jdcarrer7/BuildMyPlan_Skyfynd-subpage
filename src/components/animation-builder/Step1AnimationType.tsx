@@ -47,15 +47,15 @@ export default function Step1AnimationType() {
                 className={`
                   w-full p-4 rounded-lg border-2 text-left transition-all flex items-center justify-between
                   ${isSelected
-                    ? 'border-[var(--accent-purple)] bg-[var(--accent-purple)]/10'
-                    : 'border-[var(--border-subtle)] bg-[var(--bg-secondary)] hover:border-[var(--accent-purple)]/50'
+                    ? 'border-[var(--accent-blue)] bg-[var(--accent-blue)]/10'
+                    : 'border-[var(--border-subtle)] bg-[var(--bg-secondary)] hover:border-[var(--accent-blue)]/50'
                   }
                 `}
               >
                 <div className="flex items-center gap-3">
                   <div className={`
                     w-10 h-10 rounded-lg flex items-center justify-center
-                    ${isSelected ? 'bg-[var(--accent-purple)]' : 'bg-[var(--bg-card)]'}
+                    ${isSelected ? 'bg-[var(--accent-blue)]' : 'bg-[var(--bg-card)]'}
                   `}>
                     <Icon className={`w-5 h-5 ${isSelected ? 'text-white' : 'text-[var(--text-muted)]'}`} />
                   </div>
@@ -66,7 +66,7 @@ export default function Step1AnimationType() {
 
                 <div className="flex items-center gap-2">
                   {isSelected && (
-                    <div className="w-6 h-6 rounded-full bg-[var(--accent-purple)] flex items-center justify-center">
+                    <div className="w-6 h-6 rounded-full bg-[var(--accent-blue)] flex items-center justify-center">
                       <Check className="w-4 h-4 text-white" />
                     </div>
                   )}
@@ -75,7 +75,7 @@ export default function Step1AnimationType() {
                       e.stopPropagation();
                       setTooltipOpen(tooltipOpen === option.id ? null : option.id);
                     }}
-                    className="p-1 text-[var(--text-muted)] hover:text-[var(--accent-purple)] transition-colors cursor-pointer"
+                    className="p-1 text-[var(--text-muted)] hover:text-[var(--accent-blue)] transition-colors cursor-pointer"
                   >
                     <HelpCircle className="w-5 h-5" />
                   </span>
@@ -97,11 +97,11 @@ export default function Step1AnimationType() {
                   </button>
                   <div className="space-y-3 text-sm">
                     <div>
-                      <span className="text-[var(--accent-purple)] font-medium">What it is:</span>
+                      <span className="text-[var(--accent-blue)] font-medium">What it is:</span>
                       <p className="text-[var(--text-secondary)] mt-1">{option.tooltip.whatItIs}</p>
                     </div>
                     <div>
-                      <span className="text-[var(--accent-pink)] font-medium">Ideal if:</span>
+                      <span className="text-[var(--accent-teal)] font-medium">Ideal if:</span>
                       <p className="text-[var(--text-secondary)] mt-1">{option.tooltip.idealIf}</p>
                     </div>
                     <div>

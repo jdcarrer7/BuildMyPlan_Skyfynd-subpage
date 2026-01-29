@@ -96,7 +96,7 @@ export default function ComparisonModal({ service, isOpen, onClose }: Comparison
                         key={tier.id}
                         className={`text-center p-4 rounded-xl ${
                           tier.popular
-                            ? 'bg-gradient-to-br from-[var(--accent-purple)] to-[var(--accent-pink)]'
+                            ? 'bg-gradient-to-br from-[var(--accent-blue)] to-[var(--accent-teal)]'
                             : 'bg-[var(--bg-card)] border border-[var(--border-subtle)]'
                         }`}
                       >
@@ -147,7 +147,7 @@ export default function ComparisonModal({ service, isOpen, onClose }: Comparison
                     </div>
                     {service.tiers.map((tier) => (
                       <div key={tier.id} className="text-center">
-                        <span className="text-[var(--accent-purple)] text-sm font-medium">
+                        <span className="text-[var(--accent-blue)] text-sm font-medium">
                           {tier.outcome}
                         </span>
                       </div>

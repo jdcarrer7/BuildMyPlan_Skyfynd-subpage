@@ -29,7 +29,7 @@ export default function AppStepIndicator({ currentStep, totalSteps, onStepClick 
       {/* Service Badge */}
       <div className="hidden md:flex items-center mb-4">
         <div className="flex items-center gap-2 px-3 py-1.5 bg-[var(--bg-card)] border border-[var(--border-subtle)] rounded-full">
-          <Smartphone className="w-4 h-4 text-[var(--accent-purple)]" />
+          <Smartphone className="w-4 h-4 text-[var(--accent-blue)]" />
           <span className="text-sm font-medium text-white">App</span>
         </div>
       </div>
@@ -51,7 +51,7 @@ export default function AppStepIndicator({ currentStep, totalSteps, onStepClick 
                   ${isCompleted
                     ? 'bg-green-500 text-white cursor-pointer hover:bg-green-600'
                     : isCurrent
-                      ? 'bg-gradient-to-br from-[var(--accent-purple)] to-[var(--accent-pink)] text-white'
+                      ? 'bg-gradient-to-br from-[var(--accent-blue)] to-[var(--accent-teal)] text-white'
                       : 'bg-[var(--bg-card)] text-[var(--text-muted)] border border-[var(--border-subtle)]'
                   }
                 `}
@@ -75,7 +75,7 @@ export default function AppStepIndicator({ currentStep, totalSteps, onStepClick 
       <div className="md:hidden">
         <div className="flex items-center justify-between mb-2">
           <div className="flex items-center gap-2">
-            <Smartphone className="w-4 h-4 text-[var(--accent-purple)]" />
+            <Smartphone className="w-4 h-4 text-[var(--accent-blue)]" />
             <span className="text-sm font-medium text-white">App</span>
           </div>
           <span className="text-sm text-[var(--text-muted)]">
@@ -87,7 +87,7 @@ export default function AppStepIndicator({ currentStep, totalSteps, onStepClick 
         </div>
         <div className="w-full bg-[var(--bg-card)] rounded-full h-2 overflow-hidden">
           <motion.div
-            className="h-full bg-gradient-to-r from-[var(--accent-purple)] to-[var(--accent-pink)]"
+            className="h-full bg-gradient-to-r from-[var(--accent-blue)] to-[var(--accent-teal)]"
             initial={{ width: 0 }}
             animate={{ width: `${(currentStep / totalSteps) * 100}%` }}
             transition={{ duration: 0.3 }}

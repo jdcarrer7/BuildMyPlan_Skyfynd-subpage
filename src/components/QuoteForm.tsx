@@ -148,8 +148,8 @@ export default function QuoteForm({ isOpen, onClose }: QuoteFormProps) {
                     </div>
                     {discountPercentage > 0 && (
                       <div className="flex justify-between items-center text-sm mb-2">
-                        <span className="text-[var(--accent-purple)]">Bundle Discount</span>
-                        <span className="text-[var(--accent-purple)]">{discountPercentage}% OFF</span>
+                        <span className="text-[var(--accent-blue)]">Bundle Discount</span>
+                        <span className="text-[var(--accent-blue)]">{discountPercentage}% OFF</span>
                       </div>
                     )}
                     <div className="flex justify-between items-center pt-2 border-t border-[var(--border-subtle)]">
@@ -169,7 +169,7 @@ export default function QuoteForm({ isOpen, onClose }: QuoteFormProps) {
                         {...register('name')}
                         type="text"
                         placeholder="John Doe"
-                        className={`w-full px-4 py-3 bg-[var(--bg-secondary)] border rounded-lg text-white placeholder-[var(--text-muted)] focus:outline-none focus:ring-2 focus:ring-[var(--accent-purple)] transition-all ${
+                        className={`w-full px-4 py-3 bg-[var(--bg-secondary)] border rounded-lg text-white placeholder-[var(--text-muted)] focus:outline-none focus:ring-2 focus:ring-[var(--accent-blue)] transition-all ${
                           errors.name ? 'border-red-500' : 'border-[var(--border-subtle)]'
                         }`}
                       />
@@ -188,7 +188,7 @@ export default function QuoteForm({ isOpen, onClose }: QuoteFormProps) {
                         {...register('email')}
                         type="email"
                         placeholder="john@company.com"
-                        className={`w-full px-4 py-3 bg-[var(--bg-secondary)] border rounded-lg text-white placeholder-[var(--text-muted)] focus:outline-none focus:ring-2 focus:ring-[var(--accent-purple)] transition-all ${
+                        className={`w-full px-4 py-3 bg-[var(--bg-secondary)] border rounded-lg text-white placeholder-[var(--text-muted)] focus:outline-none focus:ring-2 focus:ring-[var(--accent-blue)] transition-all ${
                           errors.email ? 'border-red-500' : 'border-[var(--border-subtle)]'
                         }`}
                       />
@@ -208,7 +208,7 @@ export default function QuoteForm({ isOpen, onClose }: QuoteFormProps) {
                           {...register('company')}
                           type="text"
                           placeholder="Acme Inc."
-                          className="w-full px-4 py-3 bg-[var(--bg-secondary)] border border-[var(--border-subtle)] rounded-lg text-white placeholder-[var(--text-muted)] focus:outline-none focus:ring-2 focus:ring-[var(--accent-purple)] transition-all"
+                          className="w-full px-4 py-3 bg-[var(--bg-secondary)] border border-[var(--border-subtle)] rounded-lg text-white placeholder-[var(--text-muted)] focus:outline-none focus:ring-2 focus:ring-[var(--accent-blue)] transition-all"
                         />
                       </div>
                       <div>
@@ -220,7 +220,7 @@ export default function QuoteForm({ isOpen, onClose }: QuoteFormProps) {
                           {...register('phone')}
                           type="tel"
                           placeholder="+1 (555) 000-0000"
-                          className="w-full px-4 py-3 bg-[var(--bg-secondary)] border border-[var(--border-subtle)] rounded-lg text-white placeholder-[var(--text-muted)] focus:outline-none focus:ring-2 focus:ring-[var(--accent-purple)] transition-all"
+                          className="w-full px-4 py-3 bg-[var(--bg-secondary)] border border-[var(--border-subtle)] rounded-lg text-white placeholder-[var(--text-muted)] focus:outline-none focus:ring-2 focus:ring-[var(--accent-blue)] transition-all"
                         />
                       </div>
                     </div>
@@ -235,7 +235,7 @@ export default function QuoteForm({ isOpen, onClose }: QuoteFormProps) {
                         {...register('notes')}
                         rows={3}
                         placeholder="Tell us more about your project or any specific requirements..."
-                        className="w-full px-4 py-3 bg-[var(--bg-secondary)] border border-[var(--border-subtle)] rounded-lg text-white placeholder-[var(--text-muted)] focus:outline-none focus:ring-2 focus:ring-[var(--accent-purple)] transition-all resize-none"
+                        className="w-full px-4 py-3 bg-[var(--bg-secondary)] border border-[var(--border-subtle)] rounded-lg text-white placeholder-[var(--text-muted)] focus:outline-none focus:ring-2 focus:ring-[var(--accent-blue)] transition-all resize-none"
                       />
                     </div>
 

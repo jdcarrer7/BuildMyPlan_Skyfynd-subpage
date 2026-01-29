@@ -25,9 +25,9 @@ export default function Step10Retainer() {
         </p>
       </div>
 
-      <div className="flex items-center gap-2 p-3 bg-[var(--accent-pink)]/10 border border-[var(--accent-pink)]/30 rounded-lg">
-        <RefreshCw className="w-4 h-4 text-[var(--accent-pink)]" />
-        <span className="text-sm text-[var(--accent-pink)]">
+      <div className="flex items-center gap-2 p-3 bg-[var(--accent-teal)]/10 border border-[var(--accent-teal)]/30 rounded-lg">
+        <RefreshCw className="w-4 h-4 text-[var(--accent-teal)]" />
+        <span className="text-sm text-[var(--accent-teal)]">
           Retainer pricing is MONTHLY recurring. Your team is billed each month.
         </span>
       </div>
@@ -44,8 +44,8 @@ export default function Step10Retainer() {
                 className={`
                   w-full p-4 rounded-xl text-left transition-all group
                   ${isSelected
-                    ? 'bg-gradient-to-br from-[var(--accent-purple)]/20 to-[var(--accent-pink)]/20 border-2 border-[var(--accent-purple)]'
-                    : 'bg-[var(--bg-card)] border border-[var(--border-subtle)] hover:border-[var(--accent-purple)]/50'
+                    ? 'bg-gradient-to-br from-[var(--accent-blue)]/20 to-[var(--accent-teal)]/20 border-2 border-[var(--accent-blue)]'
+                    : 'bg-[var(--bg-card)] border border-[var(--border-subtle)] hover:border-[var(--accent-blue)]/50'
                   }
                 `}
                 whileHover={{ scale: 1.01 }}
@@ -54,11 +54,11 @@ export default function Step10Retainer() {
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     {isSelected ? (
-                      <div className="w-5 h-5 rounded-full bg-[var(--accent-purple)] flex items-center justify-center">
+                      <div className="w-5 h-5 rounded-full bg-[var(--accent-blue)] flex items-center justify-center">
                         <Check className="w-3 h-3 text-white" />
                       </div>
                     ) : (
-                      <div className="w-5 h-5 rounded-full border-2 border-[var(--border-subtle)] group-hover:border-[var(--accent-purple)]" />
+                      <div className="w-5 h-5 rounded-full border-2 border-[var(--border-subtle)] group-hover:border-[var(--accent-blue)]" />
                     )}
                     <span className={`font-medium ${isSelected ? 'text-white' : 'text-[var(--text-secondary)] group-hover:text-white'}`}>
                       {option.label}
@@ -70,20 +70,20 @@ export default function Step10Retainer() {
                       {option.startsAt ? (
                         <div>
                           <span className="text-xs text-[var(--text-muted)]">Starts at</span>
-                          <div className="text-lg font-semibold text-[var(--accent-pink)]">
+                          <div className="text-lg font-semibold text-[var(--accent-teal)]">
                             ${option.price.toLocaleString()}/mo+
                           </div>
                         </div>
                       ) : option.price === 0 ? (
                         <span className="text-lg font-semibold text-[var(--text-muted)]">$0/mo</span>
                       ) : (
-                        <span className="text-lg font-semibold text-[var(--accent-pink)]">
+                        <span className="text-lg font-semibold text-[var(--accent-teal)]">
                           ${option.price.toLocaleString()}/mo
                         </span>
                       )}
                     </div>
                     <span
-                      className="p-1 text-[var(--text-muted)] hover:text-[var(--accent-purple)] transition-colors cursor-pointer"
+                      className="p-1 text-[var(--text-muted)] hover:text-[var(--accent-blue)] transition-colors cursor-pointer"
                       onClick={(e) => {
                         e.stopPropagation();
                         setTooltipOpen(tooltipOpen === option.id ? null : option.id);
@@ -110,11 +110,11 @@ export default function Step10Retainer() {
                   </button>
                   <div className="space-y-3 text-sm">
                     <div>
-                      <span className="text-[var(--accent-purple)] font-medium">What it is:</span>
+                      <span className="text-[var(--accent-blue)] font-medium">What it is:</span>
                       <p className="text-[var(--text-secondary)] mt-1">{tooltip.whatItIs}</p>
                     </div>
                     <div>
-                      <span className="text-[var(--accent-pink)] font-medium">Ideal if:</span>
+                      <span className="text-[var(--accent-teal)] font-medium">Ideal if:</span>
                       <p className="text-[var(--text-secondary)] mt-1">{tooltip.idealIf}</p>
                     </div>
                     {tooltip.examples && (
@@ -136,10 +136,10 @@ export default function Step10Retainer() {
         <div className="p-4 bg-[var(--bg-secondary)] rounded-lg">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <RefreshCw className="w-4 h-4 text-[var(--accent-pink)]" />
+              <RefreshCw className="w-4 h-4 text-[var(--accent-teal)]" />
               <span className="text-[var(--text-secondary)]">Monthly retainer</span>
             </div>
-            <span className="font-semibold text-[var(--accent-pink)]">
+            <span className="font-semibold text-[var(--accent-teal)]">
               {formatMonthlyPrice(retainerOptions.find((o) => o.id === retainer)!)}
             </span>
           </div>

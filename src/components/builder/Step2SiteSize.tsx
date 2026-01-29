@@ -38,8 +38,8 @@ export default function Step2SiteSize() {
                 className={`
                   w-full p-4 rounded-lg text-left transition-all duration-300 flex items-center justify-between
                   ${isSelected
-                    ? 'bg-gradient-to-r from-[var(--accent-purple)]/20 to-[var(--accent-pink)]/20 border-2 border-[var(--accent-purple)]'
-                    : 'bg-[var(--bg-secondary)] border border-[var(--border-subtle)] hover:border-[var(--accent-purple)]/50'
+                    ? 'bg-gradient-to-r from-[var(--accent-blue)]/20 to-[var(--accent-teal)]/20 border-2 border-[var(--accent-blue)]'
+                    : 'bg-[var(--bg-secondary)] border border-[var(--border-subtle)] hover:border-[var(--accent-blue)]/50'
                   }
                 `}
               >
@@ -51,7 +51,7 @@ export default function Step2SiteSize() {
                     className={`
                       w-6 h-6 rounded-full border-2 flex items-center justify-center transition-all
                       ${isSelected
-                        ? 'border-[var(--accent-purple)] bg-[var(--accent-purple)]'
+                        ? 'border-[var(--accent-blue)] bg-[var(--accent-blue)]'
                         : 'border-[var(--border-subtle)]'
                       }
                     `}
@@ -74,7 +74,7 @@ export default function Step2SiteSize() {
                       e.stopPropagation();
                       setTooltipId(tooltipId === option.id ? null : option.id);
                     }}
-                    className="p-1 rounded-full hover:bg-[var(--accent-purple)]/20 transition-colors"
+                    className="p-1 rounded-full hover:bg-[var(--accent-blue)]/20 transition-colors"
                   >
                     <Info className="w-4 h-4 text-[var(--text-muted)]" />
                   </button>

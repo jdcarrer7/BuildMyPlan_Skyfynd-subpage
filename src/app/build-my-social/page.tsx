@@ -99,7 +99,7 @@ export default function BuildMySocialPage() {
             <span className="text-sm">Back to Services</span>
           </Link>
           <div className="flex items-center gap-2">
-            <Share2 className="w-5 h-5 text-[var(--accent-purple)]" />
+            <Share2 className="w-5 h-5 text-[var(--accent-blue)]" />
             <h1 className="text-2xl font-semibold gradient-text font-serif">
               Build My Social
             </h1>

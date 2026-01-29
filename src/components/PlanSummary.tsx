@@ -24,7 +24,7 @@ export default function PlanSummary({ onRequestQuote }: PlanSummaryProps) {
     return (
       <div className="relative overflow-hidden rounded-2xl p-8 bg-gradient-to-br from-[var(--bg-card)] to-[var(--bg-card-hover)]/50 border border-[var(--border-subtle)]">
         {/* Subtle ambient glow */}
-        <div className="absolute inset-0 bg-gradient-to-br from-[var(--accent-purple)]/5 to-transparent pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-br from-[var(--accent-blue)]/5 to-transparent pointer-events-none" />
 
         <div className="relative text-center">
           <div className="w-20 h-20 mx-auto mb-6 rounded-2xl bg-gradient-to-br from-[var(--bg-secondary)] to-[var(--bg-elevated)] flex items-center justify-center border border-[var(--border-subtle)]">
@@ -35,7 +35,7 @@ export default function PlanSummary({ onRequestQuote }: PlanSummaryProps) {
             Browse our services and add them to build your custom plan.
           </p>
           <div className="flex items-center justify-center gap-2 text-xs text-[var(--text-muted)]">
-            <Sparkles className="w-3.5 h-3.5 text-[var(--accent-purple)]" />
+            <Sparkles className="w-3.5 h-3.5 text-[var(--accent-blue)]" />
             <span>Bundle 3+ services for discounts</span>
           </div>
         </div>
@@ -51,7 +51,7 @@ export default function PlanSummary({ onRequestQuote }: PlanSummaryProps) {
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <h3 className="font-serif flex items-center gap-2.5" style={{ fontSize: '24px', fontWeight: 600, lineHeight: 1.25, letterSpacing: '-0.01em', color: '#FAFAFA' }}>
-          <ShoppingCart className="w-5 h-5 text-[var(--accent-purple)]" />
+          <ShoppingCart className="w-5 h-5 text-[var(--accent-blue)]" />
           Your Plan
         </h3>
         <span className="px-3 py-1.5 bg-gradient-to-r from-[var(--accent-orange)] to-[var(--accent-gold)] text-[#09090b] text-xs font-semibold rounded-full">
@@ -64,11 +64,11 @@ export default function PlanSummary({ onRequestQuote }: PlanSummaryProps) {
         <motion.div
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
-          className="mb-5 p-4 bg-gradient-to-r from-[var(--accent-purple)]/10 to-[var(--accent-pink)]/10 rounded-xl border border-[var(--accent-purple)]/20"
+          className="mb-5 p-4 bg-gradient-to-r from-[var(--accent-blue)]/10 to-[var(--accent-teal)]/10 rounded-xl border border-[var(--accent-blue)]/20"
         >
           <div className="flex items-center gap-3 text-sm">
-            <div className="w-8 h-8 rounded-lg bg-[var(--accent-purple)]/20 flex items-center justify-center">
-              <Tag className="w-4 h-4 text-[var(--accent-purple)]" />
+            <div className="w-8 h-8 rounded-lg bg-[var(--accent-blue)]/20 flex items-center justify-center">
+              <Tag className="w-4 h-4 text-[var(--accent-blue)]" />
             </div>
             <div className="flex-1">
               <span className="text-white font-medium">Bundle Discount Applied</span>
@@ -107,7 +107,7 @@ export default function PlanSummary({ onRequestQuote }: PlanSummaryProps) {
                       {item.addOns.map(addOnId => {
                         const addOn = service.addOns.find(a => a.id === addOnId);
                         return addOn ? (
-                          <span key={addOnId} className="text-[10px] text-[var(--accent-purple)] bg-[var(--accent-purple)]/10 px-2 py-0.5 rounded-md">
+                          <span key={addOnId} className="text-[10px] text-[var(--accent-blue)] bg-[var(--accent-blue)]/10 px-2 py-0.5 rounded-md">
                             +{addOn.name}
                           </span>
                         ) : null;
@@ -138,8 +138,8 @@ export default function PlanSummary({ onRequestQuote }: PlanSummaryProps) {
         </div>
         {discount > 0 && (
           <div className="flex justify-between text-sm">
-            <span className="text-[var(--accent-purple)]">Bundle Discount ({discountPercentage}%)</span>
-            <span className="text-[var(--accent-purple)]">-${discount.toLocaleString()}</span>
+            <span className="text-[var(--accent-blue)]">Bundle Discount ({discountPercentage}%)</span>
+            <span className="text-[var(--accent-blue)]">-${discount.toLocaleString()}</span>
           </div>
         )}
         <div className="flex justify-between text-lg font-bold pt-4 border-t border-[var(--border-subtle)]">

@@ -104,7 +104,7 @@ export default function BuildMyEmailPage() {
             <span className="text-sm">Back to Services</span>
           </Link>
           <div className="flex items-center gap-2">
-            <Mail className="w-5 h-5 text-[var(--accent-purple)]" />
+            <Mail className="w-5 h-5 text-[var(--accent-blue)]" />
             <h1 className="text-2xl font-semibold gradient-text font-serif">
               Build My Email
             </h1>

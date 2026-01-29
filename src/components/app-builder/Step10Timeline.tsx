@@ -48,7 +48,7 @@ export default function Step10Timeline() {
                 className={`
                   w-full p-4 rounded-lg text-left transition-all duration-300
                   ${isSelected
-                    ? 'bg-gradient-to-br from-[var(--accent-purple)] to-[var(--accent-pink)] text-white'
+                    ? 'bg-gradient-to-br from-[var(--accent-blue)] to-[var(--accent-teal)] text-white'
                     : 'bg-[var(--bg-secondary)] text-[var(--text-secondary)] hover:bg-[var(--bg-card-hover)] hover:text-white border border-[var(--border-subtle)]'
                   }
                 `}
@@ -59,7 +59,7 @@ export default function Step10Timeline() {
                 >
                   <div className={`
                     w-12 h-12 rounded-lg flex items-center justify-center
-                    ${isSelected ? 'bg-white/20' : 'bg-[var(--accent-purple)]/20'}
+                    ${isSelected ? 'bg-white/20' : 'bg-[var(--accent-blue)]/20'}
                     ${option.id === 'rush' ? 'text-[var(--accent-orange)]' : ''}
                   `}>
                     {icon}

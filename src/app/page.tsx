@@ -96,7 +96,7 @@ export default function BuildMyPlan() {
       <header className="relative pt-20 pb-16 md:pt-12 md:pb-24 px-6 text-center overflow-hidden">
         {/* Ambient Background Glow */}
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-          <div className="w-[800px] h-[600px] bg-gradient-to-b from-[var(--accent-purple)]/8 via-[var(--accent-fuchsia)]/5 to-transparent rounded-full blur-[100px]" />
+          <div className="w-[800px] h-[600px] bg-gradient-to-b from-[var(--accent-blue)]/8 via-[var(--accent-teal)]/5 to-transparent rounded-full blur-[100px]" />
         </div>
 
         <motion.div
@@ -112,7 +112,7 @@ export default function BuildMyPlan() {
             transition={{ delay: 0.2, duration: 0.6 }}
             className="inline-flex items-center gap-2.5 px-5 py-2.5 mb-8 bg-[var(--bg-card)]/60 backdrop-blur-sm border border-[var(--border-subtle)] rounded-full"
           >
-            <Sparkles className="w-4 h-4 text-[var(--accent-orange)]" />
+            <Sparkles className="w-4 h-4 text-[var(--accent-purple)]" />
             <span className="text-sm text-[var(--text-secondary)] tracking-wide">13 Services • 3 Tiers • Unlimited Possibilities</span>
           </motion.div>
 
@@ -129,13 +129,14 @@ export default function BuildMyPlan() {
 
           {/* Discount Badges - Sophisticated, subtle */}
           <div className="flex flex-wrap items-center justify-center gap-3 md:gap-4">
+            {/* 10% OFF - Purple */}
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: 0.4, duration: 0.5 }}
-              className="flex items-center gap-2.5 px-5 py-3 bg-[var(--bg-card)]/40 backdrop-blur-sm rounded-2xl border border-[var(--border-subtle)]"
+              className="flex items-center gap-2.5 px-5 py-3 bg-gradient-to-r from-[var(--accent-purple)]/10 to-[var(--accent-purple-light)]/10 backdrop-blur-sm rounded-2xl border border-[var(--accent-purple)]/20"
             >
-              <div className="w-7 h-7 rounded-full bg-[var(--accent-purple)]/10 flex items-center justify-center">
+              <div className="w-7 h-7 rounded-full bg-[var(--accent-purple)]/15 flex items-center justify-center">
                 <Percent className="w-3.5 h-3.5 text-[var(--accent-purple)]" />
               </div>
               <div className="text-left">
@@ -144,33 +145,35 @@ export default function BuildMyPlan() {
               </div>
             </motion.div>
 
+            {/* 15% OFF - Blue */}
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: 0.5, duration: 0.5 }}
-              className="flex items-center gap-2.5 px-5 py-3 bg-[var(--bg-card)]/40 backdrop-blur-sm rounded-2xl border border-[var(--border-subtle)]"
+              className="flex items-center gap-2.5 px-5 py-3 bg-[var(--bg-card)]/40 backdrop-blur-sm rounded-2xl border border-[var(--accent-blue)]/20"
             >
-              <div className="w-7 h-7 rounded-full bg-[var(--accent-pink)]/10 flex items-center justify-center">
-                <Percent className="w-3.5 h-3.5 text-[var(--accent-pink)]" />
+              <div className="w-7 h-7 rounded-full bg-[var(--accent-blue)]/10 flex items-center justify-center">
+                <Percent className="w-3.5 h-3.5 text-[var(--accent-blue)]" />
               </div>
               <div className="text-left">
                 <span className="text-xs text-[var(--text-muted)] block">5+ services</span>
-                <span className="text-sm font-semibold text-[var(--accent-pink)]">15% OFF</span>
+                <span className="text-sm font-semibold text-[var(--accent-blue)]">15% OFF</span>
               </div>
             </motion.div>
 
+            {/* 20% OFF - Green/Teal */}
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: 0.6, duration: 0.5 }}
-              className="flex items-center gap-2.5 px-5 py-3 bg-gradient-to-r from-[var(--accent-orange)]/10 to-[var(--accent-gold)]/10 backdrop-blur-sm rounded-2xl border border-[var(--accent-orange)]/20"
+              className="flex items-center gap-2.5 px-5 py-3 bg-[var(--bg-card)]/40 backdrop-blur-sm rounded-2xl border border-[var(--accent-teal)]/20"
             >
-              <div className="w-7 h-7 rounded-full bg-[var(--accent-orange)]/15 flex items-center justify-center">
-                <Percent className="w-3.5 h-3.5 text-[var(--accent-orange)]" />
+              <div className="w-7 h-7 rounded-full bg-[var(--accent-teal)]/15 flex items-center justify-center">
+                <Percent className="w-3.5 h-3.5 text-[var(--accent-teal)]" />
               </div>
               <div className="text-left">
                 <span className="text-xs text-[var(--text-muted)] block">7+ services</span>
-                <span className="text-sm font-semibold text-[var(--accent-orange)]">20% OFF</span>
+                <span className="text-sm font-semibold text-[var(--accent-teal)]">20% OFF</span>
               </div>
             </motion.div>
           </div>
@@ -185,7 +188,7 @@ export default function BuildMyPlan() {
             >
               <Link
                 href={`${serviceMetadata[firstConfiguredService.type].builderPath}?summary=true`}
-                className="inline-flex items-center gap-3 px-6 py-3.5 bg-gradient-to-r from-[var(--accent-purple)] to-[var(--accent-pink)] text-white font-semibold rounded-xl hover:shadow-[0_8px_32px_rgba(167,139,250,0.35)] transition-all duration-300 hover:-translate-y-0.5"
+                className="inline-flex items-center gap-3 px-6 py-3.5 bg-gradient-to-r from-[rgba(139,92,246,0.6)] via-[rgba(59,130,246,0.5)] to-[rgba(16,185,129,0.5)] text-white font-semibold rounded-xl border border-[rgba(59,130,246,0.3)] hover:shadow-[0_8px_32px_rgba(59,130,246,0.25)] transition-all duration-300 hover:-translate-y-0.5"
               >
                 <FileText className="w-5 h-5" />
                 View Quote Summary
@@ -290,7 +293,7 @@ export default function BuildMyPlan() {
             <div>
               <span className="text-[var(--text-secondary)] text-sm">{itemCount} services selected</span>
               {discountPercentage > 0 && (
-                <span className="ml-2 px-2.5 py-1 bg-[var(--accent-purple)]/15 text-[var(--accent-purple)] text-xs font-medium rounded-full">
+                <span className="ml-2 px-2.5 py-1 bg-[var(--accent-blue)]/15 text-[var(--accent-blue)] text-xs font-medium rounded-full">
                   {discountPercentage}% OFF
                 </span>
               )}

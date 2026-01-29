@@ -57,8 +57,8 @@ export default function Step7Patterns() {
                 className={`
                   w-full p-4 rounded-xl text-left transition-all group
                   ${isSelected
-                    ? 'bg-gradient-to-br from-[var(--accent-purple)]/20 to-[var(--accent-pink)]/20 border-2 border-[var(--accent-purple)]'
-                    : 'bg-[var(--bg-card)] border border-[var(--border-subtle)] hover:border-[var(--accent-purple)]/50'
+                    ? 'bg-gradient-to-br from-[var(--accent-blue)]/20 to-[var(--accent-teal)]/20 border-2 border-[var(--accent-blue)]'
+                    : 'bg-[var(--bg-card)] border border-[var(--border-subtle)] hover:border-[var(--accent-blue)]/50'
                   }
                 `}
                 whileHover={{ scale: 1.02 }}
@@ -69,11 +69,11 @@ export default function Step7Patterns() {
                     <div className={`
                       p-2 rounded-lg
                       ${isSelected
-                        ? 'bg-[var(--accent-purple)]/30'
+                        ? 'bg-[var(--accent-blue)]/30'
                         : 'bg-[var(--bg-secondary)]'
                       }
                     `}>
-                      <Grid3X3 className={`w-5 h-5 ${isSelected ? 'text-[var(--accent-purple)]' : 'text-[var(--text-secondary)]'}`} />
+                      <Grid3X3 className={`w-5 h-5 ${isSelected ? 'text-[var(--accent-blue)]' : 'text-[var(--text-secondary)]'}`} />
                     </div>
                     <span className={`font-medium ${isSelected ? 'text-white' : 'text-[var(--text-secondary)] group-hover:text-white'}`}>
                       {option.label}
@@ -81,12 +81,12 @@ export default function Step7Patterns() {
                   </div>
                   <div className="flex items-center gap-2">
                     {isSelected && (
-                      <div className="w-5 h-5 rounded-full bg-[var(--accent-purple)] flex items-center justify-center">
+                      <div className="w-5 h-5 rounded-full bg-[var(--accent-blue)] flex items-center justify-center">
                         <Check className="w-3 h-3 text-white" />
                       </div>
                     )}
                     <span
-                      className="p-1 text-[var(--text-muted)] hover:text-[var(--accent-purple)] transition-colors cursor-pointer"
+                      className="p-1 text-[var(--text-muted)] hover:text-[var(--accent-blue)] transition-colors cursor-pointer"
                       onClick={(e) => {
                         e.stopPropagation();
                         setActiveTooltip(activeTooltip === option.id ? null : option.id);
@@ -120,11 +120,11 @@ export default function Step7Patterns() {
                   </button>
                   <div className="space-y-3 text-sm">
                     <div>
-                      <span className="text-[var(--accent-purple)] font-medium">What it is:</span>
+                      <span className="text-[var(--accent-blue)] font-medium">What it is:</span>
                       <p className="text-[var(--text-secondary)] mt-1">{option.tooltip.whatItIs}</p>
                     </div>
                     <div>
-                      <span className="text-[var(--accent-pink)] font-medium">Ideal if:</span>
+                      <span className="text-[var(--accent-teal)] font-medium">Ideal if:</span>
                       <p className="text-[var(--text-secondary)] mt-1">{option.tooltip.idealIf}</p>
                     </div>
                     <div>

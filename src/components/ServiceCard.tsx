@@ -51,7 +51,7 @@ export default function ServiceCard({ service, isExpanded, onToggleExpand, onScr
   const serviceIconMap: Record<string, { icon: React.ReactNode; color: string }> = {
     'websites': { icon: <Globe className="w-5 h-5" />, color: '#3B82F6' }, // Blue
     'app-creation': { icon: <Smartphone className="w-5 h-5" />, color: '#8B5CF6' }, // Purple
-    'animations': { icon: <Film className="w-5 h-5" />, color: '#EC4899' }, // Pink
+    'animations': { icon: <Film className="w-5 h-5" />, color: '#3B82F6' }, // Pink
     'images': { icon: <Image className="w-5 h-5" />, color: '#F59E0B' }, // Amber
     'ringtones': { icon: <Music className="w-5 h-5" />, color: '#10B981' }, // Emerald
     'paid-media': { icon: <Megaphone className="w-5 h-5" />, color: '#22C55E' }, // Green
@@ -88,7 +88,7 @@ export default function ServiceCard({ service, isExpanded, onToggleExpand, onScr
       <div className="relative mb-5">
         <div className="flex items-center gap-3 mb-2.5">
           {serviceIcon && (
-            <div className="w-9 h-9 rounded-lg flex items-center justify-center shrink-0 bg-[var(--accent-purple)]/20 text-[var(--accent-purple)]">
+            <div className="w-9 h-9 rounded-lg flex items-center justify-center shrink-0 bg-[var(--accent-blue)]/20 text-[var(--accent-blue)]">
               {serviceIcon.icon}
             </div>
           )}
@@ -115,13 +115,13 @@ export default function ServiceCard({ service, isExpanded, onToggleExpand, onScr
               className={`
                 relative px-2 py-4 rounded-xl text-center transition-all duration-300 flex flex-col items-center justify-center h-[90px]
                 ${isSelected
-                  ? 'text-white bg-gradient-to-br from-[var(--accent-purple)]/50 to-[var(--accent-pink)]/30 shadow-[0_4px_20px_rgba(139,92,246,0.3)] border border-[var(--accent-purple)]/60'
+                  ? 'text-white bg-gradient-to-br from-[var(--accent-purple)]/40 via-[var(--accent-blue)]/50 to-[var(--accent-teal)]/30 shadow-[0_4px_20px_rgba(59,130,246,0.3)] border border-[var(--accent-blue)]/60'
                   : 'bg-[var(--bg-secondary)]/60 text-[var(--text-secondary)] hover:bg-[var(--bg-secondary)] hover:text-white border border-[var(--border-subtle)] hover:border-[var(--border-accent)]'
                 }
               `}
             >
               {tier.popular && (
-                <div className="absolute -top-2.5 left-1/2 -translate-x-1/2 flex items-center gap-1 px-2 py-0.5 text-[8px] font-bold rounded-full uppercase tracking-wider shadow-sm whitespace-nowrap bg-gradient-to-r from-[var(--accent-purple)] to-[var(--accent-pink)] text-[#09090b]">
+                <div className="absolute -top-2.5 left-1/2 -translate-x-1/2 flex items-center gap-1 px-2 py-0.5 text-[8px] font-bold rounded-full uppercase tracking-wider shadow-sm whitespace-nowrap bg-gradient-to-r from-[var(--accent-purple)] via-[var(--accent-blue)] to-[var(--accent-teal)] text-[#09090b]">
                   <Star className="w-2 h-2" fill="currentColor" />
                   Popular
                 </div>
@@ -160,9 +160,9 @@ export default function ServiceCard({ service, isExpanded, onToggleExpand, onScr
           return (
             <Link
               href={config.href}
-              className="flex items-center justify-center gap-3 w-full h-full px-4 py-3 rounded-xl transition-all duration-300 bg-gradient-to-r from-[var(--accent-purple)]/50 to-[var(--accent-pink)]/50 text-white border border-[var(--accent-purple)]/40 hover:shadow-[0_4px_24px_rgba(139,92,246,0.3)] hover:from-[var(--accent-purple)]/60 hover:to-[var(--accent-pink)]/60 group"
+              className="flex items-center justify-center gap-3 w-full h-full px-4 py-3 rounded-xl transition-all duration-300 bg-gradient-to-r from-[var(--accent-purple)]/40 via-[var(--accent-blue)]/50 to-[var(--accent-teal)]/40 text-white border border-[var(--accent-blue)]/40 hover:shadow-[0_4px_24px_rgba(59,130,246,0.3)] hover:from-[var(--accent-purple)]/50 hover:via-[var(--accent-blue)]/60 hover:to-[var(--accent-teal)]/50 group"
             >
-              <span className="transition-transform group-hover:scale-110 text-[var(--accent-purple)]">
+              <span className="transition-transform group-hover:scale-110 text-[var(--accent-blue)]">
                 {serviceIcon.icon}
               </span>
               <span className="text-sm font-bold">{config.label}</span>
@@ -181,7 +181,7 @@ export default function ServiceCard({ service, isExpanded, onToggleExpand, onScr
             </div>
             <div className="space-y-1.5">
               <span className="text-[var(--text-muted)] text-[10px] uppercase tracking-wider font-medium">Outcome</span>
-              <p className="text-sm text-[var(--accent-purple)] font-medium leading-relaxed">{currentTier.outcome}</p>
+              <p className="text-sm text-[var(--accent-blue)] font-medium leading-relaxed">{currentTier.outcome}</p>
             </div>
           </>
         )}
@@ -295,7 +295,7 @@ export default function ServiceCard({ service, isExpanded, onToggleExpand, onScr
                               {addOn.name}
                             </span>
                           </span>
-                          <span className="text-[var(--accent-purple)] font-semibold">
+                          <span className="text-[var(--accent-blue)] font-semibold">
                             +${addOn.price}
                           </span>
                         </button>

@@ -63,7 +63,7 @@ export default function PaidMediaPriceSidebar({ currentStep, onGoToSummary }: Pa
       className="card p-6 sticky top-6"
     >
       <div className="flex items-center gap-2 mb-4">
-        <Calculator className="w-5 h-5 text-[var(--accent-purple)]" />
+        <Calculator className="w-5 h-5 text-[var(--accent-blue)]" />
         <h3 className="text-lg font-semibold text-white">Your Estimate</h3>
       </div>
 
@@ -166,7 +166,7 @@ export default function PaidMediaPriceSidebar({ currentStep, onGoToSummary }: Pa
               key={monthlyTotal}
               initial={{ scale: 1.1 }}
               animate={{ scale: 1 }}
-              className="text-lg font-bold text-[var(--accent-pink)]"
+              className="text-lg font-bold text-[var(--accent-teal)]"
             >
               {hasCustomQuote ? 'Custom' : `$${monthlyTotal.toFixed(2)}/mo`}
             </motion.span>
@@ -187,9 +187,9 @@ export default function PaidMediaPriceSidebar({ currentStep, onGoToSummary }: Pa
 
         {/* Total Investment */}
         {duration && !hasCustomQuote && (
-          <div className="pt-3 mt-3 border-t-2 border-[var(--accent-purple)]/50">
+          <div className="pt-3 mt-3 border-t-2 border-[var(--accent-blue)]/50">
             <div className="flex items-center gap-2 mb-2">
-              <TrendingUp className="w-4 h-4 text-[var(--accent-purple)]" />
+              <TrendingUp className="w-4 h-4 text-[var(--accent-blue)]" />
               <span className="text-sm text-[var(--text-muted)]">{durationMonths}-Month Investment</span>
             </div>
             <motion.div
@@ -211,7 +211,7 @@ export default function PaidMediaPriceSidebar({ currentStep, onGoToSummary }: Pa
       {currentStep < 10 && campaignType && platforms && (
         <motion.button
           onClick={onGoToSummary}
-          className="w-full mt-6 flex items-center justify-center gap-2 px-4 py-3 rounded-lg bg-[var(--bg-secondary)] border border-[var(--border-subtle)] text-[var(--text-secondary)] hover:border-[var(--accent-purple)] hover:text-white transition-all"
+          className="w-full mt-6 flex items-center justify-center gap-2 px-4 py-3 rounded-lg bg-[var(--bg-secondary)] border border-[var(--border-subtle)] text-[var(--text-secondary)] hover:border-[var(--accent-blue)] hover:text-white transition-all"
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
         >
