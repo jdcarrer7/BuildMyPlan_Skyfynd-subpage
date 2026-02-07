@@ -232,6 +232,23 @@ export default function ContentStrategyPriceSidebar({ currentStep, onGoToSummary
         </div>
       </div>
 
+      {/* Due Today */}
+      {!hasCustomQuote && totalInvestment > 0 && (
+        <div className="mt-4 pt-3 border-t-2 border-[var(--accent-purple)]/50">
+          <div className="flex justify-between items-center">
+            <span className="text-white font-bold">Due Today</span>
+            <motion.span
+              key={`due-${totalInvestment}`}
+              initial={{ scale: 1.1 }}
+              animate={{ scale: 1 }}
+              className="text-xl font-bold gradient-text"
+            >
+              ${totalInvestment.toLocaleString()}
+            </motion.span>
+          </div>
+        </div>
+      )}
+
       {/* Go to Summary Button */}
       {currentStep < 12 && contentGoal && depth && (
         <motion.button

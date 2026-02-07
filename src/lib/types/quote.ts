@@ -16,7 +16,7 @@ export interface BuilderServiceDetail {
 }
 
 export interface QuoteRequestPayload {
-  source: 'Main Page' | 'Rent Me a Site' | 'Custom Builder';
+  source: 'Main Page' | 'Rent Me a Site' | 'RentMe' | 'Custom Builder';
   name: string;
   email: string;
   company: string;
@@ -30,6 +30,7 @@ export interface QuoteRequestPayload {
   discountPercentage: number;
   grandTotal: number;
   servicesDetail: TierServiceDetail[] | BuilderServiceDetail[];
+  resolvedServices?: import('@/lib/types/admin').ResolvedServiceConfig[];
 }
 
 export interface QuoteSubmissionResult {

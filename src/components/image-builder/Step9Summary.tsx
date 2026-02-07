@@ -465,6 +465,10 @@ export default function Step9Summary({ showQuoteForm = false, onCloseQuoteForm }
                   ${total.toLocaleString()}
                 </motion.span>
               </div>
+              <div className="flex justify-between items-center mt-2 pt-2 border-t-2 border-[var(--accent-purple)]/50">
+                <span className="text-white font-bold">Due Today</span>
+                <span className="text-xl font-bold gradient-text">${total.toLocaleString()}</span>
+              </div>
             </>
           )}
         </div>

@@ -504,6 +504,10 @@ export default function Step13Summary({ showQuoteForm = false, onCloseQuoteForm 
                 <span className="text-white font-bold">Total Investment</span>
                 <span className="text-2xl font-bold gradient-text">${store.totalInvestment.toLocaleString()}</span>
               </div>
+              <div className="flex justify-between items-center mt-2 pt-2 border-t-2 border-[var(--accent-purple)]/50">
+                <span className="text-white font-bold">Due Today</span>
+                <span className="text-xl font-bold gradient-text">${store.totalInvestment.toLocaleString()}</span>
+              </div>
               <p className="text-xs text-[var(--text-muted)] text-center">
                 One-time project fee (no monthly recurring)
               </p>

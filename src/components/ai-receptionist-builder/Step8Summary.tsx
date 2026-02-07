@@ -548,6 +548,13 @@ export default function Step8Summary({ showQuoteForm, onCloseQuoteForm }: Step8S
                   ${store.oneTimeTotal.toFixed(2)}
                 </span>
               </div>
+
+              {/* Due Today */}
+              <div className="flex justify-between items-center mt-2 pt-2 border-t-2 border-[var(--accent-purple)]/50">
+                <span className="text-white font-bold">Due Today</span>
+                <span className="text-xl font-bold gradient-text">${(store.oneTimeTotal + store.monthlyTotal).toLocaleString()}</span>
+              </div>
+              <p className="text-xs text-[var(--text-muted)] mt-1">Setup + first month&apos;s service</p>
             </div>
 
             {store.hasCustomQuote && (

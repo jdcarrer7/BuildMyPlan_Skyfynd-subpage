@@ -79,12 +79,13 @@ export default function PlanSummary({ onRequestQuote }: PlanSummaryProps) {
       )}
 
       {/* Items List - Refined */}
-      <div className="space-y-2.5 mb-6 max-h-[280px] overflow-y-auto pr-1 -mr-1">
+      <div className="space-y-2.5 mb-6 max-h-[400px] overflow-y-auto pr-1 -mr-1">
         <AnimatePresence mode="popLayout">
           {items.map((item) => {
             const service = getServiceById(item.serviceId);
             if (!service) return null;
             const tier = service.tiers.find(t => t.id === item.tierId);
+            const includedFeatures = tier?.features.filter(f => f.included === true) || [];
 
             return (
               <motion.div
@@ -93,37 +94,60 @@ export default function PlanSummary({ onRequestQuote }: PlanSummaryProps) {
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: 20 }}
-                className="flex items-start gap-3 p-3.5 bg-[var(--bg-secondary)]/50 rounded-xl group border border-transparent hover:border-[var(--border-subtle)] transition-all duration-300"
+                className="p-3.5 bg-[var(--bg-secondary)]/50 rounded-xl group border border-transparent hover:border-[var(--border-subtle)] transition-all duration-300"
               >
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2">
-                    <h4 className="text-white font-medium text-sm truncate">{service.name}</h4>
-                    <span className="px-2 py-0.5 bg-[var(--bg-card)] text-[var(--text-muted)] text-[10px] rounded-md border border-[var(--border-subtle)]">
-                      {tier?.name}
-                    </span>
-                  </div>
-                  {item.addOns.length > 0 && (
-                    <div className="mt-1.5 flex flex-wrap gap-1.5">
-                      {item.addOns.map(addOnId => {
-                        const addOn = service.addOns.find(a => a.id === addOnId);
-                        return addOn ? (
-                          <span key={addOnId} className="text-[10px] text-[var(--accent-purple)] bg-[var(--accent-purple)]/10 px-2 py-0.5 rounded-md">
-                            +{addOn.name}
-                          </span>
-                        ) : null;
-                      })}
+                <div className="flex items-start gap-3">
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2">
+                      <h4 className="text-white font-medium text-sm truncate">{service.name}</h4>
+                      <span className="px-2 py-0.5 bg-[var(--bg-card)] text-[var(--text-muted)] text-[10px] rounded-md border border-[var(--border-subtle)]">
+                        {tier?.name}
+                      </span>
                     </div>
-                  )}
+                    {item.addOns.length > 0 && (
+                      <div className="mt-1.5 flex flex-wrap gap-1.5">
+                        {item.addOns.map(addOnId => {
+                          const addOn = service.addOns.find(a => a.id === addOnId);
+                          return addOn ? (
+                            <span key={addOnId} className="text-[10px] text-[var(--accent-purple)] bg-[var(--accent-purple)]/10 px-2 py-0.5 rounded-md">
+                              +{addOn.name}
+                            </span>
+                          ) : null;
+                        })}
+                      </div>
+                    )}
+                  </div>
+                  <div className="text-right flex items-center gap-2.5">
+                    <div>
+                      <span className="text-white font-semibold">${item.subtotal.toLocaleString()}</span>
+                      {tier?.priceType === 'monthly' && <span className="text-[var(--text-muted)] text-xs">/mo</span>}
+                    </div>
+                    <button
+                      onClick={() => removeItem(item.serviceId)}
+                      className="p-1.5 text-[var(--text-muted)] hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-all opacity-0 group-hover:opacity-100"
+                    >
+                      <X className="w-4 h-4" />
+                    </button>
+                  </div>
                 </div>
-                <div className="text-right flex items-center gap-2.5">
-                  <span className="text-white font-semibold">${item.subtotal.toLocaleString()}</span>
-                  <button
-                    onClick={() => removeItem(item.serviceId)}
-                    className="p-1.5 text-[var(--text-muted)] hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-all opacity-0 group-hover:opacity-100"
-                  >
-                    <X className="w-4 h-4" />
-                  </button>
-                </div>
+                {/* Tier Features */}
+                {includedFeatures.length > 0 && (
+                  <div className="mt-2.5 pt-2.5 border-t border-[var(--border-subtle)]/50">
+                    <ul className="space-y-1">
+                      {includedFeatures.map((feat, idx) => (
+                        <li key={idx} className="flex items-start gap-2 text-[11px]">
+                          <span className="text-[var(--accent-purple)] mt-0.5">&#10003;</span>
+                          <span className="text-[var(--text-muted)]">
+                            {feat.name}{typeof feat.value === 'string' ? `: ${feat.value}` : ''}
+                          </span>
+                        </li>
+                      ))}
+                    </ul>
+                    <p className="text-[10px] text-[var(--text-muted)]/60 mt-2 italic">
+                      Price may vary based on final project specifications
+                    </p>
+                  </div>
+                )}
               </motion.div>
             );
           })}
@@ -159,6 +183,11 @@ export default function PlanSummary({ onRequestQuote }: PlanSummaryProps) {
           Add {7 - itemCount} more {7 - itemCount === 1 ? 'service' : 'services'} for 20% off
         </p>
       )}
+
+      {/* Disclaimer */}
+      <p className="text-[10px] text-[var(--text-muted)]/60 text-center mb-4 italic">
+        Price may vary based on final project specifications
+      </p>
 
       {/* CTA Button - Refined */}
       <motion.button

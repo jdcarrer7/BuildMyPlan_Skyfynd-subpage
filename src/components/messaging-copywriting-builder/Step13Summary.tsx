@@ -404,6 +404,13 @@ export default function Step13Summary({ showQuoteForm = false, onCloseQuoteForm 
                         <p className="text-2xl font-bold text-[var(--accent-pink)]">${store.monthlyTotal.toLocaleString()}/mo</p>
                       </div>
                     </div>
+                    <div className="flex justify-between items-center mt-2 pt-2 border-t-2 border-[var(--accent-purple)]/50">
+                      <span className="text-white font-bold">Due Today</span>
+                      <span className="text-xl font-bold gradient-text">${(store.oneTimeTotal + store.monthlyTotal).toLocaleString()}</span>
+                    </div>
+                    {store.monthlyTotal > 0 && (
+                      <p className="text-xs text-[var(--text-muted)] mt-1">One-time + first month&apos;s retainer</p>
+                    )}
                   </div>
                 )}
               </div>

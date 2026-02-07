@@ -427,6 +427,11 @@ export default function Step11Summary({ showQuoteForm = false, onCloseQuoteForm 
                 </div>
                 <span className="text-2xl font-bold gradient-text">${store.totalInvestment.toLocaleString()}</span>
               </div>
+              <div className="flex justify-between items-center mt-2 pt-2 border-t-2 border-[var(--accent-purple)]/50">
+                <span className="text-white font-bold">Due Today</span>
+                <span className="text-xl font-bold gradient-text">${(store.oneTimeTotal + store.monthlyTotal).toLocaleString()}</span>
+              </div>
+              <p className="text-xs text-[var(--text-muted)] mt-1">Setup + first month&apos;s service</p>
             </div>
           )}
         </div>

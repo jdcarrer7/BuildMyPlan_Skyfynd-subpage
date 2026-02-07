@@ -4,7 +4,7 @@ import dns from 'dns';
 // Force IPv4 to avoid IPv6 connection timeouts with Google Apps Script
 dns.setDefaultResultOrder('ipv4first');
 
-const VALID_SOURCES = ['Main Page', 'Rent Me a Site', 'Custom Builder'] as const;
+const VALID_SOURCES = ['Main Page', 'Rent Me a Site', 'RentMe', 'Custom Builder'] as const;
 
 export async function POST(request: Request) {
   try {

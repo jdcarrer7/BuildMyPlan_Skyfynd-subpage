@@ -256,6 +256,28 @@ export default function CombinedEstimateSidebar({ currentService, onRequestQuote
             </span>
           </div>
         )}
+
+        {/* Due Today */}
+        {!combinedTotals.hasCustomQuote && (combinedTotals.oneTimeTotal + combinedTotals.monthlyTotal) > 0 && (
+          <div className="mt-3 pt-3 border-t-2 border-[var(--accent-purple)]/50">
+            <div className="flex justify-between items-center">
+              <span className="text-white font-bold">Due Today</span>
+              <motion.span
+                key={`due-${combinedTotals.oneTimeTotal}-${combinedTotals.monthlyTotal}`}
+                initial={{ scale: 1.1 }}
+                animate={{ scale: 1 }}
+                className="text-xl font-bold gradient-text"
+              >
+                ${(combinedTotals.oneTimeTotal + combinedTotals.monthlyTotal).toLocaleString()}
+              </motion.span>
+            </div>
+            {combinedTotals.monthlyTotal > 0 && (
+              <p className="text-xs text-[var(--text-muted)] mt-1">
+                One-time + first month&apos;s subscription
+              </p>
+            )}
+          </div>
+        )}
       </div>
 
       {/* Action Buttons */}

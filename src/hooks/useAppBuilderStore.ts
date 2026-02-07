@@ -571,7 +571,11 @@ export const useAppBuilderStore = create<AppBuilderState>((set, get) => ({
       backendPrice: state.backendPrice,
       selectedFeatures: state.selectedFeatures,
       selectedAIFeatures: state.selectedAIFeatures,
-      selectedServices: state.selectedServices,
+      selectedServices: state.selectedServices.map(s => ({
+        id: s.id,
+        price: s.price ?? 0,
+        recurring: s.recurring,
+      })),
       timeline: state.timeline,
       timelineMultiplier: state.timelineMultiplier,
       oneTimeSubtotal: state.oneTimeSubtotal,

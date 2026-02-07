@@ -1,9 +1,11 @@
 import { usePlanStore } from '@/hooks/usePlanStore';
 import { getServiceById } from '@/data/services';
+import type { Feature } from '@/data/services';
 import {
   useUnifiedQuoteStore,
   serviceMetadata,
   type ConfiguredService,
+  type ServiceType,
   type WebsiteConfig,
   type AppConfig,
   type PaidMediaConfig,
@@ -13,6 +15,67 @@ import {
   type AIReceptionistConfig,
 } from '@/hooks/useUnifiedQuoteStore';
 import type { QuoteRequestPayload, TierServiceDetail, BuilderServiceDetail } from '@/lib/types/quote';
+import type { ResolvedServiceConfig, ResolvedStep } from '@/lib/types/admin';
+import { resolveServiceConfig } from '@/lib/services/configResolver';
+
+/**
+ * Converts a tier service's features into ResolvedServiceConfig format
+ * so tier quotes get the same feature-level breakdown in emails as custom builders.
+ */
+function resolveTierService(
+  serviceId: string,
+  tierId: string,
+  addOnIds: string[],
+  itemSubtotal: number
+): ResolvedServiceConfig {
+  const service = getServiceById(serviceId);
+  const tier = service?.tiers.find(t => t.id === tierId);
+  const tierName = tier?.name ?? tierId;
+  const serviceLabel = service ? `${service.name} — ${tierName}` : serviceId;
+
+  // Convert included features to steps
+  const steps: ResolvedStep[] = [];
+  if (tier) {
+    for (const feat of tier.features) {
+      if (feat.included === true) {
+        steps.push({
+          stepName: feat.name,
+          selectedLabel: typeof feat.value === 'boolean' ? 'Included' : String(feat.value),
+          selectedId: 'included',
+          priceImpact: null,
+          isRecurring: false,
+        });
+      }
+    }
+  }
+
+  // Add selected add-ons as steps
+  if (service && addOnIds.length > 0) {
+    for (const addOnId of addOnIds) {
+      const addOn = service.addOns.find(a => a.id === addOnId);
+      if (addOn) {
+        steps.push({
+          stepName: 'Add-on',
+          selectedLabel: addOn.name,
+          selectedId: addOnId,
+          priceImpact: addOn.price,
+          isRecurring: addOn.name.toLowerCase().includes('monthly'),
+        });
+      }
+    }
+  }
+
+  const isMonthly = tier?.priceType === 'monthly';
+
+  return {
+    serviceType: serviceId as ServiceType,
+    serviceLabel,
+    steps,
+    oneTimeTotal: isMonthly ? 0 : itemSubtotal,
+    monthlyTotal: isMonthly ? itemSubtotal : 0,
+    hasCustomQuote: false,
+  };
+}
 
 /**
  * Builds a quote payload from the tier-based plan store (Main Page + Rent Me a Site).
@@ -39,6 +102,11 @@ export function buildTierQuotePayload(
 
   const serviceNames = servicesDetail.map(s => s.serviceName).join(', ');
 
+  // Resolve tier features for email/admin breakdown
+  const resolvedServices = items.map(item =>
+    resolveTierService(item.serviceId, item.tierId, item.addOns, item.subtotal)
+  );
+
   return {
     source,
     name: formData.name,
@@ -54,6 +122,7 @@ export function buildTierQuotePayload(
     discountPercentage,
     grandTotal: total,
     servicesDetail,
+    resolvedServices,
   };
 }
 
@@ -117,6 +186,12 @@ export function buildBuilderQuotePayload(
 
   const serviceNames = servicesDetail.map(s => s.serviceLabel).join(', ');
 
+  // Resolve step-by-step configs for admin viewing
+  const resolvedServices = configuredServices.map(service => {
+    const serviceTotals = getServiceTotals(service);
+    return resolveServiceConfig(service.type, service.config, serviceTotals);
+  });
+
   return {
     source: 'Custom Builder',
     name: formData.name,
@@ -130,7 +205,8 @@ export function buildBuilderQuotePayload(
     oneTimeTotal: totals.oneTimeTotal,
     monthlyTotal: totals.monthlyTotal,
     discountPercentage: 0,
-    grandTotal: totals.oneTimeTotal,
+    grandTotal: totals.oneTimeTotal + totals.monthlyTotal,
     servicesDetail,
+    resolvedServices,
   };
 }
