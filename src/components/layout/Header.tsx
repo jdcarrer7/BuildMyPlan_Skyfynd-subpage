@@ -6,11 +6,12 @@ import Link from "next/link";
 // Base URL for the main Skyfynd site
 const SKYFYND_BASE_URL = "https://www.skyfynd.io";
 
-// Custom hook to detect window width
+// Custom hook to detect window width (SSR-safe)
 function useWindowWidth() {
-  const [width, setWidth] = useState(typeof window !== "undefined" ? window.innerWidth : 1400);
+  const [width, setWidth] = useState(1400);
 
   useEffect(() => {
+    setWidth(window.innerWidth);
     const handleResize = () => setWidth(window.innerWidth);
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
@@ -63,7 +64,7 @@ function Company({ size = 48, textSize = 20 }: { size?: number; textSize?: numbe
         <img
           alt="Skyfynd logo"
           style={companyStyles.logo}
-          src="https://media-skyfynd.jdcarrero7.workers.dev/Skyfynd+Landing+Page/Skyfynd+Logo/Skyfynd+logo.png"
+          src="https://f004.backblazeb2.com/file/carrero-biz/Skyfynd%20Landing%20Page/Skyfynd%20Logo/skyfynd_logo.webp"
         />
       </div>
       <div style={companyStyles.textWrapper}>
@@ -768,7 +769,7 @@ export default function Header() {
       transform: isVisible ? 'translateY(0)' : 'translateY(-100%)',
       opacity: isVisible ? 1 : 0,
     }}>
-      <NavBarShell width="1200px">
+      <NavBarShell width="min(calc(100% - 48px), 1280px)">
         <div style={headerStyles.desktopInner}>
           <Company size={48} textSize={20} />
           <DesktopNav />

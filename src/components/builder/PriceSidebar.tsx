@@ -87,6 +87,28 @@ export default function PriceSidebar({ currentStep, onGoToSummary }: PriceSideba
         )}
       </div>
 
+      {/* Due Today */}
+      {!hasCustomQuote && (total + monthlyRecurring) > 0 && (
+        <div className="mt-4 pt-3 border-t-2 border-[var(--accent-purple)]/50">
+          <div className="flex justify-between items-center">
+            <span className="text-white font-bold">Due Today</span>
+            <motion.span
+              key={`due-${total}-${monthlyRecurring}`}
+              initial={{ scale: 1.1 }}
+              animate={{ scale: 1 }}
+              className="text-xl font-bold gradient-text"
+            >
+              ${(total + monthlyRecurring).toLocaleString()}
+            </motion.span>
+          </div>
+          {monthlyRecurring > 0 && (
+            <p className="text-xs text-[var(--text-muted)] mt-1">
+              One-time + first month&apos;s subscription
+            </p>
+          )}
+        </div>
+      )}
+
       <p className="text-[10px] text-[var(--text-muted)] mt-4">
         *Estimate based on selections. Final price confirmed after consultation.
       </p>

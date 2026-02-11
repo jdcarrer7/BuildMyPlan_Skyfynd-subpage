@@ -2,17 +2,10 @@
 
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { useBuilderStore } from '@/hooks/useBuilderStore';
-import {
-  projectTypes,
-  siteSizeOptions,
-  designOptions,
-  cmsOptions,
-  features,
-  additionalServices,
-  timelineOptions,
-} from '@/data/websiteBuilder';
+import { useUnifiedQuoteStore } from '@/hooks/useUnifiedQuoteStore';
 import { ArrowLeft, Send, CheckCircle, User, Mail, Building2, Phone, MessageSquare } from 'lucide-react';
+import { buildBuilderQuotePayload } from '@/lib/services/buildQuotePayload';
+import { submitQuote } from '@/lib/services/quoteSubmission';
 
 interface BuilderQuoteFormProps {
   onBack: () => void;
@@ -22,28 +15,16 @@ export default function BuilderQuoteForm({ onBack }: BuilderQuoteFormProps) {
   const {
     customerInfo,
     setCustomerInfo,
-    projectType,
-    siteSize,
-    siteSizePrice,
-    designComplexity,
-    designPrice,
-    cms,
-    cmsPrice,
-    selectedFeatures,
-    selectedServices,
-    timeline,
-    timelineMultiplier,
-    subtotal,
-    rushFee,
-    total,
-    monthlyRecurring,
-    hasCustomQuote,
-    resetBuilder,
-  } = useBuilderStore();
+    getCombinedTotals,
+    resetAllQuotes,
+  } = useUnifiedQuoteStore();
+
+  const { oneTimeTotal, monthlyTotal, hasCustomQuote } = getCombinedTotals();
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [submitError, setSubmitError] = useState<string | null>(null);
 
   const validate = () => {
     const newErrors: Record<string, string> = {};
@@ -68,50 +49,22 @@ export default function BuilderQuoteForm({ onBack }: BuilderQuoteFormProps) {
     if (!validate()) return;
 
     setIsSubmitting(true);
+    setSubmitError(null);
 
-    // Prepare summary data
-    const summaryData = {
-      customerInfo,
-      projectType: projectTypes.find(p => p.id === projectType)?.label,
-      siteSize: siteSizeOptions.find(s => s.id === siteSize)?.label,
-      siteSizePrice,
-      designComplexity: designOptions.find(d => d.id === designComplexity)?.label,
-      designPrice,
-      cms: cmsOptions.find(c => c.id === cms)?.label,
-      cmsPrice,
-      features: selectedFeatures.map(sf => {
-        const feature = features.find(f => f.id === sf.id);
-        const option = feature?.options.find(o => o.id === sf.optionId);
-        return {
-          name: feature?.name,
-          option: option?.label,
-          price: sf.price,
-        };
-      }),
-      services: selectedServices.map(ss => {
-        const service = additionalServices.find(s => s.id === ss.id);
-        return {
-          name: service?.label,
-          price: ss.price,
-          recurring: ss.recurring,
-        };
-      }),
-      timeline: timelineOptions.find(t => t.id === timeline)?.label,
-      timelineMultiplier,
-      subtotal,
-      rushFee,
-      total,
-      monthlyRecurring,
-      hasCustomQuote,
-    };
+    try {
+      const payload = buildBuilderQuotePayload(customerInfo);
+      const result = await submitQuote(payload);
 
-    // Simulate API call
-    console.log('Website Builder Quote Submission:', summaryData);
-
-    await new Promise(resolve => setTimeout(resolve, 1500));
-
-    setIsSubmitting(false);
-    setIsSubmitted(true);
+      if (result.success) {
+        setIsSubmitted(true);
+      } else {
+        setSubmitError(result.message);
+      }
+    } catch {
+      setSubmitError('Something went wrong. Please try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   if (isSubmitted) {
@@ -140,7 +93,7 @@ export default function BuilderQuoteForm({ onBack }: BuilderQuoteFormProps) {
         <div className="flex flex-col sm:flex-row gap-3 justify-center">
           <button
             onClick={() => {
-              resetBuilder();
+              resetAllQuotes();
               window.location.href = '/';
             }}
             className="px-6 py-3 rounded-lg bg-[var(--bg-secondary)] text-white hover:bg-[var(--bg-card-hover)] transition-colors"
@@ -149,7 +102,7 @@ export default function BuilderQuoteForm({ onBack }: BuilderQuoteFormProps) {
           </button>
           <button
             onClick={() => {
-              resetBuilder();
+              resetAllQuotes();
               setIsSubmitted(false);
             }}
             className="btn-primary px-6 py-3"
@@ -283,16 +236,31 @@ export default function BuilderQuoteForm({ onBack }: BuilderQuoteFormProps) {
           <div className="flex justify-between items-center">
             <span className="text-[var(--text-secondary)]">Estimated Total</span>
             <span className="text-xl font-bold gradient-text">
-              {hasCustomQuote ? 'Custom Quote' : `$${total.toLocaleString()}`}
+              {hasCustomQuote ? 'Custom Quote' : `$${oneTimeTotal.toLocaleString()}`}
             </span>
           </div>
-          {monthlyRecurring > 0 && (
+          {monthlyTotal > 0 && (
             <div className="flex justify-between items-center mt-1 text-sm">
               <span className="text-[var(--text-muted)]">+ Monthly</span>
-              <span className="text-[var(--text-secondary)]">${monthlyRecurring}/mo</span>
+              <span className="text-[var(--text-secondary)]">${monthlyTotal}/mo</span>
+            </div>
+          )}
+          {!hasCustomQuote && (
+            <div className="flex justify-between items-center mt-2 pt-2 border-t border-[var(--border-subtle)]">
+              <span className="text-white font-semibold">Due Today</span>
+              <span className="text-lg font-bold gradient-text">
+                ${(oneTimeTotal + monthlyTotal).toLocaleString()}
+              </span>
             </div>
           )}
         </div>
+
+        {/* Error Message */}
+        {submitError && (
+          <div className="p-3 bg-red-500/10 border border-red-500/30 rounded-lg text-red-400 text-sm">
+            {submitError}
+          </div>
+        )}
 
         {/* Submit Button */}
         <motion.button

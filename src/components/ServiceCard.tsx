@@ -4,9 +4,10 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Service } from '@/data/services';
 import { usePlanStore } from '@/hooks/usePlanStore';
-import { Check, Plus, Minus, ChevronDown, ChevronUp, Star, LayoutGrid, Wrench, Smartphone, Film, Image, Music, Megaphone, Share2, Mail, Target, Palette, Layers, FileText, PenTool, Globe, Sparkles, Zap } from 'lucide-react';
+import { Check, Plus, Minus, ChevronDown, ChevronUp, Star, LayoutGrid, Wrench, Smartphone, Film, Image, Music, Megaphone, Share2, Mail, Target, Palette, Layers, FileText, PenTool, Globe, Sparkles, Zap, Phone } from 'lucide-react';
 import Link from 'next/link';
 import ComparisonModal from './ComparisonModal';
+import RentMySiteModal from './RentMySiteModal';
 
 interface ServiceCardProps {
   service: Service;
@@ -18,6 +19,7 @@ interface ServiceCardProps {
 export default function ServiceCard({ service, isExpanded, onToggleExpand, onScrollToCard }: ServiceCardProps) {
   const [selectedTier, setSelectedTier] = useState<'essential' | 'pro' | 'enterprise'>('pro');
   const [isComparisonOpen, setIsComparisonOpen] = useState(false);
+  const [isRentModalOpen, setIsRentModalOpen] = useState(false);
 
   const { addItem, removeItem, isServiceInPlan, getItemByServiceId, toggleAddOn } = usePlanStore();
 
@@ -45,7 +47,7 @@ export default function ServiceCard({ service, isExpanded, onToggleExpand, onScr
   };
 
   // Check if this service has a custom builder
-  const hasCustomBuilder = ['websites', 'app-creation', 'animations', 'images', 'ringtones', 'paid-media', 'social-media', 'email-marketing', 'brand-strategy', 'visual-identity', 'brand-applications', 'content-strategy', 'copywriting'].includes(service.id);
+  const hasCustomBuilder = ['websites', 'app-creation', 'animations', 'images', 'ringtones', 'paid-media', 'social-media', 'email-marketing', 'brand-strategy', 'visual-identity', 'brand-applications', 'content-strategy', 'copywriting', 'ai-receptionist'].includes(service.id);
 
   // Service icon and color mapping (matching SkyFynd nav bar style)
   const serviceIconMap: Record<string, { icon: React.ReactNode; color: string }> = {
@@ -185,6 +187,17 @@ export default function ServiceCard({ service, isExpanded, onToggleExpand, onScr
             </div>
           </>
         )}
+
+        {service.id === 'ai-receptionist' && (
+          <Link
+            href="/build-my-receptionist"
+            className="relative p-3.5 rounded-xl text-center transition-all duration-300 bg-gradient-to-br from-[var(--accent-orange)] to-[var(--accent-gold)] text-[#09090b] hover:shadow-[0_4px_24px_rgba(212,165,116,0.4)] flex flex-col items-center justify-center group"
+          >
+            <Phone className="w-5 h-5 mb-1.5 transition-transform group-hover:scale-110" />
+            <div className="text-xs font-bold">Build My</div>
+            <div className="text-xs font-bold">AI Agent</div>
+          </Link>
+        )}
       </div>
 
       {/* Action Buttons - Aligned with equal heights */}
@@ -230,6 +243,34 @@ export default function ServiceCard({ service, isExpanded, onToggleExpand, onScr
           {isExpanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
         </button>
       </div>
+
+      {/* Rent Me a Site - Website only */}
+      {service.id === 'websites' && (
+        <div className="mt-5">
+          {/* OR Divider */}
+          <div className="flex items-center gap-3 mb-4">
+            <div className="flex-1 h-px bg-[var(--border-subtle)]" />
+            <span className="text-xs font-semibold text-[var(--text-muted)] uppercase tracking-wider">OR</span>
+            <div className="flex-1 h-px bg-[var(--border-subtle)]" />
+          </div>
+
+          {/* Rent Button with NEW circle badge */}
+          <div className="relative">
+            {/* NEW circle badge - upper left corner */}
+            <div className="absolute -top-3 -left-2 z-10 w-10 h-10 rounded-full bg-gradient-to-br from-[var(--accent-orange)] to-[var(--accent-pink)] flex items-center justify-center shadow-[0_2px_12px_rgba(236,72,153,0.4)] animate-pulse">
+              <span className="text-[7px] font-black text-white uppercase leading-tight text-center">New!</span>
+            </div>
+            <motion.button
+              onClick={() => setIsRentModalOpen(true)}
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              className="w-full py-3.5 rounded-xl font-semibold text-white bg-gradient-to-r from-[var(--accent-purple)] via-[var(--accent-fuchsia)] to-[var(--accent-pink)] hover:shadow-[0_4px_24px_rgba(167,139,250,0.35)] transition-all duration-300"
+            >
+              Rent Me a Site
+            </motion.button>
+          </div>
+        </div>
+      )}
 
       {/* Expanded Features - Refined */}
       <AnimatePresence>
@@ -315,6 +356,14 @@ export default function ServiceCard({ service, isExpanded, onToggleExpand, onScr
         isOpen={isComparisonOpen}
         onClose={() => setIsComparisonOpen(false)}
       />
+
+      {/* Rent My Site Modal - Website only */}
+      {service.id === 'websites' && (
+        <RentMySiteModal
+          isOpen={isRentModalOpen}
+          onClose={() => setIsRentModalOpen(false)}
+        />
+      )}
     </motion.div>
   );
 }

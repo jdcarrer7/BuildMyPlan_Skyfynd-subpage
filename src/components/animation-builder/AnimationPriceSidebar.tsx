@@ -77,6 +77,23 @@ export default function AnimationPriceSidebar({ currentStep, onGoToSummary }: An
         </div>
       </div>
 
+      {/* Due Today */}
+      {!hasCustomQuote && total > 0 && (
+        <div className="mt-4 pt-3 border-t-2 border-[var(--accent-purple)]/50">
+          <div className="flex justify-between items-center">
+            <span className="text-white font-bold">Due Today</span>
+            <motion.span
+              key={`due-${total}`}
+              initial={{ scale: 1.1 }}
+              animate={{ scale: 1 }}
+              className="text-xl font-bold gradient-text"
+            >
+              ${total.toLocaleString()}
+            </motion.span>
+          </div>
+        </div>
+      )}
+
       <p className="text-[10px] text-[var(--text-muted)] mt-4">
         *Estimate based on selections. Final price confirmed after consultation.
       </p>

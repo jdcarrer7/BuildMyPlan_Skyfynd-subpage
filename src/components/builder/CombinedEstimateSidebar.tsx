@@ -1,8 +1,9 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { useUnifiedQuoteStore, serviceMetadata, WebsiteConfig, AppConfig, AnimationConfig, ImageConfig, SoundConfig, PaidMediaConfig, SocialMediaConfig, EmailMarketingConfig, BrandStrategyConfig, VisualIdentityConfig, BrandApplicationsConfig, ContentStrategyConfig, MessagingCopywritingConfig, ServiceType } from '@/hooks/useUnifiedQuoteStore';
-import { Calculator, AlertCircle, Globe, Smartphone, Film, Image, Music, Megaphone, Share2, Mail, Target, Palette, Layers, FileText, PenTool, ArrowLeft, Send } from 'lucide-react';
+import { useUnifiedQuoteStore, serviceMetadata, WebsiteConfig, AppConfig, AnimationConfig, ImageConfig, SoundConfig, PaidMediaConfig, SocialMediaConfig, EmailMarketingConfig, BrandStrategyConfig, VisualIdentityConfig, BrandApplicationsConfig, ContentStrategyConfig, MessagingCopywritingConfig, AIReceptionistConfig, ServiceType } from '@/hooks/useUnifiedQuoteStore';
+import { Calculator, AlertCircle, Globe, Smartphone, Film, Image, Music, Megaphone, Share2, Mail, Target, Palette, Layers, FileText, PenTool, ArrowLeft, Send, Phone } from 'lucide-react';
 import Link from 'next/link';
 
 interface CombinedEstimateSidebarProps {
@@ -11,14 +12,28 @@ interface CombinedEstimateSidebarProps {
 }
 
 export default function CombinedEstimateSidebar({ currentService, onRequestQuote }: CombinedEstimateSidebarProps) {
-  const { getAllConfiguredServices, getCombinedTotals } = useUnifiedQuoteStore();
+  const [isHydrated, setIsHydrated] = useState(false);
+  const unifiedStore = useUnifiedQuoteStore();
 
-  const configuredServices = getAllConfiguredServices();
-  const combinedTotals = getCombinedTotals();
+  // Wait for Zustand persist to finish hydrating from localStorage
+  useEffect(() => {
+    if (useUnifiedQuoteStore.persist.hasHydrated()) {
+      setIsHydrated(true);
+    } else {
+      const unsubscribe = useUnifiedQuoteStore.persist.onFinishHydration(() => {
+        setIsHydrated(true);
+      });
+      return () => unsubscribe();
+    }
+  }, []);
+
+  // Only get services after hydration
+  const configuredServices = isHydrated ? unifiedStore.getAllConfiguredServices() : [];
+  const combinedTotals = isHydrated ? unifiedStore.getCombinedTotals() : { oneTimeTotal: 0, monthlyTotal: 0, hasCustomQuote: false, serviceCount: 0 };
   const isMultipleServices = configuredServices.length > 1;
 
   // Get service details for breakdown
-  const getServiceDetails = (type: ServiceType, config: WebsiteConfig | AppConfig | AnimationConfig | ImageConfig | SoundConfig | PaidMediaConfig | SocialMediaConfig | EmailMarketingConfig | BrandStrategyConfig | VisualIdentityConfig | BrandApplicationsConfig | ContentStrategyConfig | MessagingCopywritingConfig) => {
+  const getServiceDetails = (type: ServiceType, config: WebsiteConfig | AppConfig | AnimationConfig | ImageConfig | SoundConfig | PaidMediaConfig | SocialMediaConfig | EmailMarketingConfig | BrandStrategyConfig | VisualIdentityConfig | BrandApplicationsConfig | ContentStrategyConfig | MessagingCopywritingConfig | AIReceptionistConfig) => {
     if (type === 'website') {
       const websiteConfig = config as WebsiteConfig;
       return {
@@ -127,6 +142,15 @@ export default function CombinedEstimateSidebar({ currentService, onRequestQuote
         monthly: messagingConfig.monthlyTotal,
         hasCustomQuote: messagingConfig.hasCustomQuote,
       };
+    } else if (type === 'ai-receptionist') {
+      const aiReceptionistConfig = config as AIReceptionistConfig;
+      return {
+        label: 'AI Receptionist',
+        icon: Phone,
+        oneTime: aiReceptionistConfig.oneTimeTotal,
+        monthly: aiReceptionistConfig.monthlyTotal,
+        hasCustomQuote: aiReceptionistConfig.hasCustomQuote,
+      };
     } else {
       const strategyConfig = config as BrandStrategyConfig;
       return {
@@ -230,6 +254,28 @@ export default function CombinedEstimateSidebar({ currentService, onRequestQuote
             <span className="text-lg font-semibold text-[var(--accent-teal)]">
               ${combinedTotals.monthlyTotal.toLocaleString()}/mo
             </span>
+          </div>
+        )}
+
+        {/* Due Today */}
+        {!combinedTotals.hasCustomQuote && (combinedTotals.oneTimeTotal + combinedTotals.monthlyTotal) > 0 && (
+          <div className="mt-3 pt-3 border-t-2 border-[var(--accent-purple)]/50">
+            <div className="flex justify-between items-center">
+              <span className="text-white font-bold">Due Today</span>
+              <motion.span
+                key={`due-${combinedTotals.oneTimeTotal}-${combinedTotals.monthlyTotal}`}
+                initial={{ scale: 1.1 }}
+                animate={{ scale: 1 }}
+                className="text-xl font-bold gradient-text"
+              >
+                ${(combinedTotals.oneTimeTotal + combinedTotals.monthlyTotal).toLocaleString()}
+              </motion.span>
+            </div>
+            {combinedTotals.monthlyTotal > 0 && (
+              <p className="text-xs text-[var(--text-muted)] mt-1">
+                One-time + first month&apos;s subscription
+              </p>
+            )}
           </div>
         )}
       </div>

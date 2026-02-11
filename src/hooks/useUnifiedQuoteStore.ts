@@ -454,6 +454,46 @@ export interface MessagingCopywritingConfig {
   hasCustomQuote: boolean;
 }
 
+export interface AIReceptionistConfig {
+  basePackage: 'starter' | 'business' | 'enterprise' | 'custom' | null;
+  // Phone Setup
+  phoneNumberType: 'local' | 'tollfree' | 'vanity' | null;
+  additionalLines: string | null;
+  coverageArea: 'us' | 'us-canada' | 'international' | null;
+  // Call Handling
+  monthlyMinutes: string | null;
+  availability: 'business' | 'extended' | '24/7' | null;
+  callTransfer: 'none' | 'single' | 'multiple' | 'smart' | null;
+  voicemailType: 'basic' | 'transcript' | 'ai-summary' | null;
+  maxCallDuration: '5' | '10' | '15' | 'unlimited' | null;
+  // AI Capabilities
+  language: 'english' | 'bilingual-spanish' | 'bilingual-other' | 'multilingual' | null;
+  voiceStyle: 'standard' | 'premium' | 'custom' | 'cloned' | null;
+  knowledgeBaseSize: '25' | '50' | '100' | '250' | 'unlimited' | null;
+  conversationComplexity: 'simple' | 'multiturn' | 'complex' | 'dynamic' | null;
+  personality: 'default' | 'custom' | 'industry' | null;
+  // Integrations
+  leadCapture: 'sheets' | 'airtable' | 'notion' | 'hubspot' | 'salesforce' | 'custom' | null;
+  calendar: 'none' | 'google' | 'calendly' | 'cal' | 'acuity' | 'custom' | null;
+  notifications: string[];
+  additionalIntegrations: string[];
+  // Reporting
+  transcripts: 'none' | 'full' | null;
+  aiSummaries: 'none' | 'enabled' | null;
+  analyticsLevel: 'basic' | 'standard' | 'advanced' | null;
+  reportingFrequency: 'none' | 'weekly' | 'monthly' | 'custom' | null;
+  // Support
+  onboardingType: 'self' | 'guided' | 'whiteglove' | null;
+  knowledgeUpdates: 'self' | 'monthly' | 'unlimited' | null;
+  supportLevel: 'email' | 'priority' | 'priority-chat' | 'dedicated' | null;
+  // Totals
+  monthlySubtotal: number;
+  oneTimeTotal: number;
+  promoDiscount: number;
+  monthlyTotal: number;
+  hasCustomQuote: boolean;
+}
+
 export interface CustomerInfo {
   name: string;
   email: string;
@@ -462,11 +502,11 @@ export interface CustomerInfo {
   notes: string;
 }
 
-export type ServiceType = 'website' | 'app' | 'animation' | 'image' | 'sound' | 'paid-media' | 'social-media' | 'email-marketing' | 'brand-strategy' | 'visual-identity' | 'brand-applications' | 'content-strategy' | 'messaging-copywriting';
+export type ServiceType = 'website' | 'app' | 'animation' | 'image' | 'sound' | 'paid-media' | 'social-media' | 'email-marketing' | 'brand-strategy' | 'visual-identity' | 'brand-applications' | 'content-strategy' | 'messaging-copywriting' | 'ai-receptionist';
 
 export interface ConfiguredService {
   type: ServiceType;
-  config: WebsiteConfig | AppConfig | AnimationConfig | ImageConfig | SoundConfig | PaidMediaConfig | SocialMediaConfig | EmailMarketingConfig | BrandStrategyConfig | VisualIdentityConfig | BrandApplicationsConfig | ContentStrategyConfig | MessagingCopywritingConfig;
+  config: WebsiteConfig | AppConfig | AnimationConfig | ImageConfig | SoundConfig | PaidMediaConfig | SocialMediaConfig | EmailMarketingConfig | BrandStrategyConfig | VisualIdentityConfig | BrandApplicationsConfig | ContentStrategyConfig | MessagingCopywritingConfig | AIReceptionistConfig;
   configuredAt: number; // timestamp
 }
 
@@ -481,10 +521,10 @@ interface UnifiedQuoteState {
   isServiceConfigured: (type: ServiceType) => boolean;
 
   // Get configuration for a service
-  getServiceConfig: <T extends WebsiteConfig | AppConfig | AnimationConfig | ImageConfig | SoundConfig | PaidMediaConfig | SocialMediaConfig | EmailMarketingConfig | BrandStrategyConfig | VisualIdentityConfig | BrandApplicationsConfig | ContentStrategyConfig | MessagingCopywritingConfig>(type: ServiceType) => T | null;
+  getServiceConfig: <T extends WebsiteConfig | AppConfig | AnimationConfig | ImageConfig | SoundConfig | PaidMediaConfig | SocialMediaConfig | EmailMarketingConfig | BrandStrategyConfig | VisualIdentityConfig | BrandApplicationsConfig | ContentStrategyConfig | MessagingCopywritingConfig | AIReceptionistConfig>(type: ServiceType) => T | null;
 
   // Save configuration for a service
-  saveServiceConfig: (type: ServiceType, config: WebsiteConfig | AppConfig | AnimationConfig | ImageConfig | SoundConfig | PaidMediaConfig | SocialMediaConfig | EmailMarketingConfig | BrandStrategyConfig | VisualIdentityConfig | BrandApplicationsConfig | ContentStrategyConfig | MessagingCopywritingConfig) => void;
+  saveServiceConfig: (type: ServiceType, config: WebsiteConfig | AppConfig | AnimationConfig | ImageConfig | SoundConfig | PaidMediaConfig | SocialMediaConfig | EmailMarketingConfig | BrandStrategyConfig | VisualIdentityConfig | BrandApplicationsConfig | ContentStrategyConfig | MessagingCopywritingConfig | AIReceptionistConfig) => void;
 
   // Clear configuration for a service (removes from quote, resets that builder)
   clearServiceConfig: (type: ServiceType) => void;
@@ -519,7 +559,7 @@ const initialCustomerInfo: CustomerInfo = {
 };
 
 // All available service types
-const ALL_SERVICE_TYPES: ServiceType[] = ['website', 'app', 'animation', 'image', 'sound', 'paid-media', 'social-media', 'email-marketing', 'brand-strategy', 'visual-identity', 'brand-applications', 'content-strategy', 'messaging-copywriting'];
+const ALL_SERVICE_TYPES: ServiceType[] = ['website', 'app', 'animation', 'image', 'sound', 'paid-media', 'social-media', 'email-marketing', 'brand-strategy', 'visual-identity', 'brand-applications', 'content-strategy', 'messaging-copywriting', 'ai-receptionist'];
 
 export const useUnifiedQuoteStore = create<UnifiedQuoteState>()(
   persist(
@@ -538,6 +578,7 @@ export const useUnifiedQuoteStore = create<UnifiedQuoteState>()(
         'brand-applications': null,
         'content-strategy': null,
         'messaging-copywriting': null,
+        'ai-receptionist': null,
       },
       customerInfo: initialCustomerInfo,
 
@@ -545,7 +586,7 @@ export const useUnifiedQuoteStore = create<UnifiedQuoteState>()(
         return get().configuredServices[type] !== null;
       },
 
-      getServiceConfig: <T extends WebsiteConfig | AppConfig | AnimationConfig | ImageConfig | SoundConfig | PaidMediaConfig | SocialMediaConfig | EmailMarketingConfig | BrandStrategyConfig | VisualIdentityConfig | BrandApplicationsConfig | ContentStrategyConfig | MessagingCopywritingConfig>(type: ServiceType): T | null => {
+      getServiceConfig: <T extends WebsiteConfig | AppConfig | AnimationConfig | ImageConfig | SoundConfig | PaidMediaConfig | SocialMediaConfig | EmailMarketingConfig | BrandStrategyConfig | VisualIdentityConfig | BrandApplicationsConfig | ContentStrategyConfig | MessagingCopywritingConfig | AIReceptionistConfig>(type: ServiceType): T | null => {
         const service = get().configuredServices[type];
         return service ? (service.config as T) : null;
       },
@@ -657,6 +698,11 @@ export const useUnifiedQuoteStore = create<UnifiedQuoteState>()(
             oneTimeTotal += config.oneTimeTotal;
             monthlyTotal += config.monthlyTotal;
             if (config.hasCustomQuote) hasCustomQuote = true;
+          } else if (service.type === 'ai-receptionist') {
+            const config = service.config as AIReceptionistConfig;
+            oneTimeTotal += config.oneTimeTotal;
+            monthlyTotal += config.monthlyTotal;
+            if (config.hasCustomQuote) hasCustomQuote = true;
           }
         });
 
@@ -690,6 +736,7 @@ export const useUnifiedQuoteStore = create<UnifiedQuoteState>()(
             'brand-applications': null,
             'content-strategy': null,
             'messaging-copywriting': null,
+            'ai-receptionist': null,
           },
           customerInfo: initialCustomerInfo,
         });
@@ -785,5 +832,11 @@ export const serviceMetadata: Record<ServiceType, {
     description: 'Strategic messaging frameworks and professional copywriting across all touchpoints',
     builderPath: '/build-my-messaging',
     icon: 'PenTool',
+  },
+  'ai-receptionist': {
+    label: 'AI Receptionist',
+    description: '24/7 AI-powered call answering that captures leads, schedules appointments, and never misses a call',
+    builderPath: '/build-my-receptionist',
+    icon: 'Phone',
   },
 };
