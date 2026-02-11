@@ -298,6 +298,12 @@ export default function AnimationQuoteForm({ onBack }: AnimationQuoteFormProps) 
               {hasCustomQuote ? 'Custom Quote' : `$${total.toLocaleString()}`}
             </span>
           </div>
+          {!hasCustomQuote && (
+            <div className="flex justify-between items-center mt-2 pt-2 border-t border-[var(--border-subtle)]">
+              <span className="text-white font-semibold">Due Today</span>
+              <span className="text-lg font-bold gradient-text">${total.toLocaleString()}</span>
+            </div>
+          )}
         </div>
 
         {/* Submit Button */}

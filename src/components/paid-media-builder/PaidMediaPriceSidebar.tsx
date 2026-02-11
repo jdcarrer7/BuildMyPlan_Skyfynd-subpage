@@ -207,6 +207,26 @@ export default function PaidMediaPriceSidebar({ currentStep, onGoToSummary }: Pa
         )}
       </div>
 
+      {/* Due Today */}
+      {!hasCustomQuote && (oneTimeTotal + monthlyTotal) > 0 && (
+        <div className="mt-4 pt-3 border-t-2 border-[var(--accent-purple)]/50">
+          <div className="flex justify-between items-center">
+            <span className="text-white font-bold">Due Today</span>
+            <motion.span
+              key={`due-${oneTimeTotal}-${monthlyTotal}`}
+              initial={{ scale: 1.1 }}
+              animate={{ scale: 1 }}
+              className="text-xl font-bold gradient-text"
+            >
+              ${(oneTimeTotal + monthlyTotal).toLocaleString()}
+            </motion.span>
+          </div>
+          <p className="text-xs text-[var(--text-muted)] mt-1">
+            Setup + first month&apos;s service
+          </p>
+        </div>
+      )}
+
       {/* Go to Summary Button */}
       {currentStep < 10 && campaignType && platforms && (
         <motion.button

@@ -32,8 +32,10 @@ export interface SelectedAIFeature {
 
 export interface SelectedService {
   id: string;
-  price: number;
+  price: number | null;
   recurring?: 'monthly';
+  optionId?: string;
+  customQuote?: boolean;
 }
 
 interface AppBuilderState {
@@ -108,6 +110,8 @@ interface AppBuilderState {
   getAIFeatureUsage: (featureId: string) => string | null;
 
   toggleService: (serviceId: string) => void;
+  setServiceOption: (serviceId: string, optionId: string) => void;
+  getServiceOption: (serviceId: string) => string | null;
   isServiceSelected: (serviceId: string) => boolean;
 
   setTimeline: (timelineId: string) => void;
@@ -345,19 +349,67 @@ export const useAppBuilderStore = create<AppBuilderState>((set, get) => ({
     } else {
       const service = appAdditionalServices.find((s) => s.id === serviceId);
       if (service) {
-        set({
-          selectedServices: [
-            ...selectedServices,
-            {
-              id: serviceId,
-              price: service.price,
-              recurring: service.recurring,
-            },
-          ],
-        });
+        // If service has options (e.g. maintenance tiers), use default option
+        if (service.options && service.defaultOption) {
+          const defaultOpt = service.options.find((o) => o.id === service.defaultOption);
+          set({
+            selectedServices: [
+              ...selectedServices,
+              {
+                id: serviceId,
+                price: defaultOpt?.price ?? service.price,
+                recurring: service.recurring,
+                optionId: service.defaultOption,
+              },
+            ],
+          });
+        } else if (service.customQuote) {
+          set({
+            selectedServices: [
+              ...selectedServices,
+              {
+                id: serviceId,
+                price: null,
+                recurring: service.recurring,
+                customQuote: true,
+              },
+            ],
+          });
+        } else {
+          set({
+            selectedServices: [
+              ...selectedServices,
+              {
+                id: serviceId,
+                price: service.price,
+                recurring: service.recurring,
+              },
+            ],
+          });
+        }
       }
     }
     get().calculateTotals();
+  },
+
+  setServiceOption: (serviceId, optionId) => {
+    const { selectedServices } = get();
+    const service = appAdditionalServices.find((s) => s.id === serviceId);
+    if (!service?.options) return;
+    const option = service.options.find((o) => o.id === optionId);
+    if (!option) return;
+
+    set({
+      selectedServices: selectedServices.map((s) =>
+        s.id === serviceId ? { ...s, optionId, price: option.price } : s
+      ),
+    });
+    get().calculateTotals();
+  },
+
+  getServiceOption: (serviceId) => {
+    const service = get().selectedServices.find((s) => s.id === serviceId);
+    return service?.optionId ?? null;
   },
 
   isServiceSelected: (serviceId) => {
@@ -481,7 +533,9 @@ export const useAppBuilderStore = create<AppBuilderState>((set, get) => ({
 
     // Additional Services
     state.selectedServices.forEach((service) => {
-      if (service.recurring === 'monthly') {
+      if (service.customQuote || service.price === null) {
+        hasCustomQuote = true;
+      } else if (service.recurring === 'monthly') {
         monthlyTotal += service.price;
       } else {
         oneTimeSubtotal += service.price;
@@ -517,7 +571,11 @@ export const useAppBuilderStore = create<AppBuilderState>((set, get) => ({
       backendPrice: state.backendPrice,
       selectedFeatures: state.selectedFeatures,
       selectedAIFeatures: state.selectedAIFeatures,
-      selectedServices: state.selectedServices,
+      selectedServices: state.selectedServices.map(s => ({
+        id: s.id,
+        price: s.price ?? 0,
+        recurring: s.recurring,
+      })),
       timeline: state.timeline,
       timelineMultiplier: state.timelineMultiplier,
       oneTimeSubtotal: state.oneTimeSubtotal,

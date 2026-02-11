@@ -87,6 +87,7 @@ export interface TimelineOption {
   id: string;
   label: string;
   multiplier: number;
+  price?: number;
   tooltip: string;
 }
 
@@ -215,25 +216,25 @@ export const siteSizeOptions: SiteSizeOption[] = [
   {
     id: '1',
     label: '1 page (Landing)',
-    price: 150,
+    price: 300,
     tooltip: 'A single, focused page. Great for campaigns, launches, or simple online presence.',
   },
   {
     id: '2-5',
     label: '2–5 pages',
-    price: 300,
+    price: 600,
     tooltip: 'Typical for small sites: Home, About, Services, Contact, etc.',
   },
   {
     id: '6-10',
     label: '6–10 pages',
-    price: 500,
+    price: 1000,
     tooltip: 'Room for detailed services, team pages, case studies, blog, and more.',
   },
   {
     id: '11-20',
     label: '11–20 pages',
-    price: 800,
+    price: 1600,
     tooltip: 'Comprehensive sites with multiple service lines, resources, and content sections.',
   },
   {
@@ -250,19 +251,19 @@ export const designOptions: DesignOption[] = [
   {
     id: 'clean',
     label: 'Clean & Simple',
-    price: 100,
+    price: 250,
     tooltip: 'Minimal, content-focused layouts with clean typography. Ideal if you want a straightforward, professional look without heavy visuals.',
   },
   {
     id: 'modern',
     label: 'Modern & Polished',
-    price: 250,
+    price: 350,
     tooltip: 'Custom layouts, refined aesthetics, and thoughtful details. Ideal if you want to stand out with a polished, contemporary feel.',
   },
   {
     id: 'premium',
     label: 'Premium & Immersive',
-    price: 450,
+    price: 600,
     tooltip: 'Bespoke design with scroll effects, animations, and rich visuals. Ideal if you want a high-end, memorable experience that wows visitors.',
   },
 ];
@@ -278,13 +279,13 @@ export const cmsOptions: CMSOption[] = [
   {
     id: 'basic',
     label: 'Basic CMS',
-    price: 100,
+    price: 250,
     tooltip: 'Edit text, images, and blog posts yourself via a simple dashboard. Ideal if you want to make quick updates without developer help.',
   },
   {
     id: 'advanced',
     label: 'Advanced CMS',
-    price: 250,
+    price: 450,
     tooltip: 'Full control over collections, dynamic content, filtering, and structured data. Ideal if you have lots of content types that change frequently.',
   },
 ];
@@ -464,9 +465,10 @@ export const additionalServices: AdditionalService[] = [
   {
     id: 'maintenance',
     label: 'Ongoing Maintenance',
-    price: 75,
+    price: 45,
+    startsAt: true,
     recurring: 'monthly',
-    tooltip: 'Monthly updates, security monitoring, backups, and minor content edits.',
+    tooltip: 'Monthly updates, security monitoring, backups, content edits.',
   },
   {
     id: 'hosting',
@@ -482,30 +484,34 @@ export const additionalServices: AdditionalService[] = [
   },
 ];
 
-// Timeline Options (Step 7)
+// Timeline Options (Step 8)
 export const timelineOptions: TimelineOption[] = [
   {
     id: 'flexible',
     label: 'Flexible / No rush',
     multiplier: 1.0,
+    price: 0,
     tooltip: "We'll schedule based on current workload. Typically 4–8 weeks.",
   },
   {
     id: 'standard',
     label: '4–6 weeks',
     multiplier: 1.0,
+    price: 0,
     tooltip: 'Standard timeline for most projects.',
   },
   {
     id: 'expedited',
     label: '2–4 weeks',
-    multiplier: 1.15,
+    multiplier: 1.0,
+    price: 490,
     tooltip: 'Expedited delivery. Your project gets priority scheduling.',
   },
   {
     id: 'rush',
     label: 'ASAP (under 2 weeks)',
-    multiplier: 1.25,
+    multiplier: 1.0,
+    price: 890,
     tooltip: 'Rush delivery. Subject to availability — contact us to confirm.',
   },
 ];

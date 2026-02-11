@@ -6,8 +6,10 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { motion, AnimatePresence } from 'framer-motion';
 import { usePlanStore } from '@/hooks/usePlanStore';
-import { getServiceById } from '@/data/services';
 import { X, Send, CheckCircle, User, Mail, Building, Phone, MessageSquare } from 'lucide-react';
+import { buildTierQuotePayload } from '@/lib/services/buildQuotePayload';
+import { submitQuote } from '@/lib/services/quoteSubmission';
+import { getServiceById } from '@/data/services';
 
 const quoteSchema = z.object({
   name: z.string().min(2, 'Name must be at least 2 characters'),
@@ -27,8 +29,9 @@ interface QuoteFormProps {
 export default function QuoteForm({ isOpen, onClose }: QuoteFormProps) {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
 
-  const { items, total, discountPercentage, clearPlan } = usePlanStore();
+  const { items, subtotal, total, discountPercentage, clearPlan } = usePlanStore();
 
   const {
     register,
@@ -41,32 +44,22 @@ export default function QuoteForm({ isOpen, onClose }: QuoteFormProps) {
 
   const onSubmit = async (data: QuoteFormData) => {
     setIsSubmitting(true);
+    setSubmitError(null);
 
-    // Build the quote summary
-    const quoteSummary = {
-      customer: data,
-      plan: items.map(item => {
-        const service = getServiceById(item.serviceId);
-        return {
-          service: service?.name,
-          tier: item.tierId,
-          addOns: item.addOns,
-          subtotal: item.subtotal,
-        };
-      }),
-      discountPercentage,
-      total,
-      submittedAt: new Date().toISOString(),
-    };
+    try {
+      const payload = buildTierQuotePayload(data);
+      const result = await submitQuote(payload);
 
-    // Mock submission - log to console
-    console.log('Quote Request Submitted:', quoteSummary);
-
-    // Simulate API delay
-    await new Promise(resolve => setTimeout(resolve, 1500));
-
-    setIsSubmitting(false);
-    setIsSubmitted(true);
+      if (result.success) {
+        setIsSubmitted(true);
+      } else {
+        setSubmitError(result.message);
+      }
+    } catch {
+      setSubmitError('Something went wrong. Please try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleClose = () => {
@@ -141,11 +134,47 @@ export default function QuoteForm({ isOpen, onClose }: QuoteFormProps) {
                   </p>
 
                   {/* Plan Summary */}
-                  <div className="mb-6 p-4 bg-[var(--bg-secondary)] rounded-lg">
-                    <div className="flex justify-between items-center text-sm mb-2">
-                      <span className="text-[var(--text-muted)]">Services Selected</span>
-                      <span className="text-white font-medium">{items.length}</span>
-                    </div>
+                  <div className="mb-6 p-4 bg-[var(--bg-secondary)] rounded-lg space-y-3 max-h-[260px] overflow-y-auto">
+                    {items.map((item) => {
+                      const service = getServiceById(item.serviceId);
+                      if (!service) return null;
+                      const tier = service.tiers.find(t => t.id === item.tierId);
+                      const includedFeatures = tier?.features.filter(f => f.included === true) || [];
+
+                      return (
+                        <div key={item.serviceId} className="pb-3 border-b border-[var(--border-subtle)]/50 last:border-b-0 last:pb-0">
+                          <div className="flex justify-between items-center mb-1.5">
+                            <div className="flex items-center gap-2">
+                              <span className="text-white font-medium text-sm">{service.name}</span>
+                              <span className="px-1.5 py-0.5 bg-[var(--bg-card)] text-[var(--text-muted)] text-[10px] rounded border border-[var(--border-subtle)]">
+                                {tier?.name}
+                              </span>
+                            </div>
+                            <span className="text-white font-semibold text-sm">
+                              ${item.subtotal.toLocaleString()}
+                              {tier?.priceType === 'monthly' && <span className="text-[var(--text-muted)] text-xs">/mo</span>}
+                            </span>
+                          </div>
+                          {includedFeatures.length > 0 && (
+                            <ul className="space-y-0.5 ml-1">
+                              {includedFeatures.slice(0, 6).map((feat, idx) => (
+                                <li key={idx} className="flex items-start gap-1.5 text-[11px]">
+                                  <span className="text-[var(--accent-blue)] mt-0.5">&#10003;</span>
+                                  <span className="text-[var(--text-muted)]">
+                                    {feat.name}{typeof feat.value === 'string' ? `: ${feat.value}` : ''}
+                                  </span>
+                                </li>
+                              ))}
+                              {includedFeatures.length > 6 && (
+                                <li className="text-[10px] text-[var(--text-muted)]/60 ml-4">
+                                  +{includedFeatures.length - 6} more features
+                                </li>
+                              )}
+                            </ul>
+                          )}
+                        </div>
+                      );
+                    })}
                     {discountPercentage > 0 && (
                       <div className="flex justify-between items-center text-sm mb-2">
                         <span className="text-[var(--accent-blue)]">Bundle Discount</span>
@@ -156,6 +185,13 @@ export default function QuoteForm({ isOpen, onClose }: QuoteFormProps) {
                       <span className="text-white font-medium">Total</span>
                       <span className="text-xl font-bold gradient-text">${total.toLocaleString()}</span>
                     </div>
+                    <div className="flex justify-between items-center pt-2 border-t border-[var(--border-subtle)]">
+                      <span className="text-white font-semibold">Due Today</span>
+                      <span className="text-lg font-bold gradient-text">${total.toLocaleString()}</span>
+                    </div>
+                    <p className="text-[10px] text-[var(--text-muted)]/60 text-center italic">
+                      Price may vary based on final project specifications
+                    </p>
                   </div>
 
                   <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
@@ -238,6 +274,13 @@ export default function QuoteForm({ isOpen, onClose }: QuoteFormProps) {
                         className="w-full px-4 py-3 bg-[var(--bg-secondary)] border border-[var(--border-subtle)] rounded-lg text-white placeholder-[var(--text-muted)] focus:outline-none focus:ring-2 focus:ring-[var(--accent-blue)] transition-all resize-none"
                       />
                     </div>
+
+                    {/* Error Message */}
+                    {submitError && (
+                      <div className="p-3 bg-red-500/10 border border-red-500/30 rounded-lg text-red-400 text-sm">
+                        {submitError}
+                      </div>
+                    )}
 
                     {/* Submit */}
                     <motion.button

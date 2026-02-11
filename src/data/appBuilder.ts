@@ -98,16 +98,26 @@ export interface AIFeature {
   usageOptions: AIFeatureUsage[];
 }
 
+export interface ServiceTierOption {
+  id: string;
+  label: string;
+  price: number;
+  description: string;
+}
+
 export interface AdditionalService {
   id: string;
   label: string;
   name?: string;
-  price: number;
+  price: number | null;
   startsAt?: boolean;
   recurring?: 'monthly';
   included?: boolean;
+  customQuote?: boolean;
   tooltip: string;
   description?: string;
+  options?: ServiceTierOption[];
+  defaultOption?: string;
 }
 
 export interface TimelineOption {
@@ -239,23 +249,23 @@ export const appRecommendationPresets: Record<string, RecommendationPreset> = {
 
 // Platform Options (Step 2)
 export const platformOptions: PlatformOption[] = [
-  { id: 'web', label: 'Web only', price: 300, tooltip: 'Browser-based application accessible on any device with internet connection.' },
-  { id: 'ios', label: 'iOS only', price: 400, tooltip: 'Native iPhone and iPad app distributed via Apple App Store.' },
-  { id: 'android', label: 'Android only', price: 400, tooltip: 'Native app distributed via Google Play Store.' },
-  { id: 'ios-android', label: 'iOS + Android', price: 650, tooltip: 'Both mobile platforms with shared functionality and design.' },
-  { id: 'web-ios', label: 'Web + iOS', price: 600, tooltip: 'Browser app plus native iPhone/iPad app.' },
-  { id: 'web-android', label: 'Web + Android', price: 600, tooltip: 'Browser app plus native Android app.' },
-  { id: 'web-ios-android', label: 'Web + iOS + Android', price: 800, tooltip: 'Full coverage: browser and both mobile platforms.' },
-  { id: 'desktop-single', label: 'Desktop (Mac or Windows)', price: 500, tooltip: 'Single desktop platform application.' },
-  { id: 'desktop-both', label: 'Desktop (Mac + Windows)', price: 750, tooltip: 'Both desktop platforms with shared functionality.' },
-  { id: 'all', label: 'All Platforms', price: 1200, startsAt: true, tooltip: 'Web, iOS, Android, Mac, Windows — complete ecosystem.' },
+  { id: 'web', label: 'Web only', price: 500, tooltip: 'Browser-based application accessible on any device with internet connection.' },
+  { id: 'ios', label: 'iOS only', price: 600, tooltip: 'Native iPhone and iPad app distributed via Apple App Store.' },
+  { id: 'android', label: 'Android only', price: 600, tooltip: 'Native app distributed via Google Play Store.' },
+  { id: 'ios-android', label: 'iOS + Android', price: 850, tooltip: 'Both mobile platforms with shared functionality and design.' },
+  { id: 'web-ios', label: 'Web + iOS', price: 800, tooltip: 'Browser app plus native iPhone/iPad app.' },
+  { id: 'web-android', label: 'Web + Android', price: 800, tooltip: 'Browser app plus native Android app.' },
+  { id: 'web-ios-android', label: 'Web + iOS + Android', price: 1000, tooltip: 'Full coverage: browser and both mobile platforms.' },
+  { id: 'desktop-single', label: 'Desktop (Mac or Windows)', price: 700, tooltip: 'Single desktop platform application.' },
+  { id: 'desktop-both', label: 'Desktop (Mac + Windows)', price: 950, tooltip: 'Both desktop platforms with shared functionality.' },
+  { id: 'all', label: 'All Platforms', price: 1400, startsAt: true, tooltip: 'Web, iOS, Android, Mac, Windows — complete ecosystem.' },
 ];
 
 // Screen Complexity Options (Step 3)
 export const screenOptions: ScreenOption[] = [
-  { id: 'simple', label: 'Simple (1–5 screens)', price: 200, tooltip: 'Basic app with core functionality. Typical: Login, home, 1–2 feature screens, settings.' },
-  { id: 'standard', label: 'Standard (6–12 screens)', price: 400, tooltip: 'Full-featured app with multiple sections and user flows.' },
-  { id: 'complex', label: 'Complex (13–25 screens)', price: 700, tooltip: 'Comprehensive app with detailed features, multiple user types, or admin dashboards.' },
+  { id: 'simple', label: 'Simple (1–5 screens)', price: 400, tooltip: 'Basic app with core functionality. Typical: Login, home, 1–2 feature screens, settings.' },
+  { id: 'standard', label: 'Standard (6–12 screens)', price: 600, tooltip: 'Full-featured app with multiple sections and user flows.' },
+  { id: 'complex', label: 'Complex (13–25 screens)', price: 900, tooltip: 'Comprehensive app with detailed features, multiple user types, or admin dashboards.' },
   { id: 'enterprise', label: 'Enterprise (25+ screens)', price: null, customQuote: true, tooltip: 'Large-scale application requiring custom scoping and pricing.' },
 ];
 
@@ -277,9 +287,9 @@ export const authOptions: AuthOption[] = [
 // Backend & Database Options (Step 6)
 export const backendOptions: BackendOption[] = [
   { id: 'none', label: 'No backend (static/local)', price: 0, tooltip: 'App stores data locally on device only. No server or database needed.' },
-  { id: 'simple', label: 'Simple (Basic CRUD)', price: 200, tooltip: 'Create, read, update, delete data — user profiles, content, simple records.' },
-  { id: 'standard', label: 'Standard (Relational data)', price: 400, tooltip: 'Multiple data types with relationships — orders linked to products, users to roles, etc.' },
-  { id: 'complex', label: 'Complex (Real-time, large scale)', price: 700, startsAt: true, tooltip: 'Real-time sync, complex queries, high data volume, multi-tenant architecture.' },
+  { id: 'simple', label: 'Simple (Basic CRUD)', price: 400, tooltip: 'Create, read, update, delete data — user profiles, content, simple records.' },
+  { id: 'standard', label: 'Standard (Relational data)', price: 600, tooltip: 'Multiple data types with relationships — orders linked to products, users to roles, etc.' },
+  { id: 'complex', label: 'Complex (Real-time, large scale)', price: 900, startsAt: true, tooltip: 'Real-time sync, complex queries, high data volume, multi-tenant architecture.' },
 ];
 
 // Features & Functionality (Step 7)
@@ -309,10 +319,10 @@ export const appFeatures: Feature[] = [
     name: 'Payments / Transactions',
     defaultTier: 'single',
     options: [
-      { id: 'single', label: 'Single Gateway', price: 150, description: 'Accept payments through one processor like Stripe, PayPal, or Square. Ideal for straightforward checkout. Examples: Small e-commerce, service booking apps.' },
-      { id: 'multiple', label: 'Multiple Gateways', price: 250, description: 'Support multiple payment methods and regional processors. Ideal for diverse markets or payment flexibility. Examples: Amazon, international apps.' },
-      { id: 'subscriptions', label: 'Subscriptions', price: 350, description: 'Recurring billing, subscription tiers, trials, and plan management. Ideal for recurring revenue models. Examples: Netflix, Spotify, Headspace.', startsAt: true },
-      { id: 'marketplace', label: 'Marketplace', price: 500, description: 'Split payments, seller payouts, escrow, and platform fees. Ideal for connecting buyers and sellers. Examples: Uber, Airbnb, Etsy.', startsAt: true },
+      { id: 'single', label: 'Single Gateway', price: 250, description: 'Accept payments through one processor like Stripe, PayPal, or Square. Ideal for straightforward checkout. Examples: Small e-commerce, service booking apps.' },
+      { id: 'multiple', label: 'Multiple Gateways', price: 350, description: 'Support multiple payment methods and regional processors. Ideal for diverse markets or payment flexibility. Examples: Amazon, international apps.' },
+      { id: 'subscriptions', label: 'Subscriptions', price: 450, description: 'Recurring billing, subscription tiers, trials, and plan management. Ideal for recurring revenue models. Examples: Netflix, Spotify, Headspace.', startsAt: true },
+      { id: 'marketplace', label: 'Marketplace', price: 600, description: 'Split payments, seller payouts, escrow, and platform fees. Ideal for connecting buyers and sellers. Examples: Uber, Airbnb, Etsy.', startsAt: true },
     ],
   },
   {
@@ -378,8 +388,8 @@ export const appFeatures: Feature[] = [
     name: 'Multi-language Support',
     defaultTier: 'two',
     options: [
-      { id: 'two', label: '2 Languages', price: 125, description: 'App available in two languages with language switcher. Ideal for bilingual markets or expanding to one new region. Examples: US apps adding Spanish.' },
-      { id: 'multiple', label: '3+ Languages', price: 225, description: 'Multiple languages with automatic region detection. Ideal for global markets or diverse user bases. Examples: Duolingo, Airbnb, Uber.', startsAt: true },
+      { id: 'two', label: '2 Languages', price: 325, description: 'App available in two languages with language switcher. Ideal for bilingual markets or expanding to one new region. Examples: US apps adding Spanish.' },
+      { id: 'multiple', label: '3+ Languages', price: 425, description: 'Multiple languages with automatic region detection. Ideal for global markets or diverse user bases. Examples: Duolingo, Airbnb, Uber.', startsAt: true },
     ],
   },
   {
@@ -617,8 +627,20 @@ export const appAdditionalServices: AdditionalService[] = [
   { id: 'beta', label: 'Beta Testing Setup', price: 75, tooltip: 'Configure TestFlight (iOS) and/or internal testing track (Android) for beta distribution.' },
   { id: 'analytics', label: 'Analytics Setup', price: 50, tooltip: 'Firebase, Mixpanel, or similar analytics integration with event tracking configuration.' },
   { id: 'docs', label: 'Documentation', price: 100, startsAt: true, tooltip: 'Technical documentation, user guides, API docs. Price varies by scope.' },
-  { id: 'maintenance', label: 'Ongoing Maintenance', price: 150, recurring: 'monthly', tooltip: 'Updates, bug fixes, OS compatibility, security patches, minor enhancements.' },
-  { id: 'source', label: 'Source Code Handoff', price: 0, included: true, tooltip: 'You own the code — always included at no extra cost.' },
+  {
+    id: 'maintenance',
+    label: 'Ongoing Maintenance',
+    price: 150,
+    recurring: 'monthly',
+    tooltip: 'Keep your app running smoothly with professional ongoing support.',
+    defaultOption: 'basic',
+    options: [
+      { id: 'basic', label: 'Basic', price: 150, description: 'Updates, bug fixes, OS compatibility, security patches, minor enhancements.' },
+      { id: 'standard', label: 'Standard', price: 300, description: 'Everything in Basic, plus performance optimization, monthly health reports, priority support, and feature tweaks.' },
+      { id: 'premium', label: 'Premium', price: 500, description: 'Everything in Standard, plus dedicated support, proactive monitoring, quarterly strategy calls, and unlimited revision requests.' },
+    ],
+  },
+  { id: 'source', label: 'Source Code Handoff', price: null, customQuote: true, tooltip: 'Want to own the code?' },
 ];
 
 // Timeline Options (Step 10)

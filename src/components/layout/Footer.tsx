@@ -116,7 +116,7 @@ export default function Footer() {
                 <div style={styles.logoIcon}>
                   <img
                     alt="Skyfynd logo"
-                    src="https://media-skyfynd.jdcarrero7.workers.dev/Skyfynd+Landing+Page/Skyfynd+Logo/Skyfynd+logo.png"
+                    src="https://f004.backblazeb2.com/file/carrero-biz/Skyfynd%20Landing%20Page/Skyfynd%20Logo/skyfynd_logo.webp"
                     style={{
                       width: isMobile ? '29px' : '35px',
                       height: isMobile ? '29px' : '35px',
