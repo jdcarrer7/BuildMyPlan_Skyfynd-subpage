@@ -5,9 +5,7 @@ import { sessionOptions } from '@/lib/auth/session';
 import type { SessionData } from '@/lib/types/admin';
 import type { QuoteJSON, ResolvedServiceConfig, ResolvedStep } from '@/lib/types/admin';
 import nodemailer from 'nodemailer';
-import dns from 'dns';
-
-dns.setDefaultResultOrder('ipv4first');
+try { require('dns').setDefaultResultOrder('ipv4first'); } catch {}
 
 const LOGO_URL = 'https://f005.backblazeb2.com/file/SKYFYND-assets/Skyfynd+logo.png';
 

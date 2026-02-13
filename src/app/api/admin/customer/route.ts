@@ -3,9 +3,7 @@ import { getIronSession } from 'iron-session';
 import { cookies } from 'next/headers';
 import { sessionOptions } from '@/lib/auth/session';
 import type { SessionData } from '@/lib/types/admin';
-import dns from 'dns';
-
-dns.setDefaultResultOrder('ipv4first');
+try { require('dns').setDefaultResultOrder('ipv4first'); } catch {}
 
 export async function POST(request: Request) {
   try {

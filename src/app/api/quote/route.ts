@@ -1,8 +1,6 @@
 import { NextResponse } from 'next/server';
-import dns from 'dns';
-
 // Force IPv4 to avoid IPv6 connection timeouts with Google Apps Script
-dns.setDefaultResultOrder('ipv4first');
+try { require('dns').setDefaultResultOrder('ipv4first'); } catch {}
 
 const VALID_SOURCES = ['Main Page', 'Rent Me a Site', 'RentMe', 'Custom Builder'] as const;
 

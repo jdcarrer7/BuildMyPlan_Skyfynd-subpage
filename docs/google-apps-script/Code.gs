@@ -24,7 +24,7 @@
 var MASTER_LEAD_SHEET_ID = '1ESFbhqXwvV3douzXrX_VII1Eh8UqaU5s7mnSgKpd_6Q';
 var CUSTOMER_SHEET_ID = '1UHWQJI4wu0qoM1UycPTLNZUxcBrKLWtlFu4_LJXxG3A';
 var JSON_FOLDER_ID = '1o8KbnqJYpI4-A4cJ6uGcL5zBDHQSo72h';
-var ADMIN_BASE_URL = 'https://buildmyplan.skyfynd.io/admin/quotes';
+var ADMIN_BASE_URL = 'https://plans.skyfynd.io/admin/quotes';
 var NOTIFICATION_EMAIL = 'contact@skyfynd.io';
 var LOGO_URL = 'https://f005.backblazeb2.com/file/SKYFYND-assets/Skyfynd+logo.png';
 
