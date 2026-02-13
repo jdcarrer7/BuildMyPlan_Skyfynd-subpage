@@ -72,10 +72,10 @@ export default function BuildMyPlan() {
       <Header />
       <main className="min-h-screen bg-[var(--bg-primary)] bg-particles" style={{ paddingTop: '100px' }}>
       {/* Header - More generous spacing */}
-      <header className="relative pt-20 pb-16 md:pt-12 md:pb-24 px-6 text-center overflow-hidden">
+      <header className="relative pt-20 pb-16 md:pt-12 md:pb-24 px-6 text-center">
         {/* Ambient Background Glow */}
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-          <div className="w-[800px] h-[600px] bg-gradient-to-b from-[var(--accent-blue)]/8 via-[var(--accent-teal)]/5 to-transparent rounded-full blur-[100px]" />
+          <div className="w-[800px] h-[600px] bg-gradient-to-b from-[var(--accent-blue)]/4 via-[var(--accent-teal)]/3 to-transparent rounded-full blur-[150px]" />
         </div>
 
         <motion.div
