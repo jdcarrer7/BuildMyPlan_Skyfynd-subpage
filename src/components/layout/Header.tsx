@@ -667,9 +667,7 @@ const navBarShellStyles: Record<string, React.CSSProperties> = {
     backdropFilter: 'blur(28px)',
     WebkitBackdropFilter: 'blur(28px)',
     border: '1px solid rgba(255, 255, 255, 0.08)',
-    background: 'rgba(10, 10, 11, 0.85)',
-    WebkitMaskImage: '-webkit-radial-gradient(white, black)',
-    maskImage: 'radial-gradient(white, black)' as React.CSSProperties['maskImage'],
+    background: 'rgba(10, 10, 11, 0.92)',
   },
   wash: {
     position: 'absolute',
