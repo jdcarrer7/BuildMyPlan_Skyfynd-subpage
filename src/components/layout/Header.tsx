@@ -64,7 +64,7 @@ function Company({ size = 48, textSize = 20 }: { size?: number; textSize?: numbe
         <img
           alt="Skyfynd logo"
           style={companyStyles.logo}
-          src="https://f004.backblazeb2.com/file/carrero-biz/Skyfynd%20Landing%20Page/Skyfynd%20Logo/skyfynd_logo.webp"
+          src="https://media.skyfynd.io/Skyfynd%20Landing%20Page/Skyfynd%20Logo/skyfynd_logo.webp"
         />
       </div>
       <div style={companyStyles.textWrapper}>
@@ -173,7 +173,7 @@ function NavLink({ text, to, fontSize = 16, isExternal = false, isActive = false
     transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
     textDecoration: 'none',
     fontSize,
-    color: isHovered ? '#FAFAFA' : 'rgba(250,250,250,0.8)',
+    color: isActive ? '#8B5CF6' : (isHovered ? '#FAFAFA' : 'rgba(250,250,250,0.8)'),
     transform: isHovered ? 'translateY(-2px) scale(1.02)' : 'translateY(0) scale(1)',
     boxShadow: isHovered
       ? '0 8px 24px rgba(59, 130, 246, 0.4), 0 0 40px rgba(16, 185, 129, 0.2)'
@@ -214,12 +214,6 @@ function NavLink({ text, to, fontSize = 16, isExternal = false, isActive = false
         zIndex: 1,
         display: 'flex',
         alignItems: 'center',
-        ...(isActive ? {
-          background: 'linear-gradient(135deg, #8B5CF6 0%, #3B82F6 50%, #10B981 100%)',
-          WebkitBackgroundClip: 'text',
-          backgroundClip: 'text',
-          WebkitTextFillColor: 'transparent',
-        } : {})
       }}>
         {text}
         {hasDropdown && <PlusIcon isHovered={isHovered} />}
@@ -258,7 +252,7 @@ function ContactButton({ size = 'default' }: { size?: 'default' | 'tablet' | 'mo
 
   const sizes = {
     default: { padding: '12px 24px', fontSize: 16, iconSize: 20, gap: 10 },
-    tablet: { padding: '11px 20px', fontSize: 17, iconSize: 18, gap: 9 },
+    tablet: { padding: '10px 18px', fontSize: 15, iconSize: 17, gap: 8 },
     mobile: { padding: '10px 16px', fontSize: 14, iconSize: 16, gap: 8 },
   };
 
@@ -274,11 +268,6 @@ function ContactButton({ size = 'default' }: { size?: 'default' | 'tablet' | 'mo
           50% {
             box-shadow: 0 0 25px rgba(59, 130, 246, 0.6), 0 0 50px rgba(16, 185, 129, 0.3);
           }
-        }
-        @keyframes navShimmer {
-          0% { background-position: 0% 50%; }
-          50% { background-position: 100% 50%; }
-          100% { background-position: 0% 50%; }
         }
       `}</style>
       <a
@@ -353,10 +342,17 @@ function ContactButton({ size = 'default' }: { size?: 'default' | 'tablet' | 'mo
             transform: isHovered ? 'rotate(12deg)' : 'rotate(0deg)',
           }}
         >
-          <svg width={s.iconSize} height={s.iconSize} viewBox="0 0 24 24" fill="none">
+          <svg width={s.iconSize} height={s.iconSize} viewBox="0 0 24 24" fill="none" style={{ transition: 'all 0.3s ease' }}>
+            <defs>
+              <linearGradient id="contactIconGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stopColor="#60A5FA" />
+                <stop offset="50%" stopColor="#10B981" />
+                <stop offset="100%" stopColor="#F59E0B" />
+              </linearGradient>
+            </defs>
             <path
               d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"
-              stroke="currentColor"
+              stroke={isHovered ? "url(#contactIconGradient)" : "currentColor"}
               strokeWidth="1.5"
               strokeLinecap="round"
               strokeLinejoin="round"
@@ -365,6 +361,27 @@ function ContactButton({ size = 'default' }: { size?: 'default' | 'tablet' | 'mo
           </svg>
         </span>
         <span style={{ position: 'relative', zIndex: 1 }}>Contact</span>
+
+        {/* Arrow on hover */}
+        <svg
+          width="14"
+          height="14"
+          viewBox="0 0 24 24"
+          fill="none"
+          style={{
+            marginLeft: isHovered ? 2 : -8,
+            opacity: isHovered ? 1 : 0,
+            transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+          }}
+        >
+          <path
+            d="M5 12h14M12 5l7 7-7 7"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </svg>
       </a>
     </>
   );
@@ -392,10 +409,10 @@ function TabletNav() {
   return (
     <>
       <nav style={navStyles.tablet}>
-        <NavLink text="Projects" to={`${SKYFYND_BASE_URL}/projects`} fontSize={20} isExternal />
-        <NavLink text="Services" to={`${SKYFYND_BASE_URL}/websites`} fontSize={20} isExternal hasDropdown />
-        <NavLink text="Plans" to="/" fontSize={20} isActive />
-        <NavLink text="About" to={`${SKYFYND_BASE_URL}/about`} fontSize={20} isExternal hasDropdown />
+        <NavLink text="Projects" to={`${SKYFYND_BASE_URL}/projects`} fontSize={15} isExternal />
+        <NavLink text="Services" to={`${SKYFYND_BASE_URL}/websites`} fontSize={15} isExternal hasDropdown />
+        <NavLink text="Plans" to="/" fontSize={15} isActive />
+        <NavLink text="About" to={`${SKYFYND_BASE_URL}/about`} fontSize={15} isExternal hasDropdown />
       </nav>
       <div style={navStyles.contactWrapperTablet}>
         <ContactButton size="tablet" />
@@ -419,7 +436,7 @@ const navStyles: Record<string, React.CSSProperties> = {
   },
   tablet: {
     display: 'flex',
-    gap: 4,
+    gap: 8,
     alignItems: 'center',
     justifyContent: 'center',
     padding: 0,
@@ -541,10 +558,7 @@ function MobileMenu() {
                   }}
                 >
                   <span style={isActive ? {
-                    background: 'linear-gradient(135deg, #8B5CF6 0%, #3B82F6 50%, #10B981 100%)',
-                    WebkitBackgroundClip: 'text',
-                    backgroundClip: 'text',
-                    WebkitTextFillColor: 'transparent',
+                    color: '#8B5CF6',
                   } : { color: 'rgba(255, 255, 255, 0.9)' }}>
                     {item.t}
                   </span>
@@ -608,12 +622,28 @@ const mobileMenuStyles: Record<string, React.CSSProperties> = {
 function NavBarShell({ children, width }: { children: React.ReactNode; width: string }) {
   return (
     <div style={{ ...navBarShellStyles.container, width }}>
-      {/* Main nav bar glass */}
+      {/* CSS for animations */}
+      <style>{`
+        @keyframes navOrbitGlow {
+          0% { offset-distance: 0%; }
+          100% { offset-distance: 100%; }
+        }
+
+        @keyframes navShimmer {
+          0% { background-position: 0% 50%; }
+          50% { background-position: 100% 50%; }
+          100% { background-position: 0% 50%; }
+        }
+      `}</style>
+
+      {/* Main nav bar glass - matching main site styling */}
       <div style={navBarShellStyles.glass}>
-        {/* Inner gradient for depth */}
-        <div style={navBarShellStyles.innerGradient} />
-        {/* Top highlight edge */}
-        <div style={navBarShellStyles.topHighlight} />
+        {/* Iridescent wash background - same as main site */}
+        <div style={navBarShellStyles.wash} />
+        {/* Glass highlight with shimmer */}
+        <div style={navBarShellStyles.highlight} />
+        {/* Noise texture */}
+        <div style={navBarShellStyles.noise} />
       </div>
 
       {/* Inner content */}
@@ -634,26 +664,38 @@ const navBarShellStyles: Record<string, React.CSSProperties> = {
     inset: 0,
     overflow: 'hidden',
     borderRadius: '20px',
-    border: '1px solid rgba(255, 255, 255, 0.1)',
-    background: 'linear-gradient(180deg, rgba(17, 17, 19, 0.95) 0%, rgba(10, 10, 11, 0.98) 100%)',
-    backdropFilter: 'blur(20px)',
-    WebkitBackdropFilter: 'blur(20px)',
-    boxShadow: '0 4px 30px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.05)',
+    backdropFilter: 'blur(28px)',
+    WebkitBackdropFilter: 'blur(28px)',
+    border: '1px solid rgba(255, 255, 255, 0.08)',
+    background: 'rgba(10, 10, 11, 0.85)',
+    WebkitMaskImage: '-webkit-radial-gradient(white, black)',
+    maskImage: 'radial-gradient(white, black)' as React.CSSProperties['maskImage'],
   },
-  innerGradient: {
+  wash: {
+    position: 'absolute',
+    inset: '-30%',
+    background: `
+      radial-gradient(circle at 20% 30%, rgba(59, 130, 246, 0.1), transparent 55%),
+      radial-gradient(circle at 80% 20%, rgba(96, 165, 250, 0.08), transparent 55%),
+      radial-gradient(circle at 70% 85%, rgba(250, 204, 21, 0.05), transparent 60%)
+    `,
+    filter: 'blur(22px)',
+    pointerEvents: 'none' as const,
+  },
+  highlight: {
     position: 'absolute',
     inset: 0,
-    background: 'linear-gradient(135deg, rgba(139, 92, 246, 0.03) 0%, rgba(59, 130, 246, 0.02) 50%, rgba(16, 185, 129, 0.02) 100%)',
-    pointerEvents: 'none',
+    background: 'linear-gradient(to bottom, rgba(255,255,255,0.04), transparent 50%)',
+    pointerEvents: 'none' as const,
   },
-  topHighlight: {
+  noise: {
     position: 'absolute',
-    top: 0,
-    left: '10%',
-    right: '10%',
-    height: '1px',
-    background: 'linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.08) 50%, transparent 100%)',
-    pointerEvents: 'none',
+    inset: 0,
+    backgroundImage: 'radial-gradient(rgba(255,255,255,0.08) 1px, transparent 1px)',
+    backgroundSize: '3px 3px',
+    opacity: 0.06,
+    mixBlendMode: 'overlay' as const,
+    pointerEvents: 'none' as const,
   },
 };
 
@@ -755,7 +797,7 @@ export default function Header() {
       }}>
         <NavBarShell width="min(95%, 900px)">
           <div style={headerStyles.tabletInner}>
-            <Company size={44} textSize={20} />
+            <Company size={40} textSize={18} />
             <TabletNav />
           </div>
         </NavBarShell>
@@ -769,7 +811,7 @@ export default function Header() {
       transform: isVisible ? 'translateY(0)' : 'translateY(-100%)',
       opacity: isVisible ? 1 : 0,
     }}>
-      <NavBarShell width="min(calc(100% - 48px), 1280px)">
+      <NavBarShell width="1200px">
         <div style={headerStyles.desktopInner}>
           <Company size={48} textSize={20} />
           <DesktopNav />
