@@ -3,6 +3,7 @@
 import Image from 'next/image';
 import { useAdminStore } from '@/hooks/useAdminStore';
 import CustomerDropdown from './CustomerDropdown';
+import MetricsSidebar from './MetricsSidebar';
 
 const LOGO_URL = 'https://f005.backblazeb2.com/file/SKYFYND-assets/Skyfynd+logo.png';
 
@@ -41,6 +42,9 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           <p className="text-[11px] text-[#52525B] truncate">{session?.name} &middot; {session?.email}</p>
         </div>
       </aside>
+
+      {/* Pipeline Metrics Sidebar */}
+      <MetricsSidebar />
 
       {/* Main Content */}
       <main className="flex-1 overflow-y-auto p-6">

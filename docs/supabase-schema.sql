@@ -1,9 +1,28 @@
 -- ══════════════════════════════════════════════
--- SkyFynd Client Portal — Supabase Schema
--- Run this in Supabase SQL Editor
+-- SkyFynd — Complete Supabase Schema
+-- Run this in Supabase SQL Editor (all at once)
 -- ══════════════════════════════════════════════
 
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+
+-- ══════════════════════════════════════════════
+-- QUOTE OVERRIDES (admin edits to GAS quotes)
+-- ══════════════════════════════════════════════
+
+CREATE TABLE quote_overrides (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  qr_number TEXT NOT NULL UNIQUE,
+  quote_data JSONB NOT NULL,
+  admin_notes TEXT DEFAULT '',
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE INDEX idx_quote_overrides_qr ON quote_overrides(qr_number);
+
+-- ══════════════════════════════════════════════
+-- CLIENT PORTAL TABLES
+-- ══════════════════════════════════════════════
 
 -- ── Portal: main record linking to a GAS quote ──
 
@@ -95,8 +114,11 @@ CREATE TABLE portal_payments (
 CREATE INDEX idx_portal_payments_portal_id ON portal_payments(portal_id);
 CREATE INDEX idx_portal_payments_stripe_session ON portal_payments(stripe_session_id);
 
--- ── Row Level Security ──
+-- ══════════════════════════════════════════════
+-- ROW LEVEL SECURITY (all tables)
+-- ══════════════════════════════════════════════
 
+ALTER TABLE quote_overrides ENABLE ROW LEVEL SECURITY;
 ALTER TABLE portals ENABLE ROW LEVEL SECURITY;
 ALTER TABLE portal_verification ENABLE ROW LEVEL SECURITY;
 ALTER TABLE portal_change_requests ENABLE ROW LEVEL SECURITY;

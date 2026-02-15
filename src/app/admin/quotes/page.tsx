@@ -7,7 +7,6 @@ import AdminLogin from '@/components/admin/AdminLogin';
 import AdminLayout from '@/components/admin/AdminLayout';
 import CustomerToggle from '@/components/admin/CustomerToggle';
 import QuotePDFExport from '@/components/admin/QuotePDFExport';
-import DashboardMetrics from '@/components/admin/DashboardMetrics';
 import PortalStatusBadge from '@/components/admin/PortalStatusBadge';
 import TrashBin from '@/components/admin/TrashBin';
 import QuoteEditor from '@/components/admin/QuoteEditor';
@@ -131,9 +130,6 @@ function AdminQuotesContent() {
 
   return (
     <AdminLayout>
-      {/* Dashboard Metrics - always visible, excludes trashed quotes */}
-      {quotes.length > 0 && <DashboardMetrics quotes={quotes.filter(q => !trashedQRs.has(q.qrNumber))} portals={portals} />}
-
       {!selectedQR ? (
         <div className="flex items-center justify-center flex-1" style={{ minHeight: 'calc(100vh - 200px)' }}>
           <div className="text-center -mt-20">
