@@ -16,7 +16,7 @@
     "NEXT_PUBLIC_SUPABASE_URL": "https://jayjqlnarnqshbqbquhj.supabase.co",
     "NEXT_PUBLIC_SUPABASE_ANON_KEY": "sb_publishable_8d70Z7sdfREtGz5mCIzXpw_Pz3ULW1B",
     "NEXT_PUBLIC_BASE_URL": "https://plans.skyfynd.io",
-    "NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY": ""
+    "NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY": "pk_live_51T0uep3s2LeYyAbKGAe90DsqxZJYUv1nY0Jb9F9FPnJmRtk9etSVHaDc4hin3N4iDH3XJZpwljS0nKUw4Rlc7rQM00nshqgYJx"
   }
   // All secrets must be set via: npx wrangler secret put <KEY_NAME>
   // Required secrets:

@@ -1,5 +1,18 @@
 import { create } from 'zustand';
 import type { MasterLeadRow, QuoteJSON, SessionData, ServiceDiscount, QuoteLevelDiscount } from '@/lib/types/admin';
+import type { PortalStatus } from '@/lib/supabase/types';
+
+export interface PortalSummaryWithDetails {
+  id: string;
+  qr_number: string;
+  client_name: string;
+  client_email: string;
+  status: PortalStatus;
+  created_at: string;
+  expires_at: string;
+  pending_changes: { message: string; created_at: string }[];
+  payment: { amount: number; paid_at: string | null } | null;
+}
 
 interface AdminState {
   // Session
@@ -17,11 +30,16 @@ interface AdminState {
   quoteLoading: boolean;
   quoteError: string | null;
 
+  // Portal tracking
+  portals: PortalSummaryWithDetails[];
+  portalsLoading: boolean;
+
   // Actions
   checkSession: () => Promise<void>;
   login: (email: string, password: string) => Promise<{ success: boolean; error?: string }>;
   logout: () => Promise<void>;
   fetchQuotes: () => Promise<void>;
+  fetchPortals: () => Promise<void>;
   selectQuote: (qr: string) => Promise<void>;
   clearSelectedQuote: () => void;
   saveDiscount: (
@@ -49,6 +67,8 @@ export const useAdminStore = create<AdminState>((set, get) => ({
   selectedQuote: null,
   quoteLoading: false,
   quoteError: null,
+  portals: [],
+  portalsLoading: false,
 
   checkSession: async () => {
     set({ sessionLoading: true });
@@ -85,7 +105,7 @@ export const useAdminStore = create<AdminState>((set, get) => ({
     } catch {
       // ignore
     }
-    set({ session: null, quotes: [], selectedQR: null, selectedQuote: null });
+    set({ session: null, quotes: [], selectedQR: null, selectedQuote: null, portals: [] });
   },
 
   fetchQuotes: async () => {
@@ -100,6 +120,21 @@ export const useAdminStore = create<AdminState>((set, get) => ({
       }
     } catch {
       set({ quotesError: 'Network error', quotesLoading: false });
+    }
+  },
+
+  fetchPortals: async () => {
+    set({ portalsLoading: true });
+    try {
+      const res = await fetch('/api/admin/portals');
+      const data = await res.json();
+      if (data.status === 'success') {
+        set({ portals: data.portals || [], portalsLoading: false });
+      } else {
+        set({ portalsLoading: false });
+      }
+    } catch {
+      set({ portalsLoading: false });
     }
   },
 
@@ -187,6 +222,7 @@ export const useAdminStore = create<AdminState>((set, get) => ({
       });
       const data = await res.json();
       if (data.status === 'success') {
+        get().fetchPortals();
         return { success: true, message: data.message };
       }
       return { success: false, error: data.message || data.error || 'Failed to send portal' };

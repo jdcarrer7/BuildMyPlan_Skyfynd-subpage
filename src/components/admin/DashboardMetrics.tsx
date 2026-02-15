@@ -1,11 +1,13 @@
 'use client';
 
 import { useMemo } from 'react';
-import { FileText, Rocket, CheckCircle2, TrendingUp, ArrowRight } from 'lucide-react';
+import { FileText, Rocket, CheckCircle2, TrendingUp, ArrowRight, LinkIcon } from 'lucide-react';
 import type { MasterLeadRow } from '@/lib/types/admin';
+import type { PortalSummaryWithDetails } from '@/hooks/useAdminStore';
 
 interface Props {
   quotes: MasterLeadRow[];
+  portals?: PortalSummaryWithDetails[];
 }
 
 interface MetricCard {
@@ -17,15 +19,20 @@ interface MetricCard {
   borderColor: string;
 }
 
-export default function DashboardMetrics({ quotes }: Props) {
+export default function DashboardMetrics({ quotes, portals = [] }: Props) {
   const metrics = useMemo(() => {
     const quotesReceived = quotes.length;
     const inProgress = quotes.filter(q => q.isCustomer && q.serviceStarted && !q.serviceEnded).length;
     const completed = quotes.filter(q => q.isCustomer && q.serviceEnded).length;
     const totalRevenue = quotes.reduce((sum, q) => sum + q.grandTotal, 0);
 
-    return { quotesReceived, inProgress, completed, totalRevenue };
-  }, [quotes]);
+    const portalsSent = portals.length;
+    const portalsSigned = portals.filter(p => p.status === 'contract_signed' || p.status === 'payment_completed').length;
+    const portalsPaid = portals.filter(p => p.status === 'payment_completed').length;
+    const pendingChanges = portals.filter(p => p.pending_changes.length > 0).length;
+
+    return { quotesReceived, inProgress, completed, totalRevenue, portalsSent, portalsSigned, portalsPaid, pendingChanges };
+  }, [quotes, portals]);
 
   const cards: MetricCard[] = [
     {
@@ -162,6 +169,40 @@ export default function DashboardMetrics({ quotes }: Props) {
           </div>
         </div>
       </div>
+
+      {/* Portal Pipeline */}
+      {metrics.portalsSent > 0 && (
+        <div className="card p-3 mt-2">
+          <div className="flex items-center justify-between mb-2">
+            <span className="text-xs font-medium text-[#A1A1AA] uppercase tracking-wide flex items-center gap-1.5">
+              <LinkIcon className="w-3 h-3" />
+              Portal Pipeline
+            </span>
+            {metrics.pendingChanges > 0 && (
+              <span className="text-[10px] font-medium px-1.5 py-0.5 rounded-full bg-[#F59E0B]/10 text-[#F59E0B]">
+                {metrics.pendingChanges} change req.
+              </span>
+            )}
+          </div>
+          <div className="flex items-center gap-4 text-xs">
+            <div className="flex items-center gap-1.5">
+              <div className="w-2 h-2 rounded-full bg-[#8B5CF6]" />
+              <span className="text-[#A1A1AA]">Sent</span>
+              <span className="text-white font-semibold">{metrics.portalsSent}</span>
+            </div>
+            <div className="flex items-center gap-1.5">
+              <div className="w-2 h-2 rounded-full bg-[#22C55E]" />
+              <span className="text-[#A1A1AA]">Signed</span>
+              <span className="text-white font-semibold">{metrics.portalsSigned}</span>
+            </div>
+            <div className="flex items-center gap-1.5">
+              <div className="w-2 h-2 rounded-full bg-[#F59E0B]" />
+              <span className="text-[#A1A1AA]">Paid</span>
+              <span className="text-white font-semibold">{metrics.portalsPaid}</span>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

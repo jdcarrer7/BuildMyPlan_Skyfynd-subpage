@@ -3,6 +3,7 @@
 import { useMemo, useState } from 'react';
 import { useAdminStore } from '@/hooks/useAdminStore';
 import { ChevronDown, ChevronRight, FileText, Loader2, Search, Users, DollarSign } from 'lucide-react';
+import PortalStatusBadge from './PortalStatusBadge';
 
 interface CustomerGroup {
   customerId: string;
@@ -33,7 +34,7 @@ function getInitials(name: string): string {
 }
 
 export default function CustomerDropdown() {
-  const { quotes, quotesLoading, quotesError, selectedQR, selectQuote } = useAdminStore();
+  const { quotes, quotesLoading, quotesError, selectedQR, selectQuote, portals } = useAdminStore();
   const [expandedCustomers, setExpandedCustomers] = useState<Set<string>>(new Set());
   const [search, setSearch] = useState('');
 
@@ -176,6 +177,7 @@ export default function CustomerDropdown() {
                   {group.quotes.map(q => {
                     const isSelected = selectedQR === q.qrNumber;
                     const srcStyle = sourceColors[q.source] || { bg: 'bg-white/[0.06]', text: 'text-[#A1A1AA]' };
+                    const portal = portals.find(p => p.qr_number === q.qrNumber);
                     return (
                       <button
                         key={q.qrNumber}
@@ -200,9 +202,12 @@ export default function CustomerDropdown() {
 
                         <div className="flex items-center justify-between gap-2 ml-5.5">
                           <span className="text-[11px] text-[#52525B]">{formatShortDate(q.date)}</span>
-                          <span className={`text-[10px] font-medium px-1.5 py-0.5 rounded-full ${srcStyle.bg} ${srcStyle.text}`}>
-                            {q.source}
-                          </span>
+                          <div className="flex items-center gap-1.5">
+                            {portal && <PortalStatusBadge status={portal.status} />}
+                            <span className={`text-[10px] font-medium px-1.5 py-0.5 rounded-full ${srcStyle.bg} ${srcStyle.text}`}>
+                              {q.source}
+                            </span>
+                          </div>
                         </div>
                       </button>
                     );

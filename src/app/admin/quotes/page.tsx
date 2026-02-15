@@ -10,7 +10,8 @@ import CustomerToggle from '@/components/admin/CustomerToggle';
 import QuoteBreakdown from '@/components/admin/QuoteBreakdown';
 import QuotePDFExport from '@/components/admin/QuotePDFExport';
 import DashboardMetrics from '@/components/admin/DashboardMetrics';
-import { Loader2, Send, LinkIcon } from 'lucide-react';
+import PortalStatusBadge from '@/components/admin/PortalStatusBadge';
+import { Loader2, Send, LinkIcon, AlertCircle } from 'lucide-react';
 import type { ServiceDiscount, QuoteLevelDiscount } from '@/lib/types/admin';
 
 function AdminQuotesContent() {
@@ -19,11 +20,13 @@ function AdminQuotesContent() {
     sessionLoading,
     checkSession,
     fetchQuotes,
+    fetchPortals,
     selectedQR,
     selectedQuote,
     quoteLoading,
     quoteError,
     quotes,
+    portals,
     selectQuote,
     saveDiscount,
     sendQuote,
@@ -42,12 +45,13 @@ function AdminQuotesContent() {
     checkSession();
   }, [checkSession]);
 
-  // Fetch quotes after login
+  // Fetch quotes and portals after login
   useEffect(() => {
     if (session?.isLoggedIn) {
       fetchQuotes();
+      fetchPortals();
     }
-  }, [session?.isLoggedIn, fetchQuotes]);
+  }, [session?.isLoggedIn, fetchQuotes, fetchPortals]);
 
   // Handle ?qr= deep link
   useEffect(() => {
@@ -109,13 +113,14 @@ function AdminQuotesContent() {
     }
   };
 
-  // Find the lead row for the selected quote
+  // Find the lead row and portal(s) for the selected quote
   const leadRow = quotes.find(q => q.qrNumber === selectedQR);
+  const quotePortals = portals.filter(p => p.qr_number === selectedQR);
 
   return (
     <AdminLayout>
       {/* Dashboard Metrics - always visible */}
-      {quotes.length > 0 && <DashboardMetrics quotes={quotes} />}
+      {quotes.length > 0 && <DashboardMetrics quotes={quotes} portals={portals} />}
 
       {!selectedQR ? (
         <div className="flex items-center justify-center h-full min-h-[40vh]">
@@ -149,6 +154,50 @@ function AdminQuotesContent() {
 
           {/* Customer Toggle */}
           {leadRow && <CustomerToggle leadRow={leadRow} />}
+
+          {/* Portal Status */}
+          {quotePortals.length > 0 && (
+            <div className="card p-4 space-y-3">
+              <h3 className="text-sm font-semibold text-[#FAFAFA] flex items-center gap-2">
+                <LinkIcon className="w-4 h-4 text-[#8B5CF6]" />
+                Client Portal
+              </h3>
+              {quotePortals.map(p => (
+                <div key={p.id} className="flex items-center justify-between gap-3 text-sm">
+                  <div className="flex items-center gap-3 min-w-0">
+                    <PortalStatusBadge status={p.status} size="md" />
+                    <span className="text-[#A1A1AA] text-xs truncate">
+                      Sent {new Date(p.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+                    </span>
+                    {p.payment && (
+                      <span className="text-[#10B981] text-xs font-medium">
+                        ${(p.payment.amount / 100).toLocaleString()} paid
+                      </span>
+                    )}
+                  </div>
+                  {p.pending_changes.length > 0 && (
+                    <div className="flex items-center gap-1.5 text-[#F59E0B]">
+                      <AlertCircle className="w-3.5 h-3.5" />
+                      <span className="text-xs font-medium">{p.pending_changes.length} change request{p.pending_changes.length > 1 ? 's' : ''}</span>
+                    </div>
+                  )}
+                </div>
+              ))}
+              {/* Show change request messages */}
+              {quotePortals.some(p => p.pending_changes.length > 0) && (
+                <div className="border-t border-white/[0.06] pt-3 space-y-2">
+                  {quotePortals.flatMap(p => p.pending_changes).map((cr, i) => (
+                    <div key={i} className="bg-[#F59E0B]/5 border border-[#F59E0B]/20 rounded-lg p-3">
+                      <p className="text-xs text-[#FAFAFA]">&ldquo;{cr.message}&rdquo;</p>
+                      <p className="text-[10px] text-[#71717A] mt-1">
+                        {new Date(cr.created_at).toLocaleString('en-US', { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' })}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
 
           {/* Service Breakdown + Discounts + Totals */}
           <QuoteBreakdown quote={selectedQuote} onSaveDiscount={handleSaveDiscount} />
