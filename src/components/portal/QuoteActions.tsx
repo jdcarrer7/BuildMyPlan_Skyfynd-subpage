@@ -57,7 +57,7 @@ export default function QuoteActions({ portalId, onAccepted, onChangeRequested }
           onClick={handleAccept}
           disabled={accepting}
           className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-3 rounded-lg font-semibold text-white transition-all disabled:opacity-50"
-          style={{ background: 'linear-gradient(135deg, #10B981 0%, #059669 100%)' }}
+          style={{ background: 'linear-gradient(to right, rgba(167,139,250,0.75) 0%, rgba(96,175,250,0.85) 40%, rgba(52,211,153,0.8) 100%)' }}
         >
           {accepting ? (
             <>

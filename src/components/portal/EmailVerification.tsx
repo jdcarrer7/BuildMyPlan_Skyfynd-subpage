@@ -108,8 +108,8 @@ export default function EmailVerification({ portalId, maskedEmail, onVerified }:
     <div className="text-center py-8 sm:py-12">
       {step === 'request' ? (
         <>
-          <div className="w-16 h-16 rounded-2xl bg-[#3B82F6]/10 flex items-center justify-center mx-auto mb-6">
-            <Mail className="w-8 h-8 text-[#3B82F6]" />
+          <div className="w-16 h-16 rounded-2xl bg-[#A78BFA]/10 flex items-center justify-center mx-auto mb-6">
+            <Mail className="w-8 h-8 text-[#A78BFA]" />
           </div>
           <h2
             className="text-2xl font-semibold text-[#FAFAFA] mb-3"
@@ -133,7 +133,7 @@ export default function EmailVerification({ portalId, maskedEmail, onVerified }:
             onClick={handleSendCode}
             disabled={sending}
             className="inline-flex items-center gap-2 px-6 py-3 rounded-lg font-semibold text-white transition-all disabled:opacity-50"
-            style={{ background: 'linear-gradient(135deg, #3B82F6 0%, #8B5CF6 100%)' }}
+            style={{ background: 'linear-gradient(to right, rgba(167,139,250,0.75) 0%, rgba(96,175,250,0.85) 40%, rgba(52,211,153,0.8) 100%)' }}
           >
             {sending ? (
               <>
@@ -150,8 +150,8 @@ export default function EmailVerification({ portalId, maskedEmail, onVerified }:
         </>
       ) : (
         <>
-          <div className="w-16 h-16 rounded-2xl bg-[#8B5CF6]/10 flex items-center justify-center mx-auto mb-6">
-            <ShieldCheck className="w-8 h-8 text-[#8B5CF6]" />
+          <div className="w-16 h-16 rounded-2xl bg-[#A78BFA]/10 flex items-center justify-center mx-auto mb-6">
+            <ShieldCheck className="w-8 h-8 text-[#A78BFA]" />
           </div>
           <h2
             className="text-2xl font-semibold text-[#FAFAFA] mb-3"
@@ -178,7 +178,7 @@ export default function EmailVerification({ portalId, maskedEmail, onVerified }:
                 onChange={(e) => handleInputChange(i, e.target.value)}
                 onKeyDown={(e) => handleKeyDown(i, e)}
                 disabled={verifying}
-                className="w-11 h-14 sm:w-14 sm:h-16 text-center text-xl sm:text-2xl font-mono font-bold rounded-lg bg-white/[0.06] border border-white/[0.1] text-[#FAFAFA] focus:border-[#8B5CF6] focus:ring-1 focus:ring-[#8B5CF6] outline-none transition-all disabled:opacity-50"
+                className="w-11 h-14 sm:w-14 sm:h-16 text-center text-xl sm:text-2xl font-mono font-bold rounded-lg bg-white/[0.06] border border-white/[0.1] text-[#FAFAFA] focus:border-[#A78BFA] focus:ring-1 focus:ring-[#A78BFA] outline-none transition-all disabled:opacity-50"
               />
             ))}
           </div>
@@ -197,7 +197,7 @@ export default function EmailVerification({ portalId, maskedEmail, onVerified }:
           <button
             onClick={handleSendCode}
             disabled={sending}
-            className="text-[#8B5CF6] text-sm hover:underline mt-4 disabled:opacity-50"
+            className="text-[#A78BFA] text-sm hover:underline mt-4 disabled:opacity-50"
           >
             {sending ? 'Resending...' : "Didn't receive it? Resend code"}
           </button>

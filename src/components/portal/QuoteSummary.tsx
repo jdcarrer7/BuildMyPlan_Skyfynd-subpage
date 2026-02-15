@@ -28,7 +28,7 @@ function StepRow({ step, indent = 0 }: { step: ResolvedStep; indent?: number }) 
               {child.stepName}
             </td>
             <td className="py-1 text-sm text-[#A1A1AA]">{child.selectedLabel}</td>
-            <td className="py-1 text-sm text-right text-[#8B5CF6] font-semibold whitespace-nowrap">
+            <td className="py-1 text-sm text-right text-[#A78BFA] font-semibold whitespace-nowrap">
               {child.priceImpact !== null && child.priceImpact > 0
                 ? child.isRecurring
                   ? `$${fmt(child.priceImpact)}/mo`
@@ -47,7 +47,7 @@ function StepRow({ step, indent = 0 }: { step: ResolvedStep; indent?: number }) 
         {step.stepName}
       </td>
       <td className="py-1 text-sm text-[#A1A1AA]">{step.selectedLabel}</td>
-      <td className="py-1 text-sm text-right text-[#8B5CF6] font-semibold whitespace-nowrap">
+      <td className="py-1 text-sm text-right text-[#A78BFA] font-semibold whitespace-nowrap">
         {step.priceImpact !== null && step.priceImpact > 0
           ? step.isRecurring
             ? `$${fmt(step.priceImpact)}/mo`
@@ -68,7 +68,7 @@ function ServiceBlock({ service }: { service: ResolvedServiceConfig }) {
       {/* Service header */}
       <div className="flex items-center justify-between bg-white/[0.04] rounded-lg px-4 py-2.5">
         <span className="font-bold text-sm text-[#FAFAFA]">{service.serviceLabel}</span>
-        <span className="font-bold text-sm text-[#8B5CF6]">{prices.join(' + ') || '$0'}</span>
+        <span className="font-bold text-sm text-[#A78BFA]">{prices.join(' + ') || '$0'}</span>
       </div>
 
       {/* Steps */}
@@ -176,7 +176,7 @@ export default function QuoteSummary({ quote }: QuoteSummaryProps) {
           {/* Grand Total */}
           <div
             className="grid grid-cols-2 px-4 py-4 text-white"
-            style={{ background: 'linear-gradient(135deg, #3B82F6 0%, #8B5CF6 100%)' }}
+            style={{ background: 'linear-gradient(to right, rgba(167,139,250,0.75) 0%, rgba(96,175,250,0.85) 40%, rgba(52,211,153,0.8) 100%)' }}
           >
             <span className="font-bold text-base">Estimated Total</span>
             <span className="text-right font-bold text-xl">${fmt(totals.grandTotal || 0)}</span>

@@ -127,8 +127,8 @@ export default function PaymentSection({ portalId, grandTotal, qrNumber }: Payme
 
   return (
     <div className="text-center space-y-6">
-      <div className="w-16 h-16 rounded-2xl bg-[#10B981]/10 flex items-center justify-center mx-auto">
-        <CreditCard className="w-8 h-8 text-[#10B981]" />
+      <div className="w-16 h-16 rounded-2xl bg-[#A78BFA]/10 flex items-center justify-center mx-auto">
+        <CreditCard className="w-8 h-8 text-[#A78BFA]" />
       </div>
 
       <div>
@@ -166,7 +166,7 @@ export default function PaymentSection({ portalId, grandTotal, qrNumber }: Payme
           onClick={handleCheckout}
           disabled={loading}
           className="inline-flex items-center gap-2 px-8 py-3 rounded-lg font-semibold text-white transition-all disabled:opacity-50"
-          style={{ background: 'linear-gradient(135deg, #10B981 0%, #059669 100%)' }}
+          style={{ background: 'linear-gradient(to right, rgba(167,139,250,0.75) 0%, rgba(96,175,250,0.85) 40%, rgba(52,211,153,0.8) 100%)' }}
         >
           {loading ? (
             <>
@@ -184,7 +184,7 @@ export default function PaymentSection({ portalId, grandTotal, qrNumber }: Payme
         <button
           onClick={handleDownloadContract}
           disabled={downloading}
-          className="inline-flex items-center gap-2 text-sm text-[#8B5CF6] hover:underline disabled:opacity-50"
+          className="inline-flex items-center gap-2 text-sm text-[#A78BFA] hover:underline disabled:opacity-50"
         >
           <Download className="w-3.5 h-3.5" />
           {downloading ? 'Generating...' : 'Download Signed Agreement'}

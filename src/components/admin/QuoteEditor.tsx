@@ -15,11 +15,20 @@ function cloneQuote(q: QuoteJSON): QuoteJSON {
 /**
  * Recalculate service totals from step prices, then recalculate quote totals.
  */
-function recalcTotals(q: QuoteJSON): QuoteJSON {
+function recalcTotals(q: QuoteJSON, overriddenServices?: Set<number>): QuoteJSON {
   let oneTimeTotal = 0;
   let monthlyTotal = 0;
 
-  for (const svc of q.services) {
+  for (let idx = 0; idx < q.services.length; idx++) {
+    const svc = q.services[idx];
+
+    // If this service has a manual price override, skip step-based calculation
+    if (overriddenServices?.has(idx)) {
+      oneTimeTotal += svc.oneTimeTotal;
+      monthlyTotal += svc.monthlyTotal;
+      continue;
+    }
+
     let svcOneTime = 0;
     let svcMonthly = 0;
 
@@ -171,11 +180,15 @@ export default function QuoteEditor({
   const [notesValue, setNotesValue] = useState('');
   const [saving, setSaving] = useState(false);
   const [saveResult, setSaveResult] = useState<{ success: boolean; message: string } | null>(null);
+  const [overriddenServices, setOverriddenServices] = useState<Set<number>>(new Set());
+  const [grandTotalOverride, setGrandTotalOverride] = useState<number | null>(null);
 
   const startEditing = useCallback(() => {
     if (!selectedQuote) return;
     setDraft(cloneQuote(selectedQuote));
     setNotesValue(adminNotes);
+    setOverriddenServices(new Set());
+    setGrandTotalOverride(null);
     setIsEditing(true);
     setSaveResult(null);
     onSaveResult?.(null);
@@ -193,6 +206,8 @@ export default function QuoteEditor({
   const cancelEditing = useCallback(() => {
     setDraft(null);
     setIsEditing(false);
+    setOverriddenServices(new Set());
+    setGrandTotalOverride(null);
     setSaveResult(null);
     onSaveResult?.(null);
   }, [setIsEditing, onSaveResult]);
@@ -211,7 +226,10 @@ export default function QuoteEditor({
     setSaving(true);
     onSavingChange?.(true);
     setSaveResult(null);
-    const finalQuote = recalcTotals(cloneQuote(draft));
+    const finalQuote = recalcTotals(cloneQuote(draft), overriddenServices);
+    if (grandTotalOverride !== null) {
+      finalQuote.totals.grandTotal = grandTotalOverride;
+    }
     const result = await saveQuoteEdit(finalQuote, notesValue);
     setSaving(false);
     onSavingChange?.(false);
@@ -258,9 +276,20 @@ export default function QuoteEditor({
     // Update field
     (target as unknown as Record<string, unknown>)[field] = value;
 
-    // Recalculate
-    setDraft(recalcTotals(next));
-  }, [draft]);
+    // Recalculate (respecting any manual overrides)
+    setDraft(recalcTotals(next, overriddenServices));
+  }, [draft, overriddenServices]);
+
+  const updateServicePrice = useCallback((serviceIndex: number, field: 'oneTimeTotal' | 'monthlyTotal', value: number) => {
+    if (!draft) return;
+    const next = cloneQuote(draft);
+    next.services[serviceIndex][field] = value;
+    // Mark this service as manually overridden so recalcTotals won't recalculate it from steps
+    const nextOverrides = new Set(overriddenServices);
+    nextOverrides.add(serviceIndex);
+    setOverriddenServices(nextOverrides);
+    setDraft(recalcTotals(next, nextOverrides));
+  }, [draft, overriddenServices]);
 
   if (!selectedQuote) return null;
 
@@ -332,14 +361,40 @@ export default function QuoteEditor({
           {/* Service Header */}
           <div className="flex items-center justify-between p-4 border-b border-white/[0.06]">
             <h3 className="text-lg font-semibold text-[#FAFAFA] font-serif">{svc.serviceLabel}</h3>
-            <div className="flex items-center gap-4 text-sm">
-              {svc.oneTimeTotal > 0 && (
-                <span className="text-white font-medium">${svc.oneTimeTotal.toLocaleString()}</span>
-              )}
-              {svc.monthlyTotal > 0 && (
-                <span className="text-[#3B82F6] font-medium">${svc.monthlyTotal.toLocaleString()}/mo</span>
-              )}
-            </div>
+            {isEditing ? (
+              <div className="flex items-center gap-3">
+                <div className="flex items-center gap-1">
+                  <span className="text-white text-sm">$</span>
+                  <input
+                    type="number"
+                    value={svc.oneTimeTotal}
+                    onChange={(e) => updateServicePrice(svcIndex, 'oneTimeTotal', Number(e.target.value) || 0)}
+                    className="w-24 bg-white/[0.04] border border-white/[0.1] rounded px-2 py-1 text-sm text-white text-right font-medium focus:outline-none focus:border-[#3B82F6] tabular-nums [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                  />
+                </div>
+                {svc.monthlyTotal > 0 && (
+                  <div className="flex items-center gap-1">
+                    <span className="text-[#3B82F6] text-sm">$</span>
+                    <input
+                      type="number"
+                      value={svc.monthlyTotal}
+                      onChange={(e) => updateServicePrice(svcIndex, 'monthlyTotal', Number(e.target.value) || 0)}
+                      className="w-24 bg-white/[0.04] border border-[#3B82F6]/30 rounded px-2 py-1 text-sm text-[#3B82F6] text-right font-medium focus:outline-none focus:border-[#3B82F6] tabular-nums [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                    />
+                    <span className="text-[#3B82F6] text-sm">/mo</span>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <div className="flex items-center gap-4 text-sm">
+                {svc.oneTimeTotal > 0 && (
+                  <span className="text-white font-medium">${svc.oneTimeTotal.toLocaleString()}</span>
+                )}
+                {svc.monthlyTotal > 0 && (
+                  <span className="text-[#3B82F6] font-medium">${svc.monthlyTotal.toLocaleString()}/mo</span>
+                )}
+              </div>
+            )}
           </div>
 
           {/* Steps Table */}
@@ -410,9 +465,21 @@ export default function QuoteEditor({
             </div>
           )}
           <div className="border-t border-white/[0.06] pt-3">
-            <div className="flex justify-between">
+            <div className="flex justify-between items-center">
               <span className="text-white font-semibold">Grand Total</span>
-              <span className="text-xl font-bold text-white">${quote.totals.grandTotal.toLocaleString()}</span>
+              {isEditing ? (
+                <div className="flex items-center gap-1">
+                  <span className="text-white text-xl font-bold">$</span>
+                  <input
+                    type="number"
+                    value={grandTotalOverride !== null ? grandTotalOverride : quote.totals.grandTotal}
+                    onChange={(e) => setGrandTotalOverride(Number(e.target.value) || 0)}
+                    className="w-32 bg-white/[0.04] border border-white/[0.1] rounded px-2 py-1 text-xl text-white text-right font-bold focus:outline-none focus:border-[#3B82F6] tabular-nums [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                  />
+                </div>
+              ) : (
+                <span className="text-xl font-bold text-white">${quote.totals.grandTotal.toLocaleString()}</span>
+              )}
             </div>
           </div>
         </div>

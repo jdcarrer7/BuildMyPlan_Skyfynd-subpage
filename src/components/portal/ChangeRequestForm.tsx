@@ -78,7 +78,7 @@ export default function ChangeRequestForm({ portalId, onSubmitted, onCancel }: C
         placeholder="Describe the changes you'd like..."
         maxLength={2000}
         rows={5}
-        className="w-full bg-white/[0.04] border border-white/[0.1] rounded-lg px-4 py-3 text-[#FAFAFA] text-sm placeholder:text-[#52525B] focus:border-[#8B5CF6] focus:ring-1 focus:ring-[#8B5CF6] outline-none resize-none transition-all"
+        className="w-full bg-white/[0.04] border border-white/[0.1] rounded-lg px-4 py-3 text-[#FAFAFA] text-sm placeholder:text-[#52525B] focus:border-[#A78BFA] focus:ring-1 focus:ring-[#A78BFA] outline-none resize-none transition-all"
       />
 
       <div className="flex items-center justify-between mt-3">
@@ -91,7 +91,7 @@ export default function ChangeRequestForm({ portalId, onSubmitted, onCancel }: C
           onClick={handleSubmit}
           disabled={submitting || !message.trim()}
           className="inline-flex items-center gap-2 px-6 py-3 rounded-lg font-semibold text-white transition-all disabled:opacity-50"
-          style={{ background: 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)' }}
+          style={{ background: 'linear-gradient(to right, rgba(167,139,250,0.75) 0%, rgba(96,175,250,0.85) 40%, rgba(52,211,153,0.8) 100%)' }}
         >
           {submitting ? (
             <>
