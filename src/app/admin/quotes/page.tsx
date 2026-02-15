@@ -264,7 +264,7 @@ function AdminQuotesContent() {
               }
             }}
             className={`group fixed right-6 z-40 w-14 h-14 rounded-full shadow-lg flex items-center justify-center hover:scale-105 active:scale-95 ${
-              isEditing
+              isEditing && editPanelOpen
                 ? 'ring-2 ring-[#A78BFA]/60 shadow-[0_0_16px_rgba(167,139,250,0.3)]'
                 : 'border border-white/[0.1] hover:bg-[#2A2A2E]'
             }`}
@@ -272,7 +272,7 @@ function AdminQuotesContent() {
               bottom: isTrashOpen && trashPanelHeight > 0
                 ? `${104 + trashPanelHeight + 16}px`
                 : '104px',
-              background: isEditing
+              background: isEditing && editPanelOpen
                 ? 'linear-gradient(to right, rgba(167,139,250,0.75) 0%, rgba(96,175,250,0.85) 40%, rgba(52,211,153,0.8) 100%)'
                 : '#1C1C1E',
               transition: 'bottom 0.3s ease',

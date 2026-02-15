@@ -38,6 +38,7 @@ interface AdminState {
 
   // Trash
   trashedQRs: Set<string>;
+  deletedQRs: Set<string>;
 
   // Actions
   checkSession: () => Promise<void>;
@@ -83,6 +84,23 @@ function saveTrashedQRs(qrs: Set<string>) {
   }
 }
 
+function loadDeletedQRs(): Set<string> {
+  try {
+    const stored = typeof window !== 'undefined' ? localStorage.getItem('skyfynd_deleted_qrs') : null;
+    return stored ? new Set(JSON.parse(stored)) : new Set();
+  } catch {
+    return new Set();
+  }
+}
+
+function saveDeletedQRs(qrs: Set<string>) {
+  try {
+    localStorage.setItem('skyfynd_deleted_qrs', JSON.stringify([...qrs]));
+  } catch {
+    // ignore
+  }
+}
+
 export const useAdminStore = create<AdminState>((set, get) => ({
   session: null,
   sessionLoading: true,
@@ -98,6 +116,7 @@ export const useAdminStore = create<AdminState>((set, get) => ({
   portals: [],
   portalsLoading: false,
   trashedQRs: loadTrashedQRs(),
+  deletedQRs: loadDeletedQRs(),
 
   checkSession: async () => {
     set({ sessionLoading: true });
@@ -143,7 +162,9 @@ export const useAdminStore = create<AdminState>((set, get) => ({
       const res = await fetch('/api/admin/quotes');
       const data = await res.json();
       if (data.status === 'success') {
-        set({ quotes: data.quotes || [], quotesLoading: false });
+        const deleted = get().deletedQRs;
+        const filtered = (data.quotes || []).filter((q: MasterLeadRow) => !deleted.has(q.qrNumber));
+        set({ quotes: filtered, quotesLoading: false });
       } else {
         set({ quotesError: data.message || 'Failed to load quotes', quotesLoading: false });
       }
@@ -306,11 +327,16 @@ export const useAdminStore = create<AdminState>((set, get) => ({
   },
 
   permanentlyDeleteQuote: (qrNumber: string) => {
-    const next = new Set(get().trashedQRs);
-    next.delete(qrNumber);
-    saveTrashedQRs(next);
-    // Remove from quotes list in memory (won't persist past refresh since quotes come from API)
+    // Remove from trash
+    const nextTrashed = new Set(get().trashedQRs);
+    nextTrashed.delete(qrNumber);
+    saveTrashedQRs(nextTrashed);
+    // Add to permanently deleted (persists across refreshes)
+    const nextDeleted = new Set(get().deletedQRs);
+    nextDeleted.add(qrNumber);
+    saveDeletedQRs(nextDeleted);
+    // Remove from quotes list in memory
     const updatedQuotes = get().quotes.filter(q => q.qrNumber !== qrNumber);
-    set({ trashedQRs: next, quotes: updatedQuotes });
+    set({ trashedQRs: nextTrashed, deletedQRs: nextDeleted, quotes: updatedQuotes });
   },
 }));
