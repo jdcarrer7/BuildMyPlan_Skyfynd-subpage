@@ -69,9 +69,9 @@ export default function QuoteBreakdown({ quote, onSaveDiscount }: Props) {
 
   if (!quote.services || quote.services.length === 0) {
     return (
-      <div className="bg-[#1c1825] rounded-xl border border-[#2a2435] p-8 text-center">
-        <p className="text-[#888]">No resolved service breakdown available for this quote.</p>
-        <p className="text-xs text-[#666] mt-2">This quote may have been submitted before the config resolver was added.</p>
+      <div className="card p-8 text-center">
+        <p className="text-[#71717A]">No resolved service breakdown available for this quote.</p>
+        <p className="text-xs text-[#52525B] mt-2">This quote may have been submitted before the config resolver was added.</p>
       </div>
     );
   }

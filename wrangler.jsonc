@@ -10,5 +10,21 @@
   "assets": {
     "directory": ".open-next/assets",
     "binding": "ASSETS"
+  },
+  // Public vars only — safe to commit
+  "vars": {
+    "NEXT_PUBLIC_SUPABASE_URL": "https://jayjqlnarnqshbqbquhj.supabase.co",
+    "NEXT_PUBLIC_SUPABASE_ANON_KEY": "sb_publishable_8d70Z7sdfREtGz5mCIzXpw_Pz3ULW1B",
+    "NEXT_PUBLIC_BASE_URL": "https://plans.skyfynd.io",
+    "NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY": ""
   }
+  // All secrets must be set via: npx wrangler secret put <KEY_NAME>
+  // Required secrets:
+  //   GOOGLE_APPS_SCRIPT_URL
+  //   SESSION_SECRET
+  //   GMAIL_USER
+  //   GMAIL_APP_PASSWORD
+  //   SUPABASE_SERVICE_ROLE_KEY
+  //   STRIPE_SECRET_KEY
+  //   STRIPE_WEBHOOK_SECRET
 }

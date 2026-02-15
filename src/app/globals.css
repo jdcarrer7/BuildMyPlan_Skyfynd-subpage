@@ -225,8 +225,8 @@ body::before {
 }
 
 .card:hover {
-  border-color: var(--border-accent);
-  box-shadow: 0 0 32px rgba(139, 92, 246, 0.08);
+  border-color: rgba(59, 130, 246, 0.3);
+  box-shadow: 0 0 32px rgba(59, 130, 246, 0.08);
 }
 
 /* Card with glow border accent */
@@ -489,6 +489,35 @@ body::before {
   opacity: 0.7;
 }
 
+/* Admin service tile - gradient border glow effect */
+.admin-service-tile {
+  position: relative;
+}
+
+.admin-service-tile::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  background: linear-gradient(135deg, #60A5FA, #10B981, #FBBF24, #F97316, #EF4444, #60A5FA);
+  background-size: 300% 300%;
+  animation: navShimmer 4s ease infinite;
+  opacity: 0.35;
+  z-index: -1;
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  padding: 1px;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.admin-service-tile:hover::before {
+  opacity: 0.7;
+}
+
 /* Glass effect for overlays - SkyFynd glassmorphism */
 .glass {
   background: linear-gradient(140deg, rgba(17, 17, 19, 0.9), rgba(17, 17, 19, 0.7));
@@ -500,24 +529,39 @@ body::before {
 
 /* Smooth focus states - SkyFynd style */
 button:focus-visible,
-a:focus-visible,
-input:focus-visible,
-textarea:focus-visible,
-select:focus-visible {
-  outline: 2px solid var(--accent-purple);
+a:focus-visible {
+  outline: 2px solid var(--accent-blue);
   outline-offset: 2px;
 }
 
-/* Input focus states */
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: none;
+}
+
+/* Input focus states - subtle glow */
 input:focus,
 textarea:focus,
 select:focus {
-  border-color: var(--accent-purple) !important;
+  border-color: rgba(59, 130, 246, 0.5) !important;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1), 0 0 16px rgba(16, 185, 129, 0.08) !important;
+}
+
+/* Browser autofill override - keep dark theme */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 1000px #0A0A0B inset !important;
+  -webkit-text-fill-color: #FAFAFA !important;
+  caret-color: #FAFAFA !important;
+  transition: background-color 5000s ease-in-out 0s;
 }
 
 /* Selection styling - SkyFynd style */
 ::selection {
-  background: rgba(139, 92, 246, 0.2);
+  background: rgba(59, 130, 246, 0.2);
 }
 
 /* ========================================

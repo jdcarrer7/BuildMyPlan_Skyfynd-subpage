@@ -44,7 +44,7 @@ export default function QuotePDFExport({ quote }: Props) {
       let y = margin;
 
       // ── Header ──
-      doc.setFillColor(74, 20, 140);
+      doc.setFillColor(15, 23, 42);
       doc.rect(0, 0, pageWidth, 40, 'F');
 
       if (logoBase64) {
@@ -102,7 +102,7 @@ export default function QuotePDFExport({ quote }: Props) {
         // Service header
         doc.setFillColor(245, 245, 250);
         doc.rect(margin, y - 4, contentWidth, 8, 'F');
-        doc.setTextColor(74, 20, 140);
+        doc.setTextColor(59, 130, 246);
         doc.setFontSize(11);
         doc.setFont('helvetica', 'bold');
         doc.text(service.serviceLabel, margin + 2, y);
@@ -178,7 +178,7 @@ export default function QuotePDFExport({ quote }: Props) {
 
       doc.setFontSize(12);
       doc.setFont('helvetica', 'bold');
-      doc.setTextColor(74, 20, 140);
+      doc.setTextColor(59, 130, 246);
       doc.text('PRICE SUMMARY', margin, y);
       y += 8;
 
@@ -254,7 +254,7 @@ export default function QuotePDFExport({ quote }: Props) {
       y += 6;
 
       doc.setFont('helvetica', 'bold');
-      doc.setTextColor(74, 20, 140);
+      doc.setTextColor(59, 130, 246);
       doc.setFontSize(14);
       doc.text('DUE TODAY', col1X, y);
       doc.text(`$${quote.totals.grandTotal.toLocaleString()}`, col3X, y, { align: 'right' });
@@ -289,7 +289,7 @@ export default function QuotePDFExport({ quote }: Props) {
         onClick={generatePDF}
         disabled={generating}
         className="flex items-center gap-2 px-5 py-3 rounded-lg font-semibold text-white transition-all disabled:opacity-50"
-        style={{ background: 'linear-gradient(135deg, #8b5cf6 0%, #d946ef 50%, #ec4899 100%)' }}
+        style={{ background: 'linear-gradient(135deg, #3B82F6 0%, #10B981 100%)' }}
       >
         <Download className="w-4 h-4" />
         {generating ? 'Generating PDF...' : 'Export PDF'}

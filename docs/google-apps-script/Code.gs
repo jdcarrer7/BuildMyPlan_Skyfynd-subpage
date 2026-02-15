@@ -31,7 +31,7 @@ var LOGO_URL = 'https://f005.backblazeb2.com/file/SKYFYND-assets/Skyfynd+logo.pn
 var MASTER_SHEET_NAME = 'Master Leads';
 var CUSTOMER_SHEET_NAME = 'Customers';
 
-// ── Master Lead Sheet Headers (20 columns) ──
+// ── Master Lead Sheet Headers (21 columns) ──
 
 function getMasterLeadHeaders() {
   return [
@@ -54,7 +54,8 @@ function getMasterLeadHeaders() {
     'Customer',         // Q - checkbox
     'Service Started',  // R
     'Service Ended',    // S
-    'Notes'             // T
+    'Notes',            // T
+    'JSON Data'         // U - full quote JSON stored here
   ];
 }
 
@@ -180,8 +181,7 @@ function handleSubmitQuote(data) {
   var customerId = assignCustomerId(data, sheet);
   var dateStr = new Date().toISOString().split('T')[0];
 
-  // Save full JSON to Drive
-  var fileName = qrNumber + '_' + dateStr + '.json';
+  // Build quote JSON object
   var quoteJSON = {
     qrNumber: qrNumber,
     customerId: customerId,
@@ -209,9 +209,6 @@ function handleSubmitQuote(data) {
       serviceNames: data.serviceNames || ''
     }
   };
-
-  var folder = DriveApp.getFolderById(JSON_FOLDER_ID);
-  folder.createFile(fileName, JSON.stringify(quoteJSON, null, 2), MimeType.PLAIN_TEXT);
 
   // Build admin link
   var adminLink = ADMIN_BASE_URL + '?qr=' + qrNumber;
@@ -260,6 +257,18 @@ function handleSubmitQuote(data) {
 
   // Insert checkbox for Customer column
   sheet.getRange(lastRow, 17).insertCheckboxes();
+
+  // Store full JSON in column U
+  sheet.getRange(lastRow, 21).setValue(JSON.stringify(quoteJSON));
+
+  // Also save JSON to Drive folder for dashboard
+  try {
+    var fileName = qrNumber + '_' + dateStr + '.json';
+    var folder = DriveApp.getFolderById(JSON_FOLDER_ID);
+    folder.createFile(fileName, JSON.stringify(quoteJSON, null, 2), MimeType.PLAIN_TEXT);
+  } catch (driveErr) {
+    Logger.log('Drive save failed (non-fatal): ' + driveErr.toString());
+  }
 
   // Send email notification (pass full quoteJSON for detailed breakdown)
   sendNotificationEmail(quoteJSON, adminLink);
@@ -557,26 +566,25 @@ function handleSendQuote(data) {
     return { status: 'error', message: 'QR number is required' };
   }
 
-  // Read quote JSON from Drive
-  var folder = DriveApp.getFolderById(JSON_FOLDER_ID);
-  var files = folder.getFiles();
-  var matchedFile = null;
-
-  while (files.hasNext()) {
-    var file = files.next();
-    if (file.getName().indexOf(qr) === 0) {
-      matchedFile = file;
-      break;
-    }
+  // Read quote JSON from spreadsheet column U
+  var ss = SpreadsheetApp.openById(MASTER_LEAD_SHEET_ID);
+  var sheet = ss.getSheetByName(MASTER_SHEET_NAME);
+  if (!sheet) {
+    return { status: 'error', message: 'Master Lead sheet not found' };
   }
 
-  if (!matchedFile) {
+  var rowIndex = findQuoteRow(sheet, qr);
+  if (rowIndex === -1) {
     return { status: 'error', message: 'Quote not found for QR: ' + qr };
   }
 
+  var jsonStr = sheet.getRange(rowIndex, 21).getValue();
+  if (!jsonStr) {
+    return { status: 'error', message: 'No JSON data found for QR: ' + qr };
+  }
+
   try {
-    var content = matchedFile.getBlob().getDataAsString();
-    var quoteJSON = JSON.parse(content);
+    var quoteJSON = JSON.parse(jsonStr);
 
     var clientEmail = quoteJSON.customer.email;
     if (!clientEmail) {
@@ -663,6 +671,20 @@ function handleListQuotes() {
   return { status: 'success', quotes: quotes };
 }
 
+// ── Helper: Find quote row index by QR number ──
+
+function findQuoteRow(sheet, qr) {
+  var lastRow = sheet.getLastRow();
+  if (lastRow <= 1) return -1;
+  var qrValues = sheet.getRange(2, 1, lastRow - 1, 1).getValues();
+  for (var i = 0; i < qrValues.length; i++) {
+    if (String(qrValues[i][0]) === qr) {
+      return i + 2;
+    }
+  }
+  return -1;
+}
+
 // ── Admin: Get Single Quote JSON ──
 
 function handleGetQuote(qr) {
@@ -670,27 +692,24 @@ function handleGetQuote(qr) {
     return { status: 'error', message: 'QR number is required' };
   }
 
-  var folder = DriveApp.getFolderById(JSON_FOLDER_ID);
-  var files = folder.getFiles();
-  var matchedFile = null;
-
-  while (files.hasNext()) {
-    var file = files.next();
-    var name = file.getName();
-    if (name.indexOf(qr) === 0) {
-      matchedFile = file;
-      break;
-    }
+  var ss = SpreadsheetApp.openById(MASTER_LEAD_SHEET_ID);
+  var sheet = ss.getSheetByName(MASTER_SHEET_NAME);
+  if (!sheet) {
+    return { status: 'error', message: 'Master Lead sheet not found' };
   }
 
-  if (!matchedFile) {
+  var rowIndex = findQuoteRow(sheet, qr);
+  if (rowIndex === -1) {
     return { status: 'error', message: 'Quote not found for QR: ' + qr };
   }
 
   try {
-    var content = matchedFile.getBlob().getDataAsString();
-    var quoteData = JSON.parse(content);
-    return { status: 'success', quote: quoteData, fileName: matchedFile.getName() };
+    var jsonStr = sheet.getRange(rowIndex, 21).getValue();
+    if (!jsonStr) {
+      return { status: 'error', message: 'No JSON data found for QR: ' + qr };
+    }
+    var quoteData = JSON.parse(jsonStr);
+    return { status: 'success', quote: quoteData };
   } catch (err) {
     return { status: 'error', message: 'Failed to parse quote JSON: ' + err.toString() };
   }
@@ -704,26 +723,25 @@ function handleSaveDiscount(data) {
     return { status: 'error', message: 'QR number is required' };
   }
 
-  // Find and update the Drive JSON
-  var folder = DriveApp.getFolderById(JSON_FOLDER_ID);
-  var files = folder.getFiles();
-  var matchedFile = null;
-
-  while (files.hasNext()) {
-    var file = files.next();
-    if (file.getName().indexOf(qr) === 0) {
-      matchedFile = file;
-      break;
-    }
+  // Read quote JSON from spreadsheet column U
+  var ss = SpreadsheetApp.openById(MASTER_LEAD_SHEET_ID);
+  var sheet = ss.getSheetByName(MASTER_SHEET_NAME);
+  if (!sheet) {
+    return { status: 'error', message: 'Master Lead sheet not found' };
   }
 
-  if (!matchedFile) {
+  var rowIndex = findQuoteRow(sheet, qr);
+  if (rowIndex === -1) {
     return { status: 'error', message: 'Quote not found for QR: ' + qr };
   }
 
+  var jsonStr = sheet.getRange(rowIndex, 21).getValue();
+  if (!jsonStr) {
+    return { status: 'error', message: 'No JSON data found for QR: ' + qr };
+  }
+
   try {
-    var content = matchedFile.getBlob().getDataAsString();
-    var quoteData = JSON.parse(content);
+    var quoteData = JSON.parse(jsonStr);
 
     // Update discount fields
     quoteData.discounts = {
@@ -783,11 +801,26 @@ function handleSaveDiscount(data) {
     var totalBeforeDiscount = oneTimeTotal + monthlyTotal;
     quoteData.totals.discountPercentage = totalBeforeDiscount > 0 ? Math.round((totalSaved / totalBeforeDiscount) * 100) : 0;
 
-    // Save updated JSON back to Drive
-    matchedFile.setContent(JSON.stringify(quoteData, null, 2));
+    // Save updated JSON back to spreadsheet column U
+    sheet.getRange(rowIndex, 21).setValue(JSON.stringify(quoteData));
+
+    // Also update the Drive JSON file
+    try {
+      var folder = DriveApp.getFolderById(JSON_FOLDER_ID);
+      var driveFiles = folder.getFiles();
+      while (driveFiles.hasNext()) {
+        var driveFile = driveFiles.next();
+        if (driveFile.getName().indexOf(qr) === 0) {
+          driveFile.setContent(JSON.stringify(quoteData, null, 2));
+          break;
+        }
+      }
+    } catch (driveErr) {
+      Logger.log('Drive update failed (non-fatal): ' + driveErr.toString());
+    }
 
     // Update Master Lead row
-    updateMasterLeadDiscount(qr, quoteData.totals.discountPercentage, quoteData.totals.grandTotal);
+    updateMasterLeadDiscount(sheet, qr, quoteData.totals.discountPercentage, quoteData.totals.grandTotal);
 
     return { status: 'success', quote: quoteData };
   } catch (err) {
@@ -795,24 +828,13 @@ function handleSaveDiscount(data) {
   }
 }
 
-function updateMasterLeadDiscount(qr, discountPercent, grandTotal) {
-  var ss = SpreadsheetApp.openById(MASTER_LEAD_SHEET_ID);
-  var sheet = ss.getSheetByName(MASTER_SHEET_NAME);
-  if (!sheet) return;
+function updateMasterLeadDiscount(sheet, qr, discountPercent, grandTotal) {
+  var rowIndex = findQuoteRow(sheet, qr);
+  if (rowIndex === -1) return;
 
-  var lastRow = sheet.getLastRow();
-  if (lastRow <= 1) return;
-
-  var qrValues = sheet.getRange(2, 1, lastRow - 1, 1).getValues();
-  for (var i = 0; i < qrValues.length; i++) {
-    if (String(qrValues[i][0]) === qr) {
-      var rowIndex = i + 2;
-      sheet.getRange(rowIndex, 14).setValue(discountPercent); // Discount %
-      sheet.getRange(rowIndex, 15).setValue(grandTotal);      // Grand Total
-      sheet.getRange(rowIndex, 15).setNumberFormat('$#,##0');
-      break;
-    }
-  }
+  sheet.getRange(rowIndex, 14).setValue(discountPercent); // Discount %
+  sheet.getRange(rowIndex, 15).setValue(grandTotal);      // Grand Total
+  sheet.getRange(rowIndex, 15).setNumberFormat('$#,##0');
 }
 
 // ── Admin: Toggle Customer Status ──

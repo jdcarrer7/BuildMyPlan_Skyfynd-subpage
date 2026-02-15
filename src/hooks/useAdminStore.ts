@@ -36,6 +36,7 @@ interface AdminState {
     serviceEnded: string
   ) => Promise<{ success: boolean; error?: string }>;
   sendQuote: (qrNumber: string) => Promise<{ success: boolean; message?: string; error?: string }>;
+  sendPortal: (qrNumber: string) => Promise<{ success: boolean; message?: string; error?: string }>;
 }
 
 export const useAdminStore = create<AdminState>((set, get) => ({
@@ -172,6 +173,23 @@ export const useAdminStore = create<AdminState>((set, get) => ({
         return { success: true, message: data.message };
       }
       return { success: false, error: data.message || data.error || 'Failed to send quote' };
+    } catch {
+      return { success: false, error: 'Network error' };
+    }
+  },
+
+  sendPortal: async (qrNumber: string) => {
+    try {
+      const res = await fetch('/api/admin/send-portal', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ qrNumber }),
+      });
+      const data = await res.json();
+      if (data.status === 'success') {
+        return { success: true, message: data.message };
+      }
+      return { success: false, error: data.message || data.error || 'Failed to send portal' };
     } catch {
       return { success: false, error: 'Network error' };
     }

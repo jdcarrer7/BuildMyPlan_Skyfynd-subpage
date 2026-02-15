@@ -26,12 +26,12 @@ export default function DiscountModal({ targetLabel, currentDiscount, saving, on
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm" onClick={onClose}>
-      <div className="bg-[#1c1825] rounded-2xl border border-[#2a2435] w-full max-w-md p-6" onClick={e => e.stopPropagation()}>
+      <div className="card w-full max-w-md p-6" onClick={e => e.stopPropagation()}>
         <div className="flex items-center justify-between mb-6">
-          <h3 className="text-lg font-semibold text-white">
+          <h3 className="text-lg font-semibold text-[#FAFAFA] font-serif">
             Discount: {targetLabel}
           </h3>
-          <button onClick={onClose} className="text-[#888] hover:text-white transition-colors">
+          <button onClick={onClose} className="text-[#71717A] hover:text-white transition-colors">
             <X className="w-5 h-5" />
           </button>
         </div>
@@ -39,15 +39,15 @@ export default function DiscountModal({ targetLabel, currentDiscount, saving, on
         <form onSubmit={handleSubmit} className="space-y-4">
           {/* Type */}
           <div>
-            <label className="block text-sm font-medium text-[#a0a0a0] mb-2">Discount Type</label>
+            <label className="block text-sm font-medium text-[#A1A1AA] mb-2">Discount Type</label>
             <div className="flex gap-2">
               <button
                 type="button"
                 onClick={() => setType('percentage')}
                 className={`flex-1 py-2 rounded-lg text-sm font-medium border transition-colors ${
                   type === 'percentage'
-                    ? 'bg-[#8b5cf6]/20 border-[#8b5cf6] text-[#8b5cf6]'
-                    : 'border-[#2a2435] text-[#888] hover:border-[#666]'
+                    ? 'bg-[#3B82F6]/15 border-[#3B82F6] text-[#60A5FA]'
+                    : 'border-white/[0.06] text-[#71717A] hover:border-white/[0.15]'
                 }`}
               >
                 Percentage (%)
@@ -57,8 +57,8 @@ export default function DiscountModal({ targetLabel, currentDiscount, saving, on
                 onClick={() => setType('fixed')}
                 className={`flex-1 py-2 rounded-lg text-sm font-medium border transition-colors ${
                   type === 'fixed'
-                    ? 'bg-[#8b5cf6]/20 border-[#8b5cf6] text-[#8b5cf6]'
-                    : 'border-[#2a2435] text-[#888] hover:border-[#666]'
+                    ? 'bg-[#3B82F6]/15 border-[#3B82F6] text-[#60A5FA]'
+                    : 'border-white/[0.06] text-[#71717A] hover:border-white/[0.15]'
                 }`}
               >
                 Fixed ($)
@@ -68,9 +68,9 @@ export default function DiscountModal({ targetLabel, currentDiscount, saving, on
 
           {/* Value */}
           <div>
-            <label className="block text-sm font-medium text-[#a0a0a0] mb-2">Value</label>
+            <label className="block text-sm font-medium text-[#A1A1AA] mb-2">Value</label>
             <div className="relative">
-              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-[#888]">
+              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-[#71717A]">
                 {type === 'percentage' ? '%' : '$'}
               </span>
               <input
@@ -79,7 +79,7 @@ export default function DiscountModal({ targetLabel, currentDiscount, saving, on
                 min="0"
                 value={value}
                 onChange={e => setValue(e.target.value)}
-                className="w-full pl-8 pr-4 py-3 bg-[#0a0a0a] border border-[#2a2435] rounded-lg text-white focus:outline-none focus:border-[#8b5cf6]"
+                className="w-full pl-8 pr-4 py-3 bg-[#0A0A0B] border border-white/[0.06] rounded-lg text-white focus:outline-none focus:border-[#3B82F6]"
                 placeholder="Enter value"
                 required
               />
@@ -88,7 +88,7 @@ export default function DiscountModal({ targetLabel, currentDiscount, saving, on
 
           {/* Applies to */}
           <div>
-            <label className="block text-sm font-medium text-[#a0a0a0] mb-2">Applies To</label>
+            <label className="block text-sm font-medium text-[#A1A1AA] mb-2">Applies To</label>
             <div className="flex gap-2">
               {(['one-time', 'monthly', 'both'] as const).map(opt => (
                 <button
@@ -97,8 +97,8 @@ export default function DiscountModal({ targetLabel, currentDiscount, saving, on
                   onClick={() => setAppliesTo(opt)}
                   className={`flex-1 py-2 rounded-lg text-sm font-medium border transition-colors capitalize ${
                     appliesTo === opt
-                      ? 'bg-[#8b5cf6]/20 border-[#8b5cf6] text-[#8b5cf6]'
-                      : 'border-[#2a2435] text-[#888] hover:border-[#666]'
+                      ? 'bg-[#3B82F6]/15 border-[#3B82F6] text-[#60A5FA]'
+                      : 'border-white/[0.06] text-[#71717A] hover:border-white/[0.15]'
                   }`}
                 >
                   {opt}
@@ -113,7 +113,7 @@ export default function DiscountModal({ targetLabel, currentDiscount, saving, on
               type="submit"
               disabled={saving}
               className="flex-1 py-3 rounded-lg font-semibold text-white disabled:opacity-50"
-              style={{ background: 'linear-gradient(135deg, #8b5cf6 0%, #d946ef 50%, #ec4899 100%)' }}
+              style={{ background: 'linear-gradient(135deg, #3B82F6 0%, #10B981 100%)' }}
             >
               {saving ? 'Saving...' : 'Apply Discount'}
             </button>
