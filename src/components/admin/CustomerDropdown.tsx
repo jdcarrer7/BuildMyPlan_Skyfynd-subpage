@@ -1,8 +1,8 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useMemo, useState, useEffect, useRef } from 'react';
 import { useAdminStore } from '@/hooks/useAdminStore';
-import { ChevronDown, ChevronRight, FileText, Loader2, Search, Users, DollarSign } from 'lucide-react';
+import { ChevronDown, ChevronRight, FileText, Loader2, Search, Users, Trash2 } from 'lucide-react';
 import PortalStatusBadge from './PortalStatusBadge';
 
 interface CustomerGroup {
@@ -34,13 +34,25 @@ function getInitials(name: string): string {
 }
 
 export default function CustomerDropdown() {
-  const { quotes, quotesLoading, quotesError, selectedQR, selectQuote, portals } = useAdminStore();
+  const { quotes, quotesLoading, quotesError, selectedQR, selectQuote, portals, trashedQRs, trashQuote } = useAdminStore();
   const [expandedCustomers, setExpandedCustomers] = useState<Set<string>>(new Set());
   const [search, setSearch] = useState('');
+  const [contextMenu, setContextMenu] = useState<{ x: number; y: number; qrNumber: string } | null>(null);
+  const contextMenuRef = useRef<HTMLDivElement>(null);
+
+  // Close context menu on outside click
+  useEffect(() => {
+    if (!contextMenu) return;
+    const handleClick = () => setContextMenu(null);
+    window.addEventListener('click', handleClick);
+    return () => window.removeEventListener('click', handleClick);
+  }, [contextMenu]);
 
   const customerGroups = useMemo(() => {
     const groups: Record<string, CustomerGroup> = {};
-    for (const q of quotes) {
+    // Filter out trashed quotes
+    const activeQuotes = quotes.filter(q => !trashedQRs.has(q.qrNumber));
+    for (const q of activeQuotes) {
       if (!groups[q.customerId]) {
         groups[q.customerId] = {
           customerId: q.customerId,
@@ -59,7 +71,7 @@ export default function CustomerDropdown() {
       });
     }
     return Object.values(groups).sort((a, b) => a.name.localeCompare(b.name));
-  }, [quotes]);
+  }, [quotes, trashedQRs]);
 
   const filtered = useMemo(() => {
     if (!search.trim()) return customerGroups;
@@ -116,7 +128,7 @@ export default function CustomerDropdown() {
       <div className="px-3 py-2.5 border-b border-white/[0.06] flex items-center justify-between">
         <div className="flex items-center gap-1.5 text-xs text-[#71717A]">
           <FileText className="w-3 h-3" />
-          <span>{quotes.length} quotes</span>
+          <span>{quotes.filter(q => !trashedQRs.has(q.qrNumber)).length} quotes</span>
         </div>
         <div className="flex items-center gap-1.5 text-xs text-[#71717A]">
           <Users className="w-3 h-3" />
@@ -182,6 +194,10 @@ export default function CustomerDropdown() {
                       <button
                         key={q.qrNumber}
                         onClick={() => selectQuote(q.qrNumber)}
+                        onContextMenu={(e) => {
+                          e.preventDefault();
+                          setContextMenu({ x: e.clientX, y: e.clientY, qrNumber: q.qrNumber });
+                        }}
                         className={`w-full text-left transition-all text-sm rounded-lg mb-1 p-2.5 ${
                           isSelected
                             ? 'bg-[#3B82F6]/12 border border-[#3B82F6]/30'
@@ -218,6 +234,26 @@ export default function CustomerDropdown() {
           );
         })}
       </div>
+
+      {/* Right-click context menu */}
+      {contextMenu && (
+        <div
+          ref={contextMenuRef}
+          className="fixed z-50 bg-[#1C1C1E] border border-white/[0.1] rounded-lg shadow-xl py-1 min-w-[160px]"
+          style={{ left: contextMenu.x, top: contextMenu.y }}
+        >
+          <button
+            onClick={() => {
+              trashQuote(contextMenu.qrNumber);
+              setContextMenu(null);
+            }}
+            className="w-full flex items-center gap-2.5 px-3 py-2 text-sm text-red-400 hover:bg-white/[0.06] transition-colors"
+          >
+            <Trash2 className="w-3.5 h-3.5" />
+            Move to trash
+          </button>
+        </div>
+      )}
     </div>
   );
 }

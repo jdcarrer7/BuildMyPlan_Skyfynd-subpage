@@ -175,28 +175,13 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'QR number is required' }, { status: 400 });
     }
 
-    // Fetch quote JSON from GAS
-    const scriptUrl = process.env.GOOGLE_APPS_SCRIPT_URL;
-    if (!scriptUrl) {
-      return NextResponse.json({ error: 'Script URL not configured' }, { status: 500 });
+    // Fetch quote data (checks Supabase overrides first, then GAS)
+    const { getQuoteData } = await import('@/lib/admin/getQuoteData');
+    const quoteResult = await getQuoteData(body.qrNumber);
+    if (!quoteResult) {
+      return NextResponse.json({ error: 'Quote not found' }, { status: 404 });
     }
-
-    const gasRes = await fetch(`${scriptUrl}?action=get_quote&qr=${encodeURIComponent(body.qrNumber)}`, {
-      redirect: 'follow',
-    });
-    const gasText = await gasRes.text();
-    let gasData;
-    try {
-      gasData = JSON.parse(gasText);
-    } catch {
-      return NextResponse.json({ error: 'Failed to fetch quote data' }, { status: 500 });
-    }
-
-    if (gasData.status !== 'success' || !gasData.quote) {
-      return NextResponse.json({ error: gasData.message || 'Quote not found' }, { status: 404 });
-    }
-
-    const quote: QuoteJSON = gasData.quote;
+    const quote: QuoteJSON = quoteResult.quote;
     const clientEmail = quote.customer?.email;
     if (!clientEmail) {
       return NextResponse.json({ error: 'No client email found for this quote' }, { status: 400 });

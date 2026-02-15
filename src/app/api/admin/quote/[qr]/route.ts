@@ -3,6 +3,7 @@ import { getIronSession } from 'iron-session';
 import { cookies } from 'next/headers';
 import { sessionOptions } from '@/lib/auth/session';
 import type { SessionData } from '@/lib/types/admin';
+import { getSupabaseAdmin } from '@/lib/supabase/client';
 try { require('dns').setDefaultResultOrder('ipv4first'); } catch {}
 
 export async function GET(
@@ -20,6 +21,28 @@ export async function GET(
       return NextResponse.json({ error: 'QR number is required' }, { status: 400 });
     }
 
+    // Check Supabase for overrides first
+    try {
+      const supabase = getSupabaseAdmin();
+      const { data: override } = await supabase
+        .from('quote_overrides')
+        .select('quote_data, admin_notes')
+        .eq('qr_number', qr)
+        .single();
+
+      if (override?.quote_data) {
+        return NextResponse.json({
+          status: 'success',
+          quote: override.quote_data,
+          adminNotes: override.admin_notes || '',
+          isEdited: true,
+        });
+      }
+    } catch {
+      // No override found or Supabase error — fall through to GAS
+    }
+
+    // Fall back to GAS
     const scriptUrl = process.env.GOOGLE_APPS_SCRIPT_URL;
     if (!scriptUrl) {
       return NextResponse.json({ error: 'Script URL not configured' }, { status: 500 });

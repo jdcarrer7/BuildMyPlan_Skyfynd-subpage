@@ -29,10 +29,15 @@ interface AdminState {
   selectedQuote: QuoteJSON | null;
   quoteLoading: boolean;
   quoteError: string | null;
+  adminNotes: string;
+  quoteEdited: boolean;
 
   // Portal tracking
   portals: PortalSummaryWithDetails[];
   portalsLoading: boolean;
+
+  // Trash
+  trashedQRs: Set<string>;
 
   // Actions
   checkSession: () => Promise<void>;
@@ -55,6 +60,27 @@ interface AdminState {
   ) => Promise<{ success: boolean; error?: string }>;
   sendQuote: (qrNumber: string) => Promise<{ success: boolean; message?: string; error?: string }>;
   sendPortal: (qrNumber: string) => Promise<{ success: boolean; message?: string; error?: string }>;
+  saveQuoteEdit: (quoteData: QuoteJSON, adminNotes: string) => Promise<{ success: boolean; error?: string }>;
+  trashQuote: (qrNumber: string) => void;
+  restoreQuote: (qrNumber: string) => void;
+  permanentlyDeleteQuote: (qrNumber: string) => void;
+}
+
+function loadTrashedQRs(): Set<string> {
+  try {
+    const stored = typeof window !== 'undefined' ? localStorage.getItem('skyfynd_trashed_qrs') : null;
+    return stored ? new Set(JSON.parse(stored)) : new Set();
+  } catch {
+    return new Set();
+  }
+}
+
+function saveTrashedQRs(qrs: Set<string>) {
+  try {
+    localStorage.setItem('skyfynd_trashed_qrs', JSON.stringify([...qrs]));
+  } catch {
+    // ignore
+  }
 }
 
 export const useAdminStore = create<AdminState>((set, get) => ({
@@ -67,8 +93,11 @@ export const useAdminStore = create<AdminState>((set, get) => ({
   selectedQuote: null,
   quoteLoading: false,
   quoteError: null,
+  adminNotes: '',
+  quoteEdited: false,
   portals: [],
   portalsLoading: false,
+  trashedQRs: loadTrashedQRs(),
 
   checkSession: async () => {
     set({ sessionLoading: true });
@@ -139,12 +168,17 @@ export const useAdminStore = create<AdminState>((set, get) => ({
   },
 
   selectQuote: async (qr: string) => {
-    set({ selectedQR: qr, quoteLoading: true, quoteError: null });
+    set({ selectedQR: qr, selectedQuote: null, quoteLoading: true, quoteError: null, adminNotes: '', quoteEdited: false });
     try {
       const res = await fetch(`/api/admin/quote/${encodeURIComponent(qr)}`);
       const data = await res.json();
       if (data.status === 'success') {
-        set({ selectedQuote: data.quote, quoteLoading: false });
+        set({
+          selectedQuote: data.quote,
+          quoteLoading: false,
+          adminNotes: data.adminNotes || '',
+          quoteEdited: !!data.isEdited,
+        });
       } else {
         set({ quoteError: data.message || 'Failed to load quote', quoteLoading: false });
       }
@@ -154,7 +188,7 @@ export const useAdminStore = create<AdminState>((set, get) => ({
   },
 
   clearSelectedQuote: () => {
-    set({ selectedQR: null, selectedQuote: null, quoteError: null });
+    set({ selectedQR: null, selectedQuote: null, quoteError: null, adminNotes: '', quoteEdited: false });
   },
 
   saveDiscount: async (qrNumber, serviceDiscounts, quoteDiscount) => {
@@ -229,5 +263,54 @@ export const useAdminStore = create<AdminState>((set, get) => ({
     } catch {
       return { success: false, error: 'Network error' };
     }
+  },
+
+  saveQuoteEdit: async (quoteData: QuoteJSON, adminNotes: string) => {
+    const qr = get().selectedQR;
+    if (!qr) return { success: false, error: 'No quote selected' };
+    try {
+      const res = await fetch(`/api/admin/quote/${encodeURIComponent(qr)}/edit`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ quoteData, adminNotes }),
+      });
+      const data = await res.json();
+      if (data.status === 'success') {
+        set({ selectedQuote: data.quote, adminNotes: data.adminNotes || '', quoteEdited: true });
+        return { success: true };
+      }
+      return { success: false, error: data.error || 'Failed to save edits' };
+    } catch {
+      return { success: false, error: 'Network error' };
+    }
+  },
+
+  trashQuote: (qrNumber: string) => {
+    const next = new Set(get().trashedQRs);
+    next.add(qrNumber);
+    saveTrashedQRs(next);
+    // Clear selection if the trashed quote is currently selected
+    const updates: Partial<AdminState> = { trashedQRs: next };
+    if (get().selectedQR === qrNumber) {
+      updates.selectedQR = null;
+      updates.selectedQuote = null;
+    }
+    set(updates);
+  },
+
+  restoreQuote: (qrNumber: string) => {
+    const next = new Set(get().trashedQRs);
+    next.delete(qrNumber);
+    saveTrashedQRs(next);
+    set({ trashedQRs: next });
+  },
+
+  permanentlyDeleteQuote: (qrNumber: string) => {
+    const next = new Set(get().trashedQRs);
+    next.delete(qrNumber);
+    saveTrashedQRs(next);
+    // Remove from quotes list in memory (won't persist past refresh since quotes come from API)
+    const updatedQuotes = get().quotes.filter(q => q.qrNumber !== qrNumber);
+    set({ trashedQRs: next, quotes: updatedQuotes });
   },
 }));

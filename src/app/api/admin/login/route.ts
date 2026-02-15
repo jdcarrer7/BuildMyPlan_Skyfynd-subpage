@@ -1,8 +1,7 @@
 import { NextResponse } from 'next/server';
 import { getIronSession } from 'iron-session';
 import { cookies } from 'next/headers';
-import { sessionOptions } from '@/lib/auth/session';
-import { ADMIN_USERS } from '@/lib/auth/session';
+import { sessionOptions, getAdminUsers } from '@/lib/auth/session';
 import type { SessionData } from '@/lib/types/admin';
 
 export async function POST(request: Request) {
@@ -13,7 +12,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Email and password are required' }, { status: 400 });
     }
 
-    const user = ADMIN_USERS.find(
+    const user = getAdminUsers().find(
       u => u.email.toLowerCase() === email.toLowerCase() && u.password === password
     );
 

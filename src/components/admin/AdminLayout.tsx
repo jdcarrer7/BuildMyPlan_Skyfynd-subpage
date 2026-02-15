@@ -29,12 +29,16 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               Logout
             </button>
           </div>
-          <p className="text-xs text-[#71717A] mt-1">{session?.name} ({session?.email})</p>
         </div>
 
         {/* Customer Dropdown / Quote List */}
         <div className="flex-1 overflow-y-auto">
           <CustomerDropdown />
+        </div>
+
+        {/* User Info - bottom of sidebar */}
+        <div className="px-4 py-3 border-t border-white/[0.06]">
+          <p className="text-[11px] text-[#52525B] truncate">{session?.name} &middot; {session?.email}</p>
         </div>
       </aside>
 

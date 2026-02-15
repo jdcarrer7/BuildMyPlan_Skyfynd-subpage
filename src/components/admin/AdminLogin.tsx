@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useAdminStore } from '@/hooks/useAdminStore';
+import FloatingStars from '@/components/admin/FloatingStars';
 
 const LOGO_URL = 'https://f005.backblazeb2.com/file/SKYFYND-assets/Skyfynd+logo.png';
 
@@ -25,8 +26,9 @@ export default function AdminLogin() {
   };
 
   return (
-    <div className="min-h-screen bg-[#0A0A0B] flex items-center justify-center px-4">
-      <div className="w-full max-w-md">
+    <div className="min-h-screen bg-[#0A0A0B] flex items-center justify-center px-4 relative overflow-hidden">
+      <FloatingStars />
+      <div className="w-full max-w-md relative z-10">
         <div className="text-center mb-8">
           <div className="flex items-center justify-center gap-3 mb-3">
             <img src={LOGO_URL} alt="SkyFynd" className="w-12 h-12 object-contain" />
@@ -79,7 +81,7 @@ export default function AdminLogin() {
             disabled={loading}
             className="w-full py-3 rounded-lg font-semibold text-white transition-all disabled:opacity-50"
             style={{
-              background: loading ? '#52525B' : 'linear-gradient(135deg, #3B82F6 0%, #10B981 100%)',
+              background: loading ? '#52525B' : 'linear-gradient(to right, rgba(167,139,250,0.75) 0%, rgba(96,175,250,0.85) 40%, rgba(52,211,153,0.8) 100%)',
             }}
           >
             {loading ? 'Signing in...' : 'Sign In'}

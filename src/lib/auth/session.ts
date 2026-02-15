@@ -18,16 +18,16 @@ export const defaultSession: SessionData = {
   name: '',
 };
 
-// Hardcoded admin users
-export const ADMIN_USERS = [
-  {
-    email: 'carlos@skyfynd.io',
-    password: '***REMOVED***',
-    name: 'Carlos',
-  },
-  {
-    email: 'contact@skyfynd.io',
-    password: '***REMOVED***',
-    name: 'SkyFynd Admin',
-  },
-];
+// Build admin users from environment variables (ADMIN_EMAIL_1, ADMIN_PASSWORD_1, ADMIN_NAME_1, etc.)
+export function getAdminUsers(): { email: string; password: string; name: string }[] {
+  const users: { email: string; password: string; name: string }[] = [];
+  for (let i = 1; i <= 10; i++) {
+    const email = process.env[`ADMIN_EMAIL_${i}`];
+    const password = process.env[`ADMIN_PASSWORD_${i}`];
+    const name = process.env[`ADMIN_NAME_${i}`] || `Admin ${i}`;
+    if (email && password) {
+      users.push({ email, password, name });
+    }
+  }
+  return users;
+}

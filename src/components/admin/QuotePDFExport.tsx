@@ -288,8 +288,8 @@ export default function QuotePDFExport({ quote }: Props) {
       <button
         onClick={generatePDF}
         disabled={generating}
-        className="flex items-center gap-2 px-5 py-3 rounded-lg font-semibold text-white transition-all disabled:opacity-50"
-        style={{ background: 'linear-gradient(135deg, #3B82F6 0%, #10B981 100%)' }}
+        className="flex items-center gap-2 px-5 py-3 rounded-lg font-semibold text-white transition-all disabled:opacity-50 border border-[#A78BFA]/30 hover:shadow-[0_8px_32px_rgba(167,139,250,0.3)] hover:-translate-y-0.5"
+        style={{ background: 'linear-gradient(to right, rgba(167,139,250,0.75) 0%, rgba(96,175,250,0.85) 40%, rgba(52,211,153,0.8) 100%)' }}
       >
         <Download className="w-4 h-4" />
         {generating ? 'Generating PDF...' : 'Export PDF'}
