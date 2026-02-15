@@ -17,15 +17,18 @@ export function buildPortalInviteEmail(
   let html = '';
 
   html += '<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"></head>';
-  html += '<body style="margin:0;padding:0;background-color:#0A0A0A;font-family:Arial,Helvetica,sans-serif;">';
-  html += '<table width="100%" cellpadding="0" cellspacing="0" style="background-color:#0A0A0A;padding:20px 0;">';
+  html += '<body style="margin:0;padding:0;background-color:#f5f5f5;font-family:Arial,Helvetica,sans-serif;">';
+  html += '<table width="100%" cellpadding="0" cellspacing="0" style="background-color:#f5f5f5;padding:20px 0;">';
   html += '<tr><td align="center"><table width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;background-color:#111111;border-radius:8px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.4);">';
 
   // Header
-  html += '<tr><td style="background-color:#A78BFA;background:linear-gradient(to right,#A78BFA 0%,#60AFFA 40%,#34D399 100%);padding:30px 40px;text-align:center;">';
-  html += `<img src="${LOGO_URL}" alt="SkyFynd" width="80" style="display:block;margin:0 auto 12px;max-width:80px;" />`;
-  html += '<h1 style="color:#ffffff;margin:0 0 4px;font-size:22px;font-weight:700;">Your Project Portal</h1>';
-  html += `<p style="color:rgba(255,255,255,0.85);margin:0;font-size:14px;">${qrNumber}</p>`;
+  html += '<tr><td style="background-color:#A78BFA;background:linear-gradient(to right,#A78BFA 0%,#60AFFA 40%,#34D399 100%);padding:20px 40px;text-align:center;">';
+  html += '<table cellpadding="0" cellspacing="0" style="margin:0 auto 10px;"><tr>';
+  html += `<td style="vertical-align:middle;"><img src="${LOGO_URL}" alt="SkyFynd" width="36" style="display:block;max-width:36px;" /></td>`;
+  html += '<td style="vertical-align:middle;padding-left:10px;"><span style="color:#ffffff;font-size:22px;font-weight:600;font-family:Georgia,\'Times New Roman\',serif;">Skyfynd</span></td>';
+  html += '</tr></table>';
+  html += '<h1 style="color:#ffffff;margin:0 0 4px;font-size:20px;font-weight:700;">Your Project Portal</h1>';
+  html += `<p style="color:rgba(255,255,255,0.85);margin:0;font-size:13px;">${qrNumber}</p>`;
   html += '</td></tr>';
 
   // Body
@@ -63,13 +66,16 @@ export function buildVerificationCodeEmail(clientName: string, code: string): st
   let html = '';
 
   html += '<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"></head>';
-  html += '<body style="margin:0;padding:0;background-color:#0A0A0A;font-family:Arial,Helvetica,sans-serif;">';
-  html += '<table width="100%" cellpadding="0" cellspacing="0" style="background-color:#0A0A0A;padding:20px 0;">';
+  html += '<body style="margin:0;padding:0;background-color:#f5f5f5;font-family:Arial,Helvetica,sans-serif;">';
+  html += '<table width="100%" cellpadding="0" cellspacing="0" style="background-color:#f5f5f5;padding:20px 0;">';
   html += '<tr><td align="center"><table width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;background-color:#111111;border-radius:8px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.4);">';
 
   // Header
-  html += '<tr><td style="background-color:#A78BFA;background:linear-gradient(to right,#A78BFA 0%,#60AFFA 40%,#34D399 100%);padding:24px 40px;text-align:center;">';
-  html += `<img src="${LOGO_URL}" alt="SkyFynd" width="80" style="display:block;margin:0 auto;max-width:80px;" />`;
+  html += '<tr><td style="background-color:#A78BFA;background:linear-gradient(to right,#A78BFA 0%,#60AFFA 40%,#34D399 100%);padding:16px 40px;text-align:center;">';
+  html += '<table cellpadding="0" cellspacing="0" style="margin:0 auto;"><tr>';
+  html += `<td style="vertical-align:middle;"><img src="${LOGO_URL}" alt="SkyFynd" width="36" style="display:block;max-width:36px;" /></td>`;
+  html += '<td style="vertical-align:middle;padding-left:10px;"><span style="color:#ffffff;font-size:22px;font-weight:600;font-family:Georgia,\'Times New Roman\',serif;">Skyfynd</span></td>';
+  html += '</tr></table>';
   html += '</td></tr>';
 
   // Body
