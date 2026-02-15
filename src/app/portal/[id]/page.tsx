@@ -200,7 +200,7 @@ export default function PortalPage() {
         {currentStep === 'sign' && portal && (
           <div className="space-y-8">
             <div className="text-center">
-              <PenLine className="w-10 h-10 text-[#8B5CF6] mx-auto mb-3" />
+              <PenLine className="w-10 h-10 text-[#A78BFA] mx-auto mb-3" />
               <h2
                 className="text-2xl font-semibold text-[#FAFAFA] mb-2"
                 style={{ fontFamily: "'Source Serif Pro', Georgia, serif" }}
@@ -212,20 +212,26 @@ export default function PortalPage() {
               </p>
             </div>
 
-            {/* Contract */}
-            <div className="max-h-[60vh] overflow-y-auto rounded-lg border border-white/[0.06]">
-              <ContractViewer
-                clientName={portal.client_name}
-                effectiveDate={new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
-              />
+            {/* Contract + Signature overlay */}
+            <div className="relative">
+              <div className="max-h-[60vh] overflow-y-auto rounded-lg border border-white/[0.06]">
+                <ContractViewer
+                  clientName={portal.client_name}
+                  effectiveDate={new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
+                />
+              </div>
+              {/* Fade overlay + Signature pinned over the contract bottom */}
+              <div className="sticky bottom-0 -mt-16 relative z-10">
+                <div className="absolute -top-20 left-0 right-0 h-20 pointer-events-none" style={{ background: 'linear-gradient(to bottom, transparent, #111113)' }} />
+                <div className="bg-[#111113] rounded-b-lg pt-4">
+                  <SignatureCanvas
+                    clientName={portal.client_name}
+                    portalId={portalId}
+                    onSigned={handleSigned}
+                  />
+                </div>
+              </div>
             </div>
-
-            {/* Signature */}
-            <SignatureCanvas
-              clientName={portal.client_name}
-              portalId={portalId}
-              onSigned={handleSigned}
-            />
           </div>
         )}
 
