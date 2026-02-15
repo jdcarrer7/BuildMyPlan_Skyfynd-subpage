@@ -36,7 +36,7 @@ export default function AdminLogin() {
               Skyfynd
             </h1>
           </div>
-          <p className="text-[#A1A1AA]">Quote Management Dashboard</p>
+          <p className="text-[#A1A1AA]">Operations Management Dashboard</p>
         </div>
 
         <form onSubmit={handleSubmit} className="card admin-service-tile p-8">
