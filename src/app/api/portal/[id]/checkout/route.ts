@@ -74,23 +74,24 @@ export async function POST(
       cancel_url: `${baseUrl}/portal/${portalId}`,
     });
 
-    // Record payment in Supabase
+    // Record payment in Supabase (upsert in case of retry)
     await supabase
       .from('portal_payments')
-      .insert({
+      .upsert({
         portal_id: portalId,
         stripe_session_id: checkoutSession.id,
         amount: depositAmount,
         currency: 'usd',
         status: 'pending',
-      });
+      }, { onConflict: 'portal_id' });
 
     return NextResponse.json({
       status: 'success',
       checkoutUrl: checkoutSession.url,
     });
-  } catch (error) {
+  } catch (error: unknown) {
     console.error('Checkout error:', error);
-    return NextResponse.json({ error: 'Failed to create checkout session' }, { status: 500 });
+    const message = error instanceof Error ? error.message : 'Failed to create checkout session';
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }
