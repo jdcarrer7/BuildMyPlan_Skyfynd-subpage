@@ -96,7 +96,7 @@ export default function ServiceCard({ service, isExpanded, onToggleExpand, onScr
           )}
           <h3 className="font-serif" style={{ fontSize: '24px', fontWeight: 600, lineHeight: 1.25, letterSpacing: '-0.01em', color: '#FAFAFA' }}>{service.name}</h3>
           {isInPlan && (
-            <span className="px-2.5 py-1 bg-gradient-to-r from-[var(--accent-orange)] to-[var(--accent-gold)] text-[#09090b] text-[10px] font-semibold rounded-full uppercase tracking-wide">
+            <span className="px-2.5 py-1 bg-gradient-to-r from-[var(--accent-orange)] to-[var(--accent-gold)] text-[#09090b] text-[10px] font-semibold rounded-full uppercase tracking-wide flex items-center justify-center text-center leading-tight">
               In Plan
             </span>
           )}

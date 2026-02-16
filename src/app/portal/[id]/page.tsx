@@ -197,50 +197,47 @@ export default function PortalPage() {
           </div>
         )}
 
-        {currentStep === 'sign' && portal && (
-          <div className="space-y-8">
-            <div className="text-center">
-              <PenLine className="w-10 h-10 text-[#A78BFA] mx-auto mb-3" />
-              <h2
-                className="text-2xl font-semibold text-[#FAFAFA] mb-2"
-                style={{ fontFamily: "'Source Serif Pro', Georgia, serif" }}
-              >
-                Review &amp; Sign Agreement
-              </h2>
-              <p className="text-[#A1A1AA] text-sm max-w-lg mx-auto">
-                Please read the Master Services Agreement below, then sign at the bottom to proceed.
-              </p>
-            </div>
-
-            {/* Contract + Signature overlay */}
-            <div className="relative">
-              <div className="max-h-[60vh] overflow-y-auto rounded-lg border border-white/[0.06]">
-                <ContractViewer
-                  clientName={portal.client_name}
-                  effectiveDate={new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
-                />
+        {currentStep === 'sign' && portal && (() => {
+          const clientName = portal.quote_data?.customer?.name || portal.client_name;
+          return (
+            <div className="space-y-4">
+              {/* Compact inline header */}
+              <div className="flex items-center gap-2 text-sm text-[#A1A1AA]">
+                <PenLine className="w-4 h-4 text-[#3B82F6] shrink-0" />
+                <span className="text-[#FAFAFA] font-medium">Review &amp; Sign Agreement</span>
+                <span className="hidden sm:inline">— Read the contract below, then sign on the right to proceed.</span>
               </div>
-              {/* Fade overlay + Signature pinned over the contract bottom */}
-              <div className="sticky bottom-0 -mt-16 relative z-10">
-                <div className="absolute -top-20 left-0 right-0 h-20 pointer-events-none" style={{ background: 'linear-gradient(to bottom, transparent, #111113)' }} />
-                <div className="bg-[#111113] rounded-b-lg pt-4">
+
+              {/* Side-by-side: Contract (left) + Signature (right) */}
+              <div className="flex flex-col lg:flex-row gap-4">
+                {/* Contract — takes most space */}
+                <div className="flex-1 min-w-0">
+                  <div className="max-h-[80vh] overflow-y-auto rounded-lg border border-white/[0.06]">
+                    <ContractViewer
+                      clientName={clientName}
+                      effectiveDate={new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
+                    />
+                  </div>
+                </div>
+
+                {/* Signature sidebar */}
+                <div className="lg:w-80 lg:shrink-0 lg:sticky lg:top-4 lg:self-start rounded-lg border border-white/[0.06] bg-[#0D0D0F] p-4">
                   <SignatureCanvas
-                    clientName={portal.client_name}
+                    clientName={clientName}
                     portalId={portalId}
                     onSigned={handleSigned}
                   />
                 </div>
               </div>
             </div>
-          </div>
-        )}
+          );
+        })()}
 
         {currentStep === 'pay' && portal && (
           <div className="py-8">
             <PaymentSection
               portalId={portalId}
               grandTotal={portal.quote_data?.totals?.grandTotal || 0}
-              qrNumber={portal.qr_number}
             />
           </div>
         )}

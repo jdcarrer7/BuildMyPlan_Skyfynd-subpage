@@ -3,6 +3,7 @@ import { getIronSession } from 'iron-session';
 import { cookies } from 'next/headers';
 import { sessionOptions } from '@/lib/auth/session';
 import type { SessionData } from '@/lib/types/admin';
+import { getSupabaseAdmin } from '@/lib/supabase/client';
 try { require('dns').setDefaultResultOrder('ipv4first'); } catch {}
 
 export async function GET() {
@@ -38,6 +39,30 @@ export async function GET() {
           return NextResponse.json({ status: 'success', quotes: [] });
         }
         return NextResponse.json({ error: 'Unexpected response' }, { status: 500 });
+      }
+
+      // Merge Supabase quote overrides into the GAS quotes list
+      if (result.status === 'success' && Array.isArray(result.quotes) && result.quotes.length > 0) {
+        try {
+          const supabase = getSupabaseAdmin();
+          const qrNumbers = result.quotes.map((q: { qrNumber: string }) => q.qrNumber);
+          const { data: overrides } = await supabase
+            .from('quote_overrides')
+            .select('qr_number, quote_data')
+            .in('qr_number', qrNumbers);
+
+          if (overrides && overrides.length > 0) {
+            const overrideMap = new Map(overrides.map((o: { qr_number: string; quote_data: { totals?: { grandTotal?: number } } }) => [o.qr_number, o.quote_data]));
+            for (const quote of result.quotes) {
+              const override = overrideMap.get(quote.qrNumber) as { totals?: { grandTotal?: number } } | undefined;
+              if (override?.totals?.grandTotal !== undefined) {
+                quote.grandTotal = override.totals.grandTotal;
+              }
+            }
+          }
+        } catch (e) {
+          console.error('Failed to merge quote overrides:', e);
+        }
       }
 
       return NextResponse.json(result);

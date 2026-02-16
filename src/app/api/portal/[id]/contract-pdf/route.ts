@@ -41,6 +41,14 @@ export async function GET(
       return NextResponse.json({ error: 'No signature found' }, { status: 404 });
     }
 
+    // Get payment data if available
+    const { data: payment } = await supabase
+      .from('portal_payments')
+      .select('amount, status, paid_at, stripe_session_id')
+      .eq('portal_id', portalId)
+      .eq('status', 'completed')
+      .single();
+
     // Return data needed for client-side PDF generation
     return NextResponse.json({
       status: 'success',
@@ -59,6 +67,11 @@ export async function GET(
         signed_at: signature.signed_at,
         ip_address: signature.ip_address,
       },
+      payment: payment ? {
+        amount: payment.amount,
+        paid_at: payment.paid_at,
+        confirmation_id: payment.stripe_session_id,
+      } : null,
     });
   } catch (error) {
     console.error('Contract PDF error:', error);

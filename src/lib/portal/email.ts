@@ -25,7 +25,7 @@ export function buildPortalInviteEmail(
   html += '<tr><td style="background-color:#A78BFA;background:linear-gradient(to right,#A78BFA 0%,#60AFFA 40%,#34D399 100%);padding:20px 40px;text-align:center;">';
   html += '<table cellpadding="0" cellspacing="0" style="margin:0 auto 10px;"><tr>';
   html += `<td style="vertical-align:middle;"><img src="${LOGO_URL}" alt="SkyFynd" width="36" style="display:block;max-width:36px;" /></td>`;
-  html += '<td style="vertical-align:middle;padding-left:10px;"><span style="color:#ffffff;font-size:22px;font-weight:600;font-family:Georgia,\'Times New Roman\',serif;">Skyfynd</span></td>';
+  html += '<td style="vertical-align:middle;padding-left:10px;"><span style="color:#ffffff;font-size:22px;font-weight:600;font-family:Arial,Helvetica,sans-serif;letter-spacing:-0.3px;">Skyfynd</span></td>';
   html += '</tr></table>';
   html += '<h1 style="color:#ffffff;margin:0 0 4px;font-size:20px;font-weight:700;">Your Project Portal</h1>';
   html += `<p style="color:rgba(255,255,255,0.85);margin:0;font-size:13px;">${qrNumber}</p>`;
@@ -40,8 +40,8 @@ export function buildPortalInviteEmail(
   html += '<table width="100%" cellpadding="0" cellspacing="0" style="background-color:#1C1825;border-radius:8px;margin-bottom:24px;">';
   html += '<tr><td style="padding:16px 20px;">';
   html += '<table width="100%" cellpadding="0" cellspacing="0">';
-  html += `<tr><td style="color:#71717A;font-size:13px;padding:4px 0;">Services</td><td style="text-align:right;font-weight:600;color:#A78BFA;font-size:13px;padding:4px 0;">${serviceCount} selected</td></tr>`;
-  html += `<tr><td style="color:#71717A;font-size:13px;padding:4px 0;">Estimated Total</td><td style="text-align:right;font-weight:600;color:#A78BFA;font-size:13px;padding:4px 0;">$${fmt(grandTotal)}</td></tr>`;
+  html += `<tr><td style="color:#71717A;font-size:13px;padding:4px 0;">Services</td><td style="text-align:right;font-weight:600;color:#ffffff;font-size:13px;padding:4px 0;">${serviceCount} selected</td></tr>`;
+  html += `<tr><td style="color:#71717A;font-size:13px;padding:4px 0;">Estimated Total</td><td style="text-align:right;font-weight:600;color:#ffffff;font-size:13px;padding:4px 0;">$${fmt(grandTotal)}</td></tr>`;
   html += '</table></td></tr></table>';
 
   // CTA Button
@@ -55,7 +55,7 @@ export function buildPortalInviteEmail(
   // Footer
   html += '<tr><td style="background-color:#0D0D0F;padding:20px 40px;text-align:center;border-top:1px solid #1F1F23;">';
   html += '<p style="color:#71717A;font-size:12px;margin:0 0 4px;">Questions? Reply to this email or reach out to us anytime.</p>';
-  html += '<p style="color:#A78BFA;font-size:12px;margin:0;font-weight:600;">SkyFynd \u2014 Creative & Digital Marketing</p>';
+  html += '<p style="color:#ffffff;font-size:12px;margin:0;font-weight:600;">SkyFynd \u2014 Creative & Digital Marketing</p>';
   html += '</td></tr>';
 
   html += '</table></td></tr></table></body></html>';
@@ -74,7 +74,7 @@ export function buildVerificationCodeEmail(clientName: string, code: string): st
   html += '<tr><td style="background-color:#A78BFA;background:linear-gradient(to right,#A78BFA 0%,#60AFFA 40%,#34D399 100%);padding:16px 40px;text-align:center;">';
   html += '<table cellpadding="0" cellspacing="0" style="margin:0 auto;"><tr>';
   html += `<td style="vertical-align:middle;"><img src="${LOGO_URL}" alt="SkyFynd" width="36" style="display:block;max-width:36px;" /></td>`;
-  html += '<td style="vertical-align:middle;padding-left:10px;"><span style="color:#ffffff;font-size:22px;font-weight:600;font-family:Georgia,\'Times New Roman\',serif;">Skyfynd</span></td>';
+  html += '<td style="vertical-align:middle;padding-left:10px;"><span style="color:#ffffff;font-size:22px;font-weight:600;font-family:Arial,Helvetica,sans-serif;letter-spacing:-0.3px;">Skyfynd</span></td>';
   html += '</tr></table>';
   html += '</td></tr>';
 
@@ -85,7 +85,7 @@ export function buildVerificationCodeEmail(clientName: string, code: string): st
 
   // Code display
   html += `<div style="background-color:#1C1825;border:2px solid #2A2435;border-radius:12px;padding:20px;margin:0 auto;max-width:280px;">`;
-  html += `<p style="font-size:36px;font-weight:700;color:#A78BFA;letter-spacing:8px;margin:0;font-family:monospace;">${code}</p>`;
+  html += `<p style="font-size:36px;font-weight:700;color:#ffffff;letter-spacing:8px;margin:0;font-family:monospace;">${code}</p>`;
   html += '</div>';
 
   html += '<p style="color:#71717A;font-size:12px;margin:20px 0 0;">This code expires in 10 minutes.</p>';

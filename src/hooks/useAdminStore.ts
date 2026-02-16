@@ -297,7 +297,16 @@ export const useAdminStore = create<AdminState>((set, get) => ({
       });
       const data = await res.json();
       if (data.status === 'success') {
+        // Update the selected quote
         set({ selectedQuote: data.quote, adminNotes: data.adminNotes || '', quoteEdited: true });
+        // Update the quotes list in-memory so sidebar + metrics reflect edited prices immediately
+        const newGrandTotal = data.quote?.totals?.grandTotal;
+        if (newGrandTotal !== undefined) {
+          const updatedQuotes = get().quotes.map(q =>
+            q.qrNumber === qr ? { ...q, grandTotal: newGrandTotal } : q
+          );
+          set({ quotes: updatedQuotes });
+        }
         return { success: true };
       }
       return { success: false, error: data.error || 'Failed to save edits' };

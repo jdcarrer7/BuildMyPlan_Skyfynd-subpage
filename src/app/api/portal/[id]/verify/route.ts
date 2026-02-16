@@ -15,7 +15,7 @@ export async function POST(
     // Fetch portal
     const { data: portal, error } = await supabase
       .from('portals')
-      .select('id, client_email, client_name, expires_at')
+      .select('id, client_email, client_name, expires_at, quote_data')
       .eq('id', portalId)
       .single();
 
@@ -56,13 +56,16 @@ export async function POST(
       auth: { user: gmailUser, pass: gmailPass },
     });
 
-    const htmlBody = buildVerificationCodeEmail(portal.client_name, code);
+    const clientName = (portal.quote_data as Record<string, unknown>)?.customer
+      ? ((portal.quote_data as Record<string, unknown>).customer as Record<string, string>)?.name || portal.client_name
+      : portal.client_name;
+    const htmlBody = buildVerificationCodeEmail(clientName, code);
 
     await transporter.sendMail({
       from: `"SkyFynd" <${gmailUser}>`,
       to: portal.client_email,
       subject: 'Your SkyFynd Verification Code',
-      text: `Hi ${portal.client_name},\n\nYour verification code is: ${code}\n\nThis code expires in 10 minutes.\n\nSkyFynd`,
+      text: `Hi ${clientName},\n\nYour verification code is: ${code}\n\nThis code expires in 10 minutes.\n\nSkyFynd`,
       html: htmlBody,
     });
 

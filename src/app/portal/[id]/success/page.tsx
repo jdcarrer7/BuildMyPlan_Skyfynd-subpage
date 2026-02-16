@@ -13,7 +13,6 @@ export default function PaymentSuccessPage() {
   const [downloading, setDownloading] = useState(false);
 
   useEffect(() => {
-    // Brief loading state for UX
     const timer = setTimeout(() => setLoading(false), 1500);
     return () => clearTimeout(timer);
   }, []);
@@ -29,52 +28,8 @@ export default function PaymentSuccessPage() {
         return;
       }
 
-      const { jsPDF } = await import('jspdf');
-      const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
-      const pageWidth = doc.internal.pageSize.getWidth();
-      const margin = 20;
-
-      doc.setFillColor(26, 26, 46);
-      doc.rect(0, 0, pageWidth, 35, 'F');
-      doc.setTextColor(255, 255, 255);
-      doc.setFontSize(20);
-      doc.setFont('helvetica', 'bold');
-      doc.text('Skyfynd', margin, 18);
-      doc.setFontSize(10);
-      doc.setFont('helvetica', 'normal');
-      doc.text('Master Services Agreement — Signed Copy', margin, 28);
-      doc.text(data.portal.qr_number, pageWidth - margin, 18, { align: 'right' });
-
-      let y = 45;
-      doc.setTextColor(0, 0, 0);
-      doc.setFont('helvetica', 'bold');
-      doc.setFontSize(10);
-      doc.text('Agreement Details', margin, y);
-      y += 7;
-      doc.setFont('helvetica', 'normal');
-      doc.setFontSize(9);
-      doc.text(`Client: ${data.portal.client_name}`, margin, y); y += 5;
-      doc.text(`Email: ${data.portal.client_email}`, margin, y); y += 5;
-      doc.text(`Signed: ${new Date(data.signature.signed_at).toLocaleString()}`, margin, y); y += 10;
-
-      doc.setFont('helvetica', 'bold');
-      doc.setFontSize(10);
-      doc.text('Client Signature', margin, y);
-      y += 5;
-      try {
-        doc.addImage(data.signature.signature_data_url, 'PNG', margin, y, 60, 25);
-      } catch {
-        doc.text('[Signature on file]', margin, y + 10);
-      }
-
-      doc.setFontSize(7);
-      doc.setTextColor(150, 150, 150);
-      doc.text(
-        'Skyfynd LLC — Creative & Digital Marketing',
-        pageWidth / 2, 290, { align: 'center' }
-      );
-
-      doc.save(`${data.portal.qr_number}_Signed_Agreement.pdf`);
+      const { generateSignedAgreementPDF } = await import('@/lib/portal/generate-signed-pdf');
+      await generateSignedAgreementPDF(data);
     } catch (err) {
       console.error('PDF error:', err);
     }
@@ -122,7 +77,7 @@ export default function PaymentSuccessPage() {
             onClick={handleDownloadContract}
             disabled={downloading}
             className="inline-flex items-center gap-2 px-6 py-3 rounded-lg font-semibold text-white transition-all disabled:opacity-50"
-            style={{ background: 'linear-gradient(135deg, #8B5CF6 0%, #7C3AED 100%)' }}
+            style={{ background: 'linear-gradient(to right, rgba(167,139,250,0.75) 0%, rgba(96,175,250,0.85) 40%, rgba(52,211,153,0.8) 100%)' }}
           >
             <Download className="w-4 h-4" />
             {downloading ? 'Generating...' : 'Download Signed Agreement'}

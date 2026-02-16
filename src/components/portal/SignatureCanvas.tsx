@@ -39,7 +39,7 @@ export default function SignatureCanvas({ clientName, portalId, onSigned }: Sign
   const updateCanvasSize = useCallback(() => {
     if (containerRef.current) {
       const rect = containerRef.current.getBoundingClientRect();
-      setCanvasSize({ width: Math.floor(rect.width), height: 200 });
+      setCanvasSize({ width: Math.floor(rect.width), height: 150 });
     }
   }, []);
 
@@ -149,51 +149,48 @@ export default function SignatureCanvas({ clientName, portalId, onSigned }: Sign
   // Confirmation / review screen
   if (confirmed && previewUrl) {
     return (
-      <div className="space-y-6">
-        <h3
-          className="text-xl font-semibold text-[#FAFAFA] text-center"
-          style={{ fontFamily: "'Source Serif Pro', Georgia, serif" }}
-        >
+      <div className="space-y-3">
+        <h3 className="text-sm font-semibold text-[#FAFAFA] text-center">
           Confirm Your Signature
         </h3>
 
-        <div className="bg-white rounded-lg p-6 flex items-center justify-center">
-          <img src={previewUrl} alt="Your signature" className="max-h-24" />
+        <div className="bg-white rounded-lg p-4 flex items-center justify-center">
+          <img src={previewUrl} alt="Your signature" className="max-h-16" />
         </div>
 
-        <p className="text-[#A1A1AA] text-sm text-center">
-          By clicking &quot;Submit Signature,&quot; you confirm that you,{' '}
-          <span className="text-[#FAFAFA] font-medium">{clientName}</span>, have read and agree to
-          the Master Services Agreement above.
+        <p className="text-[#A1A1AA] text-xs text-center">
+          By clicking &quot;Submit,&quot; you,{' '}
+          <span className="text-[#FAFAFA] font-medium">{clientName}</span>, agree to
+          the Master Services Agreement.
         </p>
 
-        {error && <p className="text-red-400 text-sm text-center">{error}</p>}
+        {error && <p className="text-red-400 text-xs text-center">{error}</p>}
 
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+        <div className="flex items-center justify-center gap-2">
           <button
             onClick={handleSubmit}
             disabled={submitting}
-            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-3 rounded-lg font-semibold text-white transition-all disabled:opacity-50"
+            className="inline-flex items-center justify-center gap-2 px-5 py-2 rounded-lg text-sm font-semibold text-white transition-all disabled:opacity-50"
             style={{ background: 'linear-gradient(to right, rgba(167,139,250,0.75) 0%, rgba(96,175,250,0.85) 40%, rgba(52,211,153,0.8) 100%)' }}
           >
             {submitting ? (
               <>
-                <Loader2 className="w-4 h-4 animate-spin" />
+                <Loader2 className="w-3.5 h-3.5 animate-spin" />
                 Submitting...
               </>
             ) : (
               <>
-                <Check className="w-4 h-4" />
-                Submit Signature
+                <Check className="w-3.5 h-3.5" />
+                Submit
               </>
             )}
           </button>
           <button
             onClick={handleClear}
             disabled={submitting}
-            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 rounded-lg font-semibold text-[#A1A1AA] border border-white/[0.1] hover:bg-white/[0.04] transition-all"
+            className="inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-lg text-sm text-[#A1A1AA] border border-white/[0.1] hover:bg-white/[0.04] transition-all"
           >
-            <RotateCcw className="w-4 h-4" />
+            <RotateCcw className="w-3.5 h-3.5" />
             Redo
           </button>
         </div>
@@ -204,16 +201,13 @@ export default function SignatureCanvas({ clientName, portalId, onSigned }: Sign
   const isReviewDisabled = mode === 'draw' ? isEmpty : !typedName.trim();
 
   return (
-    <div className="space-y-4">
-      <h3
-        className="text-xl font-semibold text-[#FAFAFA] text-center"
-        style={{ fontFamily: "'Source Serif Pro', Georgia, serif" }}
-      >
+    <div className="space-y-3">
+      <h3 className="text-sm font-semibold text-[#FAFAFA] text-center">
         Sign Below
       </h3>
 
       {/* Mode toggle tabs */}
-      <div className="flex items-center justify-center gap-1 bg-white/[0.04] rounded-lg p-1 max-w-xs mx-auto">
+      <div className="flex items-center justify-center gap-1 bg-white/[0.04] rounded-lg p-1">
         <button
           onClick={() => handleModeSwitch('draw')}
           className={`flex-1 inline-flex items-center justify-center gap-2 px-4 py-2 rounded-md text-sm font-medium transition-all ${
@@ -240,8 +234,8 @@ export default function SignatureCanvas({ clientName, portalId, onSigned }: Sign
 
       {mode === 'draw' ? (
         <>
-          <p className="text-[#A1A1AA] text-sm text-center">
-            Use your mouse or finger to sign in the box below.
+          <p className="text-[#A1A1AA] text-xs text-center">
+            Use your mouse or finger to sign below.
           </p>
 
           <div ref={containerRef} className="relative bg-white rounded-lg overflow-hidden border-2 border-white/[0.1]">
@@ -268,7 +262,7 @@ export default function SignatureCanvas({ clientName, portalId, onSigned }: Sign
         </>
       ) : (
         <>
-          <p className="text-[#A1A1AA] text-sm text-center">
+          <p className="text-[#A1A1AA] text-xs text-center">
             Type your full name to create a signature.
           </p>
 
@@ -299,7 +293,7 @@ export default function SignatureCanvas({ clientName, portalId, onSigned }: Sign
             </div>
 
             {/* Live preview */}
-            <div className="relative bg-white rounded-lg overflow-hidden border-2 border-white/[0.1] h-[200px] flex items-center justify-center">
+            <div className="relative bg-white rounded-lg overflow-hidden border-2 border-white/[0.1] h-[150px] flex items-center justify-center">
               <p
                 className="text-[#1a1a2e] text-4xl select-none"
                 style={{ fontFamily: selectedFont }}
