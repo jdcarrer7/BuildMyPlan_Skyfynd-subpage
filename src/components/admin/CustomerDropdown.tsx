@@ -77,12 +77,11 @@ const CATEGORY_CONFIG: Record<PipelineCategory, { label: string; icon: typeof Fi
 };
 
 export default function CustomerDropdown() {
-  const { quotes, quotesLoading, quotesError, selectedQR, selectQuote, portals, trashedQRs, trashQuote, completePortal } = useAdminStore();
+  const { quotes, quotesLoading, quotesError, selectedQR, selectQuote, portals, trashedQRs, trashQuote } = useAdminStore();
   const [expandedCustomers, setExpandedCustomers] = useState<Set<string>>(new Set());
   const [expandedCategories, setExpandedCategories] = useState<Set<PipelineCategory>>(new Set(['quotes', 'inProgress']));
   const [search, setSearch] = useState('');
   const [contextMenu, setContextMenu] = useState<{ x: number; y: number; qrNumber: string } | null>(null);
-  const [completing, setCompleting] = useState<string | null>(null);
   const contextMenuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -170,12 +169,6 @@ export default function CustomerDropdown() {
     });
   };
 
-  const handleComplete = async (portalId: string) => {
-    setCompleting(portalId);
-    await completePortal(portalId);
-    setCompleting(null);
-  };
-
   if (quotesLoading) {
     return (
       <div className="flex items-center justify-center p-8 text-[#A1A1AA]">
@@ -189,7 +182,7 @@ export default function CustomerDropdown() {
     return <div className="p-4 text-red-400 text-sm">{quotesError}</div>;
   }
 
-  const renderQuoteButton = (q: QuoteItem, showComplete?: boolean) => {
+  const renderQuoteButton = (q: QuoteItem) => {
     const isSelected = selectedQR === q.qrNumber;
     const srcStyle = sourceColors[q.source] || { bg: 'bg-white/[0.06]', text: 'text-[#A1A1AA]' };
     const portal = getPortalForQuote(q.qrNumber);
@@ -224,18 +217,6 @@ export default function CustomerDropdown() {
           <span className="text-[11px] text-[#52525B]">{formatShortDate(q.date)}</span>
           <div className="flex items-center gap-1.5">
             {portal && <PortalStatusBadge status={portal.status} />}
-            {showComplete && portal && (
-              <span
-                onClick={(e) => { e.stopPropagation(); handleComplete(portal.id); }}
-                className={`text-[10px] font-medium px-1.5 py-0.5 rounded-full cursor-pointer transition-colors ${
-                  completing === portal.id
-                    ? 'bg-[#10B981]/15 text-[#34D399] opacity-50'
-                    : 'bg-[#10B981]/15 text-[#34D399] hover:bg-[#10B981]/25'
-                }`}
-              >
-                {completing === portal.id ? '...' : 'Mark Complete'}
-              </span>
-            )}
             <span className={`text-[10px] font-medium px-1.5 py-0.5 rounded-full ${srcStyle.bg} ${srcStyle.text}`}>
               {q.source}
             </span>
@@ -245,7 +226,7 @@ export default function CustomerDropdown() {
     );
   };
 
-  const renderCustomerGroups = (groups: CustomerGroup[], showComplete?: boolean) => {
+  const renderCustomerGroups = (groups: CustomerGroup[]) => {
     if (groups.length === 0) {
       return <div className="px-3 py-4 text-xs text-[#52525B] text-center">None</div>;
     }
@@ -288,7 +269,7 @@ export default function CustomerDropdown() {
 
           {isExpanded && (
             <div className="pb-1.5 px-2">
-              {group.quotes.map(q => renderQuoteButton(q, showComplete))}
+              {group.quotes.map(q => renderQuoteButton(q))}
             </div>
           )}
         </div>
@@ -349,7 +330,7 @@ export default function CustomerDropdown() {
 
         {/* In Progress */}
         {renderCategoryHeader('inProgress', inProgressItems.length)}
-        {expandedCategories.has('inProgress') && renderCustomerGroups(filteredInProgress, true)}
+        {expandedCategories.has('inProgress') && renderCustomerGroups(filteredInProgress)}
 
         {/* Completed */}
         {renderCategoryHeader('completed', completedItems.length)}
