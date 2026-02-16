@@ -2,7 +2,7 @@
 
 import { useMemo, useState, useEffect, useRef } from 'react';
 import { useAdminStore } from '@/hooks/useAdminStore';
-import { ChevronDown, ChevronRight, FileText, Loader2, Search, Trash2, CheckCircle2, Wrench } from 'lucide-react';
+import { ChevronDown, ChevronRight, FileText, Loader2, Search, Trash2, CheckCircle2 } from 'lucide-react';
 import PortalStatusBadge from './PortalStatusBadge';
 import type { PortalStatus } from '@/lib/supabase/types';
 
@@ -70,9 +70,9 @@ function groupByCustomer(items: QuoteItem[]): CustomerGroup[] {
 
 type PipelineCategory = 'quotes' | 'inProgress' | 'completed';
 
-const CATEGORY_CONFIG: Record<PipelineCategory, { label: string; icon: typeof FileText; color: string }> = {
+const CATEGORY_CONFIG: Record<PipelineCategory, { label: string; icon?: typeof FileText; emoji?: string; color: string }> = {
   quotes: { label: 'Quotes', icon: FileText, color: '#3B82F6' },
-  inProgress: { label: 'In Progress', icon: Wrench, color: '#F59E0B' },
+  inProgress: { label: 'In Progress', emoji: '🚀', color: '#F59E0B' },
   completed: { label: 'Completed', icon: CheckCircle2, color: '#10B981' },
 };
 
@@ -306,7 +306,11 @@ export default function CustomerDropdown() {
         onClick={() => toggleCategory(category)}
         className="w-full flex items-center gap-2 px-3 py-2.5 border-b border-white/[0.08] hover:bg-white/[0.02] transition-colors"
       >
-        <Icon className="w-3.5 h-3.5 shrink-0" style={{ color: config.color }} />
+        {config.emoji ? (
+          <span className="text-sm shrink-0 leading-none">{config.emoji}</span>
+        ) : Icon ? (
+          <Icon className="w-3.5 h-3.5 shrink-0" style={{ color: config.color }} />
+        ) : null}
         <span className="text-xs font-semibold uppercase tracking-wider" style={{ color: config.color }}>
           {config.label}
         </span>
