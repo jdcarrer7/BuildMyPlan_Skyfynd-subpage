@@ -83,8 +83,13 @@ export default function SignatureCanvas({ clientName, portalId, onSigned }: Sign
     setPreviewUrl(null);
     setConfirmed(false);
     setError(null);
-    setIsEmpty(true);
-    setTypedName('');
+    if (newMode === 'type') {
+      setTypedName(clientName);
+      setIsEmpty(false);
+    } else {
+      setTypedName('');
+      setIsEmpty(true);
+    }
     if (sigRef.current) sigRef.current.clear();
   };
 
