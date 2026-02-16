@@ -5,8 +5,6 @@ import { portalSessionOptions } from '@/lib/auth/portal-session';
 import type { PortalSessionData } from '@/lib/auth/portal-session';
 import { getSupabaseAdmin } from '@/lib/supabase/client';
 import { getStripe } from '@/lib/stripe/client';
-// Force IPv4 to avoid IPv6 connection timeouts with Stripe API
-try { require('dns').setDefaultResultOrder('ipv4first'); } catch {}
 
 export async function POST(
   request: Request,
