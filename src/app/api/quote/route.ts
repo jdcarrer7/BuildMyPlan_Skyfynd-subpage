@@ -23,31 +23,31 @@ export async function POST(request: Request) {
 
     const { qrNumber } = await createQuote(body);
 
-    // Send admin notification via Resend (non-blocking)
-    sendEmail({
-      to: ADMIN_EMAIL,
-      subject: `New Quote Request — ${body.name}`,
-      html: `<p><strong>New quote submitted</strong></p>
+    // Send emails — must await on Cloudflare Workers (runtime terminates after response)
+    await Promise.allSettled([
+      sendEmail({
+        to: ADMIN_EMAIL,
+        subject: `New Quote Request — ${body.name}`,
+        html: `<p><strong>New quote submitted</strong></p>
 <p><strong>Name:</strong> ${body.name}</p>
 <p><strong>Email:</strong> ${body.email}</p>
 <p><strong>Source:</strong> ${body.source}</p>
 <p><strong>QR:</strong> ${qrNumber}</p>`,
-      text: `New quote submitted\n\nName: ${body.name}\nEmail: ${body.email}\nSource: ${body.source}\nQR: ${qrNumber}`,
-    }).catch((err) => console.error('Admin notification email failed:', err));
-
-    // Send customer confirmation email (non-blocking)
-    sendEmail({
-      to: body.email,
-      subject: `We've received your quote request — ${qrNumber}`,
-      html: buildQuoteConfirmationEmail(
-        body.name,
-        qrNumber,
-        body.serviceNames,
-        body.serviceCount
-      ),
-      text: `Hi ${body.name},\n\nThank you for your quote request! We've received your submission (${qrNumber}) and our team will review it shortly. You can expect to hear from us within 24 hours.\n\nQuestions? Reply to this email or reach out to us anytime.\n\nSkyfynd — Software for Businesses`,
-      replyTo: ADMIN_EMAIL,
-    }).catch((err) => console.error('Customer confirmation email failed:', err));
+        text: `New quote submitted\n\nName: ${body.name}\nEmail: ${body.email}\nSource: ${body.source}\nQR: ${qrNumber}`,
+      }),
+      sendEmail({
+        to: body.email,
+        subject: `We've received your quote request — ${qrNumber}`,
+        html: buildQuoteConfirmationEmail(
+          body.name,
+          qrNumber,
+          body.serviceNames,
+          body.serviceCount
+        ),
+        text: `Hi ${body.name},\n\nThank you for your quote request! We've received your submission (${qrNumber}) and our team will review it shortly. You can expect to hear from us within 24 hours.\n\nQuestions? Reply to this email or reach out to us anytime.\n\nSkyfynd — Software for Businesses`,
+        replyTo: ADMIN_EMAIL,
+      }),
+    ]);
 
     return NextResponse.json({ message: 'Quote submitted successfully!', qrNumber });
   } catch (error) {
