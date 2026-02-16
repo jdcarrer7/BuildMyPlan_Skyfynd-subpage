@@ -145,14 +145,42 @@ export async function getQuote(
 
   const { data, error } = await supabase
     .from('quotes')
-    .select('quote_data, admin_notes, updated_at, created_at')
+    .select('*, quote_data, admin_notes, updated_at, created_at')
     .eq('qr_number', qrNumber)
     .single();
 
   if (error || !data) return null;
 
+  // If quote_data is empty/incomplete (e.g. GAS fetch failed during migration),
+  // reconstruct a minimal QuoteJSON from the denormalized columns
+  let quote = data.quote_data as QuoteJSON;
+  if (!quote || !quote.customer || !quote.services || !quote.totals) {
+    quote = {
+      qrNumber: data.qr_number,
+      customerId: data.customer_id,
+      submittedAt: data.submitted_at,
+      source: data.source || '',
+      customer: {
+        name: data.name || '',
+        email: data.email || '',
+        company: data.company || '',
+        phone: data.phone || '',
+        notes: data.notes || '',
+      },
+      services: [],
+      totals: {
+        oneTimeTotal: Number(data.one_time_total) || 0,
+        monthlyTotal: Number(data.monthly_total) || 0,
+        hasCustomQuote: data.has_custom_quote || false,
+        discountPercentage: Number(data.discount_percentage) || 0,
+        grandTotal: Number(data.grand_total) || 0,
+      },
+      rawPayload: {},
+    };
+  }
+
   return {
-    quote: data.quote_data as QuoteJSON,
+    quote,
     adminNotes: data.admin_notes || '',
     isEdited: data.updated_at !== data.created_at,
   };
