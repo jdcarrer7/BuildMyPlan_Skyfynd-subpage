@@ -51,7 +51,7 @@ export default function FinalPaymentPage() {
     setCheckoutLoading(true);
     setError(null);
     try {
-      const res = await fetch(`/api/portal/${portalId}/final-checkout`, { method: 'POST' });
+      const res = await fetch(`/api/portal/${portalId}/final-checkout/`, { method: 'POST' });
       const json = await res.json();
       if (res.ok && json.checkoutUrl) {
         window.location.href = json.checkoutUrl;
