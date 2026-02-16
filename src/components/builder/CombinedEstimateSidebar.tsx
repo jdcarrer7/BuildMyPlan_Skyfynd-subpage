@@ -237,7 +237,7 @@ export default function CombinedEstimateSidebar({ currentService, onRequestQuote
       {/* Grand Totals */}
       <div className="mt-6 pt-4 border-t-2 border-[var(--accent-blue)]/50">
         <div className="flex justify-between items-center mb-2">
-          <span className="text-white font-bold">One-time Total</span>
+          <span className="text-white font-bold">Project Total</span>
           <motion.span
             key={combinedTotals.oneTimeTotal}
             initial={{ scale: 1.1 }}
@@ -257,27 +257,36 @@ export default function CombinedEstimateSidebar({ currentService, onRequestQuote
           </div>
         )}
 
-        {/* Due Today */}
-        {!combinedTotals.hasCustomQuote && (combinedTotals.oneTimeTotal + combinedTotals.monthlyTotal) > 0 && (
-          <div className="mt-3 pt-3 border-t-2 border-[var(--accent-purple)]/50">
-            <div className="flex justify-between items-center">
-              <span className="text-white font-bold">Due Today</span>
-              <motion.span
-                key={`due-${combinedTotals.oneTimeTotal}-${combinedTotals.monthlyTotal}`}
-                initial={{ scale: 1.1 }}
-                animate={{ scale: 1 }}
-                className="text-xl font-bold gradient-text"
-              >
-                ${(combinedTotals.oneTimeTotal + combinedTotals.monthlyTotal).toLocaleString()}
-              </motion.span>
-            </div>
-            {combinedTotals.monthlyTotal > 0 && (
-              <p className="text-xs text-[var(--text-muted)] mt-1">
-                One-time + first month&apos;s subscription
+        {/* Payment Structure */}
+        {!combinedTotals.hasCustomQuote && (combinedTotals.oneTimeTotal + combinedTotals.monthlyTotal) > 0 && (() => {
+          const grandTotal = combinedTotals.oneTimeTotal + combinedTotals.monthlyTotal;
+          const deposit = Math.ceil(grandTotal / 2);
+          const completion = Math.floor(grandTotal / 2);
+          return (
+            <div className="mt-3 pt-3 border-t-2 border-[var(--accent-purple)]/50">
+              <div className="flex justify-between items-center mb-2">
+                <span className="text-white font-bold">Deposit (50%)</span>
+                <motion.span
+                  key={`deposit-${grandTotal}`}
+                  initial={{ scale: 1.1 }}
+                  animate={{ scale: 1 }}
+                  className="text-xl font-bold gradient-text"
+                >
+                  ${deposit.toLocaleString()}
+                </motion.span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-[var(--text-secondary)] font-medium">Due on Completion (50%)</span>
+                <span className="text-lg font-semibold text-[var(--text-secondary)]">
+                  ${completion.toLocaleString()}
+                </span>
+              </div>
+              <p className="text-xs text-[var(--text-muted)] mt-2">
+                50% deposit to begin &middot; 50% upon project completion
               </p>
-            )}
-          </div>
-        )}
+            </div>
+          );
+        })()}
       </div>
 
       {/* Action Buttons */}

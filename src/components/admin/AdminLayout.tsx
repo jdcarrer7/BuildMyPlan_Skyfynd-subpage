@@ -17,9 +17,9 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         {/* Header */}
         <div className="p-4 border-b border-white/[0.06]">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1.5">
               <img src={LOGO_URL} alt="SkyFynd" className="w-7 h-7 object-contain" />
-              <h1 className="text-xl font-semibold text-white" style={{ fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif", letterSpacing: '-0.5px' }}>
+              <h1 className="text-[24px] font-semibold text-white" style={{ fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif", letterSpacing: '-0.5px' }}>
                 Skyfynd
               </h1>
             </div>

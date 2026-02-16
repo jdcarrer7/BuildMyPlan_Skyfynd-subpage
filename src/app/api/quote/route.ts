@@ -168,7 +168,7 @@ export async function POST(request: Request) {
       } catch {
         // If we got a non-JSON response but 200 status, treat as success
         if (scriptResponse.ok) {
-          sendAdminNotification(body);
+          await sendAdminNotification(body);
           return NextResponse.json({ message: 'Quote submitted successfully!' });
         }
         return NextResponse.json(
@@ -178,7 +178,7 @@ export async function POST(request: Request) {
       }
 
       if (result.status === 'success') {
-        sendAdminNotification(body);
+        await sendAdminNotification(body);
         return NextResponse.json({ message: 'Quote submitted successfully!' });
       }
 

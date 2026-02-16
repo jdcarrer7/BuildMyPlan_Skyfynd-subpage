@@ -151,7 +151,7 @@ export default function QuoteSummary({ quote }: QuoteSummaryProps) {
 
           {/* Totals */}
           <div className="grid grid-cols-3 bg-white/[0.04] px-4 py-2.5 border-t border-white/[0.06] text-sm font-semibold">
-            <span className="text-[#FAFAFA]">Total One-Time</span>
+            <span className="text-[#FAFAFA]">Project Total</span>
             <span className="text-center text-[#FAFAFA]">${fmt(totals.oneTimeTotal || 0)}</span>
             <span></span>
           </div>
@@ -178,9 +178,23 @@ export default function QuoteSummary({ quote }: QuoteSummaryProps) {
             className="grid grid-cols-2 px-4 py-4 text-white"
             style={{ background: 'linear-gradient(to right, rgba(167,139,250,0.75) 0%, rgba(96,175,250,0.85) 40%, rgba(52,211,153,0.8) 100%)' }}
           >
-            <span className="font-bold text-base">Estimated Total</span>
+            <span className="font-bold text-base">Project Total</span>
             <span className="text-right font-bold text-xl">${fmt(totals.grandTotal || 0)}</span>
           </div>
+
+          {/* Payment Structure */}
+          {(totals.grandTotal || 0) > 0 && (
+            <>
+              <div className="grid grid-cols-2 px-4 py-2.5 bg-white/[0.03] text-sm">
+                <span className="text-[#A1A1AA] font-medium">Deposit (50%)</span>
+                <span className="text-right text-[#FAFAFA] font-semibold">${fmt(Math.ceil((totals.grandTotal || 0) / 2))}</span>
+              </div>
+              <div className="grid grid-cols-2 px-4 py-2.5 text-sm">
+                <span className="text-[#71717A] font-medium">Due on Completion (50%)</span>
+                <span className="text-right text-[#A1A1AA] font-semibold">${fmt(Math.floor((totals.grandTotal || 0) / 2))}</span>
+              </div>
+            </>
+          )}
         </div>
       </div>
 

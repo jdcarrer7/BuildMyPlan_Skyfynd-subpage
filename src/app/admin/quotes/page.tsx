@@ -288,16 +288,13 @@ function AdminQuotesContent() {
           )}
 
           {/* Actions: Send Quote + Send Portal + Final Payment + PDF Export */}
-          <div className="relative flex items-center justify-end gap-3">
-            {/* Toast overlay for result messages — doesn't disrupt button layout */}
+          <div className="flex items-center justify-end gap-3">
             {(sendQuoteResult || sendPortalResult || sendFinalPaymentResult) && (
-              <div className="absolute -top-8 right-0 pointer-events-none">
-                <span className={`text-sm ${
-                  (sendQuoteResult || sendPortalResult || sendFinalPaymentResult)?.success ? 'text-[#10B981]' : 'text-red-400'
-                }`}>
-                  {(sendQuoteResult || sendPortalResult || sendFinalPaymentResult)?.message}
-                </span>
-              </div>
+              <span className={`text-sm mr-auto ${
+                (sendQuoteResult || sendPortalResult || sendFinalPaymentResult)?.success ? 'text-[#10B981]' : 'text-red-400'
+              }`}>
+                {(sendQuoteResult || sendPortalResult || sendFinalPaymentResult)?.message}
+              </span>
             )}
             <button
               onClick={handleSendQuote}

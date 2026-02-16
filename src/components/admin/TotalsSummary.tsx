@@ -29,7 +29,7 @@ export default function TotalsSummary({ quote, onAddQuoteDiscount }: Props) {
       <div className="space-y-3">
         {totals.oneTimeTotal > 0 && (
           <div className="flex justify-between text-sm">
-            <span className="text-[#A1A1AA]">One-Time Total</span>
+            <span className="text-[#A1A1AA]">Project Total</span>
             <span className="text-white font-medium">${totals.oneTimeTotal.toLocaleString()}</span>
           </div>
         )}
@@ -57,18 +57,22 @@ export default function TotalsSummary({ quote, onAddQuoteDiscount }: Props) {
           </div>
         </div>
 
-        {/* Due Today */}
-        {(totals.oneTimeTotal + totals.monthlyTotal) > 0 && (
+        {/* Payment Structure */}
+        {totals.grandTotal > 0 && (
           <div className="border-t-2 border-[#3B82F6]/30 pt-3">
-            <div className="flex justify-between items-center">
-              <span className="text-white font-bold">Due Today</span>
+            <div className="flex justify-between items-center mb-2">
+              <span className="text-white font-bold">Deposit (50%)</span>
               <span className="text-xl font-bold gradient-text">
-                ${(totals.oneTimeTotal + totals.monthlyTotal).toLocaleString()}
+                ${Math.ceil(totals.grandTotal / 2).toLocaleString()}
               </span>
             </div>
-            {totals.monthlyTotal > 0 && (
-              <p className="text-xs text-[#71717A] mt-1">One-time + first month&apos;s subscription</p>
-            )}
+            <div className="flex justify-between items-center">
+              <span className="text-[#A1A1AA] font-medium">Due on Completion (50%)</span>
+              <span className="text-lg font-semibold text-[#A1A1AA]">
+                ${Math.floor(totals.grandTotal / 2).toLocaleString()}
+              </span>
+            </div>
+            <p className="text-xs text-[#71717A] mt-2">50% deposit to begin &middot; 50% upon project completion</p>
           </div>
         )}
 

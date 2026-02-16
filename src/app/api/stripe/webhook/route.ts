@@ -1,6 +1,52 @@
 import { NextResponse } from 'next/server';
 import { getStripe } from '@/lib/stripe/client';
 import { getSupabaseAdmin } from '@/lib/supabase/client';
+import { buildPaymentConfirmationEmail } from '@/lib/portal/email';
+import nodemailer from 'nodemailer';
+
+async function sendConfirmationEmail(
+  clientEmail: string,
+  clientName: string,
+  qrNumber: string,
+  amountCents: number,
+  paymentType: 'deposit' | 'final',
+  grandTotal?: number,
+  depositAmountDollars?: number
+) {
+  const gmailUser = process.env.GMAIL_USER;
+  const gmailPass = process.env.GMAIL_APP_PASSWORD;
+  if (!gmailUser || !gmailPass) {
+    console.error('Email credentials not configured, skipping confirmation email');
+    return;
+  }
+
+  const amountDollars = amountCents / 100;
+  const subject = paymentType === 'deposit'
+    ? `Deposit Confirmation — ${qrNumber}`
+    : `Payment Confirmation — ${qrNumber}`;
+
+  const htmlBody = buildPaymentConfirmationEmail(
+    clientName,
+    qrNumber,
+    amountDollars,
+    paymentType,
+    grandTotal,
+    depositAmountDollars
+  );
+
+  const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: { user: gmailUser, pass: gmailPass },
+  });
+
+  await transporter.sendMail({
+    from: `"SkyFynd" <${gmailUser}>`,
+    to: clientEmail,
+    subject,
+    text: `Hi ${clientName},\n\nWe've received your ${paymentType === 'deposit' ? 'deposit' : 'final'} payment of $${amountDollars.toLocaleString()} for ${qrNumber}.\n\nThank you!\nSkyfynd`,
+    html: htmlBody,
+  });
+}
 
 export async function POST(request: Request) {
   try {
@@ -23,7 +69,7 @@ export async function POST(request: Request) {
     if (event.type === 'checkout.session.completed') {
       const session = event.data.object;
       const portalId = session.metadata?.portal_id;
-      const paymentType = session.metadata?.payment_type || 'deposit';
+      const paymentType = (session.metadata?.payment_type || 'deposit') as 'deposit' | 'final';
       const stripeSessionId = session.id;
       const paymentIntentId = typeof session.payment_intent === 'string'
         ? session.payment_intent
@@ -55,6 +101,45 @@ export async function POST(request: Request) {
             updated_at: new Date().toISOString(),
           })
           .eq('id', portalId);
+      }
+
+      // Send confirmation email
+      try {
+        const { data: portal } = await supabase
+          .from('portals')
+          .select('client_email, client_name, qr_number, quote_data')
+          .eq('id', portalId)
+          .single();
+
+        if (portal) {
+          const amountCents = session.amount_total || 0;
+          const grandTotal = portal.quote_data?.totals?.grandTotal || 0;
+
+          if (paymentType === 'final') {
+            // Get deposit amount for the breakdown
+            const { data: deposit } = await supabase
+              .from('portal_payments')
+              .select('amount')
+              .eq('portal_id', portalId)
+              .eq('payment_type', 'deposit')
+              .eq('status', 'completed')
+              .single();
+
+            const depositDollars = deposit ? deposit.amount / 100 : 0;
+            await sendConfirmationEmail(
+              portal.client_email, portal.client_name, portal.qr_number,
+              amountCents, 'final', grandTotal, depositDollars
+            );
+          } else {
+            await sendConfirmationEmail(
+              portal.client_email, portal.client_name, portal.qr_number,
+              amountCents, 'deposit'
+            );
+          }
+        }
+      } catch (emailErr) {
+        console.error('Failed to send confirmation email:', emailErr);
+        // Don't fail the webhook for email errors
       }
     }
 
