@@ -25,20 +25,23 @@ function buildQuoteHtml(q: QuoteJSON): string {
   let html = '';
 
   html += '<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"></head>';
-  html += '<body style="margin:0;padding:0;background-color:#0A0A0A;font-family:Arial,Helvetica,sans-serif;">';
-  html += '<table width="100%" cellpadding="0" cellspacing="0" style="background-color:#0A0A0A;padding:20px 0;">';
+  html += '<body style="margin:0;padding:0;background-color:#f5f5f5;font-family:Arial,Helvetica,sans-serif;">';
+  html += '<table width="100%" cellpadding="0" cellspacing="0" style="background-color:#f5f5f5;padding:20px 0;">';
   html += '<tr><td align="center"><table width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;background-color:#111111;border-radius:8px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.4);">';
 
   // Header
-  html += '<tr><td style="background-color:#A78BFA;background:linear-gradient(to right,#A78BFA 0%,#60AFFA 40%,#34D399 100%);padding:30px 40px;text-align:center;">';
-  html += `<img src="${LOGO_URL}" alt="SkyFynd" width="80" style="display:block;margin:0 auto 12px;max-width:80px;" />`;
-  html += '<h1 style="color:#ffffff;margin:0 0 4px;font-size:22px;font-weight:700;">Quote Estimate</h1>';
-  html += `<p style="color:rgba(255,255,255,0.85);margin:0;font-size:14px;">${q.qrNumber} &bull; ${dateStr}</p>`;
+  html += '<tr><td style="background-color:#A78BFA;background:linear-gradient(to right,#A78BFA 0%,#60AFFA 40%,#34D399 100%);padding:20px 40px;text-align:center;">';
+  html += '<table cellpadding="0" cellspacing="0" style="margin:0 auto 10px;"><tr>';
+  html += `<td style="vertical-align:middle;"><img src="${LOGO_URL}" alt="SkyFynd" width="36" style="display:block;max-width:36px;" /></td>`;
+  html += '<td style="vertical-align:middle;padding-left:10px;"><span style="color:#ffffff;font-size:22px;font-weight:600;font-family:Arial,Helvetica,sans-serif;letter-spacing:-0.3px;">Skyfynd</span></td>';
+  html += '</tr></table>';
+  html += '<h1 style="color:#ffffff;margin:0 0 4px;font-size:20px;font-weight:700;">Quote Estimate</h1>';
+  html += `<p style="color:rgba(255,255,255,0.85);margin:0;font-size:13px;">${q.qrNumber} &bull; ${dateStr}</p>`;
   html += '</td></tr>';
 
   // Client Info
   html += '<tr><td style="padding:24px 40px 16px;">';
-  html += '<h2 style="color:#A78BFA;font-size:16px;margin:0 0 12px;border-bottom:2px solid #1F1F23;padding-bottom:8px;">Client Information</h2>';
+  html += '<h2 style="color:#ffffff;font-size:16px;margin:0 0 12px;border-bottom:2px solid #1F1F23;padding-bottom:8px;">Client Information</h2>';
   html += '<table width="100%" cellpadding="0" cellspacing="0" style="font-size:14px;color:#E5E5E5;">';
   const fields: [string, string][] = [
     ['Name', customer.name],
@@ -56,13 +59,13 @@ function buildQuoteHtml(q: QuoteJSON): string {
 
   // Service Breakdown
   html += '<tr><td style="padding:16px 40px;">';
-  html += '<h2 style="color:#A78BFA;font-size:16px;margin:0 0 16px;border-bottom:2px solid #1F1F23;padding-bottom:8px;">Service Breakdown</h2>';
+  html += '<h2 style="color:#ffffff;font-size:16px;margin:0 0 16px;border-bottom:2px solid #1F1F23;padding-bottom:8px;">Service Breakdown</h2>';
 
   for (const svc of services) {
     html += '<div style="margin-bottom:20px;">';
     html += '<table width="100%" cellpadding="0" cellspacing="0"><tr>';
-    html += `<td style="background-color:#1C1825;padding:8px 12px;border-radius:6px;font-weight:700;color:#A78BFA;font-size:14px;">${svc.serviceLabel}</td>`;
-    html += '<td style="background-color:#1C1825;padding:8px 12px;border-radius:6px;text-align:right;font-weight:700;color:#A78BFA;font-size:14px;">';
+    html += `<td style="background-color:#1C1825;padding:8px 12px;border-radius:6px;font-weight:700;color:#ffffff;font-size:14px;">${svc.serviceLabel}</td>`;
+    html += '<td style="background-color:#1C1825;padding:8px 12px;border-radius:6px;text-align:right;font-weight:700;color:#ffffff;font-size:14px;">';
     const prices: string[] = [];
     if (svc.oneTimeTotal > 0) prices.push('$' + fmt(svc.oneTimeTotal));
     if (svc.monthlyTotal > 0) prices.push('$' + fmt(svc.monthlyTotal) + '/mo');
@@ -76,7 +79,7 @@ function buildQuoteHtml(q: QuoteJSON): string {
           html += '<tr>';
           html += `<td style="padding:2px 0 2px ${indent + 12}px;color:#71717A;width:35%;">${child.stepName}</td>`;
           html += `<td style="padding:2px 0;color:#A1A1AA;">${child.selectedLabel}</td>`;
-          html += '<td style="padding:2px 0;text-align:right;color:#A78BFA;font-weight:600;white-space:nowrap;">';
+          html += '<td style="padding:2px 0;text-align:right;color:#ffffff;font-weight:600;white-space:nowrap;">';
           if (child.priceImpact !== null && child.priceImpact > 0) {
             html += child.isRecurring ? '$' + fmt(child.priceImpact) + '/mo' : '$' + fmt(child.priceImpact);
           }
@@ -86,7 +89,7 @@ function buildQuoteHtml(q: QuoteJSON): string {
         html += '<tr>';
         html += `<td style="padding:2px 0 2px ${indent + 4}px;color:#71717A;width:35%;">${step.stepName}</td>`;
         html += `<td style="padding:2px 0;color:#A1A1AA;">${step.selectedLabel}</td>`;
-        html += '<td style="padding:2px 0;text-align:right;color:#A78BFA;font-weight:600;white-space:nowrap;">';
+        html += '<td style="padding:2px 0;text-align:right;color:#ffffff;font-weight:600;white-space:nowrap;">';
         if (step.priceImpact !== null && step.priceImpact > 0) {
           html += step.isRecurring ? '$' + fmt(step.priceImpact) + '/mo' : '$' + fmt(step.priceImpact);
         }
@@ -105,13 +108,13 @@ function buildQuoteHtml(q: QuoteJSON): string {
 
   // Price Summary
   html += '<tr><td style="padding:0 40px 24px;">';
-  html += '<h2 style="color:#A78BFA;font-size:16px;margin:0 0 12px;border-bottom:2px solid #1F1F23;padding-bottom:8px;">Price Summary</h2>';
+  html += '<h2 style="color:#ffffff;font-size:16px;margin:0 0 12px;border-bottom:2px solid #1F1F23;padding-bottom:8px;">Price Summary</h2>';
   html += '<table width="100%" cellpadding="0" cellspacing="0" style="border:1px solid #1F1F23;border-radius:8px;overflow:hidden;">';
 
   html += '<tr style="background-color:#1C1825;">';
-  html += '<td style="padding:10px 14px;font-weight:700;color:#A78BFA;font-size:13px;">Service</td>';
-  html += '<td style="padding:10px 14px;font-weight:700;color:#A78BFA;font-size:13px;text-align:center;">One-Time</td>';
-  html += '<td style="padding:10px 14px;font-weight:700;color:#A78BFA;font-size:13px;text-align:right;">Monthly</td></tr>';
+  html += '<td style="padding:10px 14px;font-weight:700;color:#ffffff;font-size:13px;">Service</td>';
+  html += '<td style="padding:10px 14px;font-weight:700;color:#ffffff;font-size:13px;text-align:center;">One-Time</td>';
+  html += '<td style="padding:10px 14px;font-weight:700;color:#ffffff;font-size:13px;text-align:right;">Monthly</td></tr>';
 
   services.forEach((svc, i) => {
     const bg = i % 2 === 0 ? '#111111' : '#161618';
@@ -147,7 +150,7 @@ function buildQuoteHtml(q: QuoteJSON): string {
   // Notes
   if (customer.notes) {
     html += '<tr><td style="padding:0 40px 24px;">';
-    html += '<h2 style="color:#A78BFA;font-size:14px;margin:0 0 8px;">Client Notes</h2>';
+    html += '<h2 style="color:#ffffff;font-size:14px;margin:0 0 8px;">Client Notes</h2>';
     html += `<p style="color:#A1A1AA;font-size:13px;margin:0;background:#1C1825;padding:12px;border-radius:6px;">${customer.notes}</p>`;
     html += '</td></tr>';
   }
@@ -156,7 +159,7 @@ function buildQuoteHtml(q: QuoteJSON): string {
   html += '<tr><td style="background-color:#0D0D0F;padding:20px 40px;text-align:center;border-top:1px solid #1F1F23;">';
   html += '<p style="color:#71717A;font-size:12px;margin:0 0 6px;font-style:italic;">Price may vary based on final project specifications.</p>';
   html += '<p style="color:#71717A;font-size:11px;margin:0 0 4px;">This is an estimate and not a binding contract.</p>';
-  html += '<p style="color:#A78BFA;font-size:12px;margin:0;font-weight:600;">SkyFynd \u2014 Creative & Digital Marketing</p>';
+  html += '<p style="color:#ffffff;font-size:12px;margin:0;font-weight:600;">SkyFynd \u2014 Creative & Digital Marketing</p>';
   html += '</td></tr>';
 
   html += '</table></td></tr></table></body></html>';
