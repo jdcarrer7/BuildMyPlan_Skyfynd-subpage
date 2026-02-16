@@ -9,7 +9,8 @@ export type PortalStatus =
   | 'change_requested'
   | 'quote_accepted'
   | 'contract_signed'
-  | 'payment_completed';
+  | 'payment_completed'
+  | 'project_completed';
 
 // ── Database row types ──
 

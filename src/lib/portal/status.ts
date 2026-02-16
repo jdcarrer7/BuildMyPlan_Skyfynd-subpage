@@ -7,7 +7,8 @@ const VALID_TRANSITIONS: Record<PortalStatus, PortalStatus[]> = {
   change_requested: ['quote_viewed', 'quote_accepted'],
   quote_accepted: ['contract_signed'],
   contract_signed: ['payment_completed'],
-  payment_completed: [],
+  payment_completed: ['project_completed'],
+  project_completed: [],
 };
 
 export function canTransitionTo(current: PortalStatus, next: PortalStatus): boolean {
@@ -22,6 +23,7 @@ export const STATUS_LABELS: Record<PortalStatus, string> = {
   quote_accepted: 'Accepted',
   contract_signed: 'Signed',
   payment_completed: 'Paid',
+  project_completed: 'Completed',
 };
 
 export const STATUS_COLORS: Record<PortalStatus, string> = {
@@ -32,4 +34,5 @@ export const STATUS_COLORS: Record<PortalStatus, string> = {
   quote_accepted: '#10B981',
   contract_signed: '#22C55E',
   payment_completed: '#F59E0B',
+  project_completed: '#3B82F6',
 };

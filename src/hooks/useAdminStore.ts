@@ -62,6 +62,7 @@ interface AdminState {
   sendQuote: (qrNumber: string) => Promise<{ success: boolean; message?: string; error?: string }>;
   sendPortal: (qrNumber: string) => Promise<{ success: boolean; message?: string; error?: string }>;
   saveQuoteEdit: (quoteData: QuoteJSON, adminNotes: string) => Promise<{ success: boolean; error?: string }>;
+  completePortal: (portalId: string) => Promise<{ success: boolean; error?: string }>;
   trashQuote: (qrNumber: string) => void;
   restoreQuote: (qrNumber: string) => void;
   permanentlyDeleteQuote: (qrNumber: string) => void;
@@ -281,6 +282,20 @@ export const useAdminStore = create<AdminState>((set, get) => ({
         return { success: true, message: data.message };
       }
       return { success: false, error: data.message || data.error || 'Failed to send portal' };
+    } catch {
+      return { success: false, error: 'Network error' };
+    }
+  },
+
+  completePortal: async (portalId: string) => {
+    try {
+      const res = await fetch(`/api/admin/portals/${portalId}/complete`, { method: 'POST' });
+      const data = await res.json();
+      if (data.status === 'success') {
+        get().fetchPortals();
+        return { success: true };
+      }
+      return { success: false, error: data.error || 'Failed to complete portal' };
     } catch {
       return { success: false, error: 'Network error' };
     }
