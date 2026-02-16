@@ -205,29 +205,24 @@ export default function PortalPage() {
               <div className="flex items-center gap-2 text-sm text-[#A1A1AA]">
                 <PenLine className="w-4 h-4 text-[#3B82F6] shrink-0" />
                 <span className="text-[#FAFAFA] font-medium">Review &amp; Sign Agreement</span>
-                <span className="hidden sm:inline">— Read the contract below, then sign on the right to proceed.</span>
+                <span className="hidden sm:inline">— Read the contract below, then sign at the bottom to proceed.</span>
               </div>
 
-              {/* Side-by-side: Contract (left) + Signature (right) */}
-              <div className="flex flex-col lg:flex-row gap-4">
-                {/* Contract — takes most space */}
-                <div className="flex-1 min-w-0">
-                  <div className="max-h-[80vh] overflow-y-auto rounded-lg border border-white/[0.06]">
-                    <ContractViewer
-                      clientName={clientName}
-                      effectiveDate={new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
-                    />
-                  </div>
-                </div>
+              {/* Full-width contract */}
+              <div className="max-h-[75vh] overflow-y-auto rounded-lg border border-white/[0.06]">
+                <ContractViewer
+                  clientName={clientName}
+                  effectiveDate={new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
+                />
+              </div>
 
-                {/* Signature sidebar */}
-                <div className="lg:w-80 lg:shrink-0 lg:sticky lg:top-4 lg:self-start rounded-lg border border-white/[0.06] bg-[#0D0D0F] p-4">
-                  <SignatureCanvas
-                    clientName={clientName}
-                    portalId={portalId}
-                    onSigned={handleSigned}
-                  />
-                </div>
+              {/* Signature section below */}
+              <div className="rounded-lg border border-white/[0.06] bg-[#0D0D0F] p-4 max-w-lg mx-auto">
+                <SignatureCanvas
+                  clientName={clientName}
+                  portalId={portalId}
+                  onSigned={handleSigned}
+                />
               </div>
             </div>
           );
