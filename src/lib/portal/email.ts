@@ -4,6 +4,69 @@ function fmt(n: number): string {
   return Number(n).toLocaleString('en-US');
 }
 
+export function buildQuoteConfirmationEmail(
+  clientName: string,
+  qrNumber: string,
+  serviceNames?: string,
+  serviceCount?: number
+): string {
+  let html = '';
+
+  html += '<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"></head>';
+  html += '<body style="margin:0;padding:0;background-color:#f5f5f5;font-family:Arial,Helvetica,sans-serif;">';
+  html += '<table width="100%" cellpadding="0" cellspacing="0" style="background-color:#f5f5f5;padding:20px 0;">';
+  html += '<tr><td align="center"><table width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;background-color:#111111;border-radius:8px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.4);">';
+
+  // Header
+  html += '<tr><td style="background-color:#A78BFA;background:linear-gradient(to right,#A78BFA 0%,#60AFFA 40%,#34D399 100%);padding:20px 24px;text-align:center;">';
+  html += '<table cellpadding="0" cellspacing="0" style="margin:0 auto 10px;"><tr>';
+  html += `<td style="vertical-align:middle;"><img src="${LOGO_URL}" alt="SkyFynd" width="36" style="display:block;max-width:36px;" /></td>`;
+  html += '<td style="vertical-align:middle;padding-left:10px;"><span style="color:#ffffff;font-size:22px;font-weight:600;font-family:Arial,Helvetica,sans-serif;letter-spacing:-0.3px;">Skyfynd</span></td>';
+  html += '</tr></table>';
+  html += '<h1 style="color:#ffffff;margin:0 0 4px;font-size:20px;font-weight:700;">Quote Request Received</h1>';
+  html += `<p style="color:rgba(255,255,255,0.85);margin:0;font-size:13px;">${qrNumber}</p>`;
+  html += '</td></tr>';
+
+  // Body
+  html += '<tr><td style="padding:24px;">';
+  html += `<p style="color:#E5E5E5;font-size:16px;margin:0 0 16px;">Hi ${clientName},</p>`;
+  html += '<p style="color:#A1A1AA;font-size:14px;line-height:1.6;margin:0 0 24px;">Thank you for your quote request! We\'ve received your submission and our team will review it shortly. You can expect to hear from us within 24 hours.</p>';
+
+  // Summary box
+  if (serviceNames || serviceCount) {
+    html += '<table width="100%" cellpadding="0" cellspacing="0" style="background-color:#1C1825;border-radius:8px;margin-bottom:24px;">';
+    html += '<tr><td style="padding:16px 20px;">';
+    html += '<table width="100%" cellpadding="0" cellspacing="0">';
+    html += `<tr><td style="color:#71717A;font-size:13px;padding:4px 0;">Reference</td><td style="text-align:right;font-weight:600;color:#ffffff;font-size:13px;padding:4px 0;">${qrNumber}</td></tr>`;
+    if (serviceCount) {
+      html += `<tr><td style="color:#71717A;font-size:13px;padding:4px 0;">Services</td><td style="text-align:right;font-weight:600;color:#ffffff;font-size:13px;padding:4px 0;">${serviceCount} selected</td></tr>`;
+    }
+    if (serviceNames) {
+      html += `<tr><td colspan="2" style="color:#71717A;font-size:12px;padding:8px 0 0;line-height:1.5;">${serviceNames}</td></tr>`;
+    }
+    html += '</table></td></tr></table>';
+  }
+
+  html += '<p style="color:#A1A1AA;font-size:14px;line-height:1.6;margin:0 0 8px;">Here\'s what happens next:</p>';
+  html += '<table cellpadding="0" cellspacing="0" style="margin-bottom:24px;">';
+  html += '<tr><td style="color:#A78BFA;font-size:14px;font-weight:700;padding:4px 12px 4px 0;vertical-align:top;">1.</td><td style="color:#A1A1AA;font-size:14px;line-height:1.6;padding:4px 0;">We review your request and prepare a detailed quote</td></tr>';
+  html += '<tr><td style="color:#60AFFA;font-size:14px;font-weight:700;padding:4px 12px 4px 0;vertical-align:top;">2.</td><td style="color:#A1A1AA;font-size:14px;line-height:1.6;padding:4px 0;">You\'ll receive your personalized portal with pricing and details</td></tr>';
+  html += '<tr><td style="color:#34D399;font-size:14px;font-weight:700;padding:4px 12px 4px 0;vertical-align:top;">3.</td><td style="color:#A1A1AA;font-size:14px;line-height:1.6;padding:4px 0;">Review, sign, and get started — all in one place</td></tr>';
+  html += '</table>';
+
+  html += '<p style="color:#71717A;font-size:12px;text-align:center;margin:0;">Keep this email for your records. Your reference number is <strong style="color:#ffffff;">' + qrNumber + '</strong>.</p>';
+  html += '</td></tr>';
+
+  // Footer
+  html += '<tr><td style="background-color:#0D0D0F;padding:20px 24px;text-align:center;border-top:1px solid #1F1F23;">';
+  html += '<p style="color:#71717A;font-size:12px;margin:0 0 4px;">Questions? Reply to this email or reach out to us anytime.</p>';
+  html += '<p style="color:#ffffff;font-size:12px;margin:0;font-weight:600;">Skyfynd \u2014 Software for Businesses</p>';
+  html += '</td></tr>';
+
+  html += '</table></td></tr></table></body></html>';
+  return html;
+}
+
 export function buildPortalInviteEmail(
   portalId: string,
   clientName: string,
