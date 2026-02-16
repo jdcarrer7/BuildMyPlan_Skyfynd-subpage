@@ -29,7 +29,7 @@ export default function PortalLayout({ children }: { children: React.ReactNode }
       <footer className="border-t border-white/[0.06] mt-auto">
         <div className="max-w-4xl mx-auto px-6 py-6 text-center">
           <p className="text-[#52525B] text-xs">
-            SkyFynd LLC &mdash; Creative & Digital Marketing
+            Skyfynd LLC &mdash; Software for Businesses
           </p>
         </div>
       </footer>

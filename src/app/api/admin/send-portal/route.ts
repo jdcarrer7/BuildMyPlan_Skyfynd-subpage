@@ -76,7 +76,7 @@ export async function POST(request: Request) {
       from: `"SkyFynd" <${gmailUser}>`,
       to: clientEmail,
       subject,
-      text: `Hi ${clientName},\n\nYour project portal is ready. Visit your portal to review your quote, sign the agreement, and complete your deposit.\n\nQuote: ${quote.qrNumber}\nTotal: $${grandTotal}\n\nSkyFynd — Creative & Digital Marketing`,
+      text: `Hi ${clientName},\n\nYour project portal is ready. Visit your portal to review your quote, sign the agreement, and complete your deposit.\n\nQuote: ${quote.qrNumber}\nTotal: $${grandTotal}\n\nSkyfynd — Software for Businesses`,
       html: htmlBody,
     });
 

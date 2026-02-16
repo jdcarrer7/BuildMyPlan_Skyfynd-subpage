@@ -374,7 +374,7 @@ export async function generateSignedAgreementPDF(data: SignedPDFData): Promise<v
     doc.setTextColor(170, 170, 170);
     doc.setFont('helvetica', 'normal');
     doc.text(
-      'Skyfynd LLC — Creative & Digital Marketing — Confidential',
+      'Skyfynd LLC — Software for Businesses — Confidential',
       pageWidth / 2,
       doc.internal.pageSize.getHeight() - 8,
       { align: 'center' }

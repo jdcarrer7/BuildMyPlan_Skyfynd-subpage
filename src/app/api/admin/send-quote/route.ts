@@ -159,7 +159,7 @@ function buildQuoteHtml(q: QuoteJSON): string {
   html += '<tr><td style="background-color:#0D0D0F;padding:20px 40px;text-align:center;border-top:1px solid #1F1F23;">';
   html += '<p style="color:#71717A;font-size:12px;margin:0 0 6px;font-style:italic;">Price may vary based on final project specifications.</p>';
   html += '<p style="color:#71717A;font-size:11px;margin:0 0 4px;">This is an estimate and not a binding contract.</p>';
-  html += '<p style="color:#ffffff;font-size:12px;margin:0;font-weight:600;">SkyFynd \u2014 Creative & Digital Marketing</p>';
+  html += '<p style="color:#ffffff;font-size:12px;margin:0;font-weight:600;">Skyfynd \u2014 Software for Businesses</p>';
   html += '</td></tr>';
 
   html += '</table></td></tr></table></body></html>';

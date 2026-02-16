@@ -267,7 +267,7 @@ export default function QuotePDFExport({ quote }: Props) {
         doc.setFont('helvetica', 'normal');
         doc.setTextColor(150, 150, 150);
         doc.text(
-          'This is an estimate. Final pricing may vary. | SkyFynd \u2014 Creative & Digital Marketing',
+          'This is an estimate. Final pricing may vary. | Skyfynd \u2014 Software for Businesses',
           pageWidth / 2,
           290,
           { align: 'center' }

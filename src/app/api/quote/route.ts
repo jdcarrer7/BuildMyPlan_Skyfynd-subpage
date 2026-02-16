@@ -88,7 +88,7 @@ function buildAdminNotificationHtml(body: Record<string, unknown>): string {
   // Footer
   html += '<tr><td style="background-color:#0D0D0F;padding:20px 40px;text-align:center;border-top:1px solid #1F1F23;">';
   html += '<p style="color:#71717A;font-size:12px;margin:0 0 4px;">View details in the admin dashboard.</p>';
-  html += '<p style="color:#A78BFA;font-size:12px;margin:0;font-weight:600;">SkyFynd \u2014 Creative & Digital Marketing</p>';
+  html += '<p style="color:#A78BFA;font-size:12px;margin:0;font-weight:600;">Skyfynd \u2014 Software for Businesses</p>';
   html += '</td></tr>';
 
   html += '</table></td></tr></table></body></html>';
