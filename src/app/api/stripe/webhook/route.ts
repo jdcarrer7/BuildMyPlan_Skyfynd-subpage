@@ -23,6 +23,7 @@ export async function POST(request: Request) {
     if (event.type === 'checkout.session.completed') {
       const session = event.data.object;
       const portalId = session.metadata?.portal_id;
+      const paymentType = session.metadata?.payment_type || 'deposit';
       const stripeSessionId = session.id;
       const paymentIntentId = typeof session.payment_intent === 'string'
         ? session.payment_intent
@@ -45,14 +46,16 @@ export async function POST(request: Request) {
         })
         .eq('stripe_session_id', stripeSessionId);
 
-      // Update portal status
-      await supabase
-        .from('portals')
-        .update({
-          status: 'payment_completed',
-          updated_at: new Date().toISOString(),
-        })
-        .eq('id', portalId);
+      // Only update portal status for deposit payments
+      if (paymentType === 'deposit') {
+        await supabase
+          .from('portals')
+          .update({
+            status: 'payment_completed',
+            updated_at: new Date().toISOString(),
+          })
+          .eq('id', portalId);
+      }
     }
 
     return NextResponse.json({ received: true });

@@ -35,7 +35,7 @@ export async function GET() {
     // Fetch payment info
     const { data: payments } = await supabase
       .from('portal_payments')
-      .select('portal_id, amount, status, paid_at')
+      .select('portal_id, amount, status, paid_at, payment_type')
       .eq('status', 'completed');
 
     // Build a lookup map for change requests and payments
@@ -47,9 +47,12 @@ export async function GET() {
       changeRequestsByPortal[cr.portal_id].push({ message: cr.message, created_at: cr.created_at });
     }
 
+    // Use first (deposit) payment for backward-compatible `payment` field
     const paymentsByPortal: Record<string, { amount: number; paid_at: string | null }> = {};
     for (const p of payments || []) {
-      paymentsByPortal[p.portal_id] = { amount: p.amount, paid_at: p.paid_at };
+      if (!paymentsByPortal[p.portal_id]) {
+        paymentsByPortal[p.portal_id] = { amount: p.amount, paid_at: p.paid_at };
+      }
     }
 
     // Enrich portal data

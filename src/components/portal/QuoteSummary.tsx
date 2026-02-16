@@ -125,9 +125,9 @@ export default function QuoteSummary({ quote }: QuoteSummaryProps) {
         <h3 className="text-sm font-semibold text-[#A1A1AA] uppercase tracking-wider mb-4 pb-2 border-b border-white/[0.06]">
           Price Summary
         </h3>
-        <div className="rounded-lg border border-white/[0.06] overflow-hidden">
+        <div className="rounded-lg border border-white/[0.06] overflow-x-auto">
           {/* Header row */}
-          <div className="grid grid-cols-3 bg-white/[0.04] px-4 py-2.5 text-xs font-bold uppercase text-[#71717A]">
+          <div className="grid grid-cols-3 bg-white/[0.04] px-4 py-2.5 text-xs font-bold uppercase text-[#71717A] min-w-[320px]">
             <span>Service</span>
             <span className="text-center">One-Time</span>
             <span className="text-right">Monthly</span>
@@ -139,7 +139,7 @@ export default function QuoteSummary({ quote }: QuoteSummaryProps) {
               key={i}
               className={`grid grid-cols-3 px-4 py-2 text-sm ${i % 2 === 0 ? '' : 'bg-white/[0.02]'}`}
             >
-              <span className="text-[#A1A1AA]">{svc.serviceLabel}</span>
+              <span className="text-[#A1A1AA] min-w-0 truncate">{svc.serviceLabel}</span>
               <span className="text-center text-[#A1A1AA]">
                 {svc.oneTimeTotal > 0 ? `$${fmt(svc.oneTimeTotal)}` : '\u2014'}
               </span>

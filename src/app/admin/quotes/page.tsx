@@ -10,7 +10,7 @@ import QuotePDFExport from '@/components/admin/QuotePDFExport';
 import PortalStatusBadge from '@/components/admin/PortalStatusBadge';
 import TrashBin from '@/components/admin/TrashBin';
 import QuoteEditor from '@/components/admin/QuoteEditor';
-import { Loader2, Send, LinkIcon, AlertCircle, Save, X, CheckCircle2 } from 'lucide-react';
+import { Loader2, Send, LinkIcon, AlertCircle, Save, X, CheckCircle2, CreditCard } from 'lucide-react';
 
 function AdminQuotesContent() {
   const {
@@ -30,12 +30,15 @@ function AdminQuotesContent() {
     sendPortal,
     trashedQRs,
     completePortal,
+    sendFinalPayment,
   } = useAdminStore();
 
   const [sendingQuote, setSendingQuote] = useState(false);
   const [sendQuoteResult, setSendQuoteResult] = useState<{ success: boolean; message: string } | null>(null);
   const [sendingPortal, setSendingPortal] = useState(false);
   const [sendPortalResult, setSendPortalResult] = useState<{ success: boolean; message: string } | null>(null);
+  const [sendingFinalPayment, setSendingFinalPayment] = useState(false);
+  const [sendFinalPaymentResult, setSendFinalPaymentResult] = useState<{ success: boolean; message: string } | null>(null);
 
   // Floating button state
   const [editTrigger, setEditTrigger] = useState(0);
@@ -78,6 +81,7 @@ function AdminQuotesContent() {
     setEditSaveResult(null);
     setCompletePanelOpen(false);
     setCompleteResult(null);
+    setSendFinalPaymentResult(null);
   }, [selectedQR]);
 
   // Handle ?qr= deep link
@@ -138,6 +142,21 @@ function AdminQuotesContent() {
     });
     if (result.success) {
       setTimeout(() => setSendPortalResult(null), 4000);
+    }
+  };
+
+  const handleSendFinalPayment = async () => {
+    if (!selectedQR) return;
+    setSendingFinalPayment(true);
+    setSendFinalPaymentResult(null);
+    const result = await sendFinalPayment(selectedQR);
+    setSendingFinalPayment(false);
+    setSendFinalPaymentResult({
+      success: result.success,
+      message: result.success ? (result.message || 'Final payment request sent!') : (result.error || 'Failed to send'),
+    });
+    if (result.success) {
+      setTimeout(() => setSendFinalPaymentResult(null), 4000);
     }
   };
 
@@ -280,6 +299,11 @@ function AdminQuotesContent() {
                 {sendPortalResult.message}
               </span>
             )}
+            {sendFinalPaymentResult && (
+              <span className={`text-sm ${sendFinalPaymentResult.success ? 'text-[#10B981]' : 'text-red-400'}`}>
+                {sendFinalPaymentResult.message}
+              </span>
+            )}
             <button
               onClick={handleSendQuote}
               disabled={sendingQuote}
@@ -298,6 +322,17 @@ function AdminQuotesContent() {
               <LinkIcon className="w-4 h-4" />
               {sendingPortal ? 'Sending...' : 'Send Portal'}
             </button>
+            {isInProgress && (
+              <button
+                onClick={handleSendFinalPayment}
+                disabled={sendingFinalPayment}
+                className="flex items-center gap-2 px-5 py-3 rounded-lg font-semibold text-white transition-all disabled:opacity-50 border border-[#A78BFA]/30 hover:shadow-[0_8px_32px_rgba(167,139,250,0.3)] hover:-translate-y-0.5"
+                style={{ background: 'linear-gradient(to right, rgba(167,139,250,0.75) 0%, rgba(96,175,250,0.85) 40%, rgba(52,211,153,0.8) 100%)' }}
+              >
+                <CreditCard className="w-4 h-4" />
+                {sendingFinalPayment ? 'Sending...' : 'Send Final Payment'}
+              </button>
+            )}
             <QuotePDFExport quote={selectedQuote} />
           </div>
         </div>

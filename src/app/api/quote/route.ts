@@ -31,7 +31,7 @@ function buildAdminNotificationHtml(body: Record<string, unknown>): string {
   html += '<tr><td align="center"><table width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;background-color:#111111;border-radius:8px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.4);">';
 
   // Header
-  html += '<tr><td style="background-color:#A78BFA;background:linear-gradient(to right,#A78BFA 0%,#60AFFA 40%,#34D399 100%);padding:20px 40px;text-align:center;">';
+  html += '<tr><td style="background-color:#A78BFA;background:linear-gradient(to right,#A78BFA 0%,#60AFFA 40%,#34D399 100%);padding:20px 24px;text-align:center;">';
   html += '<table cellpadding="0" cellspacing="0" style="margin:0 auto 10px;"><tr>';
   html += `<td style="vertical-align:middle;"><img src="${LOGO_URL}" alt="SkyFynd" width="36" style="display:block;max-width:36px;" /></td>`;
   html += '<td style="vertical-align:middle;padding-left:10px;"><span style="color:#ffffff;font-size:22px;font-weight:600;font-family:Georgia,\'Times New Roman\',serif;">Skyfynd</span></td>';
@@ -41,7 +41,7 @@ function buildAdminNotificationHtml(body: Record<string, unknown>): string {
   html += '</td></tr>';
 
   // Client Info
-  html += '<tr><td style="padding:24px 40px 16px;">';
+  html += '<tr><td style="padding:24px 16px;">';
   html += '<h2 style="color:#A78BFA;font-size:16px;margin:0 0 12px;border-bottom:2px solid #1F1F23;padding-bottom:8px;">Client Information</h2>';
   html += '<table width="100%" cellpadding="0" cellspacing="0" style="font-size:14px;color:#E5E5E5;">';
   const fields: [string, string][] = [['Name', name], ['Email', email], ['Company', company], ['Phone', phone]];
@@ -54,7 +54,7 @@ function buildAdminNotificationHtml(body: Record<string, unknown>): string {
   html += '</table></td></tr>';
 
   // Quote Summary
-  html += '<tr><td style="padding:0 40px 24px;">';
+  html += '<tr><td style="padding:0 24px 24px;">';
   html += '<h2 style="color:#A78BFA;font-size:16px;margin:0 0 12px;border-bottom:2px solid #1F1F23;padding-bottom:8px;">Quote Summary</h2>';
   html += '<table width="100%" cellpadding="0" cellspacing="0" style="background-color:#1C1825;border-radius:8px;overflow:hidden;">';
   html += `<tr><td style="padding:10px 16px;color:#71717A;font-size:13px;">Services (${serviceCount})</td>`;
@@ -79,14 +79,14 @@ function buildAdminNotificationHtml(body: Record<string, unknown>): string {
 
   // Notes
   if (notes) {
-    html += '<tr><td style="padding:0 40px 24px;">';
+    html += '<tr><td style="padding:0 24px 24px;">';
     html += '<h2 style="color:#A78BFA;font-size:14px;margin:0 0 8px;">Client Notes</h2>';
     html += `<p style="color:#A1A1AA;font-size:13px;margin:0;background:#1C1825;padding:12px;border-radius:6px;">${notes}</p>`;
     html += '</td></tr>';
   }
 
   // Footer
-  html += '<tr><td style="background-color:#0D0D0F;padding:20px 40px;text-align:center;border-top:1px solid #1F1F23;">';
+  html += '<tr><td style="background-color:#0D0D0F;padding:20px 24px;text-align:center;border-top:1px solid #1F1F23;">';
   html += '<p style="color:#71717A;font-size:12px;margin:0 0 4px;">View details in the admin dashboard.</p>';
   html += '<p style="color:#A78BFA;font-size:12px;margin:0;font-weight:600;">Skyfynd \u2014 Software for Businesses</p>';
   html += '</td></tr>';
