@@ -1,8 +1,7 @@
 import { NextResponse } from 'next/server';
 import { getSupabaseAdmin } from '@/lib/supabase/client';
 import { buildVerificationCodeEmail } from '@/lib/portal/email';
-import nodemailer from 'nodemailer';
-try { require('dns').setDefaultResultOrder('ipv4first'); } catch {}
+import { sendEmail } from '@/lib/email/resend';
 
 export async function POST(
   request: Request,
@@ -45,28 +44,16 @@ export async function POST(
     }
 
     // Send code via email
-    const gmailUser = process.env.GMAIL_USER;
-    const gmailPass = process.env.GMAIL_APP_PASSWORD;
-    if (!gmailUser || !gmailPass) {
-      return NextResponse.json({ error: 'Email credentials not configured' }, { status: 500 });
-    }
-
-    const transporter = nodemailer.createTransport({
-      service: 'gmail',
-      auth: { user: gmailUser, pass: gmailPass },
-    });
-
     const clientName = (portal.quote_data as Record<string, unknown>)?.customer
       ? ((portal.quote_data as Record<string, unknown>).customer as Record<string, string>)?.name || portal.client_name
       : portal.client_name;
     const htmlBody = buildVerificationCodeEmail(clientName, code);
 
-    await transporter.sendMail({
-      from: `"SkyFynd" <${gmailUser}>`,
+    await sendEmail({
       to: portal.client_email,
       subject: 'Your SkyFynd Verification Code',
-      text: `Hi ${clientName},\n\nYour verification code is: ${code}\n\nThis code expires in 10 minutes.\n\nSkyFynd`,
       html: htmlBody,
+      text: `Hi ${clientName},\n\nYour verification code is: ${code}\n\nThis code expires in 10 minutes.\n\nSkyFynd`,
     });
 
     // Mask email for response

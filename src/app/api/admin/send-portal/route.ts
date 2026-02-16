@@ -5,8 +5,7 @@ import { sessionOptions } from '@/lib/auth/session';
 import type { SessionData, QuoteJSON } from '@/lib/types/admin';
 import { getSupabaseAdmin } from '@/lib/supabase/client';
 import { buildPortalInviteEmail } from '@/lib/portal/email';
-import nodemailer from 'nodemailer';
-try { require('dns').setDefaultResultOrder('ipv4first'); } catch {}
+import { sendEmail } from '@/lib/email/resend';
 
 export async function POST(request: Request) {
   try {
@@ -61,23 +60,11 @@ export async function POST(request: Request) {
     const htmlBody = buildPortalInviteEmail(portal.id, clientName, quote.qrNumber, grandTotal, serviceCount);
     const subject = `Your SkyFynd Project Portal \u2014 ${quote.qrNumber}`;
 
-    const gmailUser = process.env.GMAIL_USER;
-    const gmailPass = process.env.GMAIL_APP_PASSWORD;
-    if (!gmailUser || !gmailPass) {
-      return NextResponse.json({ error: 'Email credentials not configured' }, { status: 500 });
-    }
-
-    const transporter = nodemailer.createTransport({
-      service: 'gmail',
-      auth: { user: gmailUser, pass: gmailPass },
-    });
-
-    await transporter.sendMail({
-      from: `"SkyFynd" <${gmailUser}>`,
+    await sendEmail({
       to: clientEmail,
       subject,
-      text: `Hi ${clientName},\n\nYour project portal is ready. Visit your portal to review your quote, sign the agreement, and complete your deposit.\n\nQuote: ${quote.qrNumber}\nTotal: $${grandTotal}\n\nSkyfynd — Software for Businesses`,
       html: htmlBody,
+      text: `Hi ${clientName},\n\nYour project portal is ready. Visit your portal to review your quote, sign the agreement, and complete your deposit.\n\nQuote: ${quote.qrNumber}\nTotal: $${grandTotal}\n\nSkyfynd — Software for Businesses`,
     });
 
     return NextResponse.json({

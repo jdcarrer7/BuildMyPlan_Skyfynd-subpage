@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import { getStripe } from '@/lib/stripe/client';
 import { getSupabaseAdmin } from '@/lib/supabase/client';
 import { buildPaymentConfirmationEmail } from '@/lib/portal/email';
-import nodemailer from 'nodemailer';
+import { sendEmail } from '@/lib/email/resend';
 
 async function sendConfirmationEmail(
   clientEmail: string,
@@ -13,13 +13,6 @@ async function sendConfirmationEmail(
   grandTotal?: number,
   depositAmountDollars?: number
 ) {
-  const gmailUser = process.env.GMAIL_USER;
-  const gmailPass = process.env.GMAIL_APP_PASSWORD;
-  if (!gmailUser || !gmailPass) {
-    console.error('Email credentials not configured, skipping confirmation email');
-    return;
-  }
-
   const amountDollars = amountCents / 100;
   const subject = paymentType === 'deposit'
     ? `Deposit Confirmation — ${qrNumber}`
@@ -34,17 +27,11 @@ async function sendConfirmationEmail(
     depositAmountDollars
   );
 
-  const transporter = nodemailer.createTransport({
-    service: 'gmail',
-    auth: { user: gmailUser, pass: gmailPass },
-  });
-
-  await transporter.sendMail({
-    from: `"SkyFynd" <${gmailUser}>`,
+  await sendEmail({
     to: clientEmail,
     subject,
-    text: `Hi ${clientName},\n\nWe've received your ${paymentType === 'deposit' ? 'deposit' : 'final'} payment of $${amountDollars.toLocaleString()} for ${qrNumber}.\n\nThank you!\nSkyfynd`,
     html: htmlBody,
+    text: `Hi ${clientName},\n\nWe've received your ${paymentType === 'deposit' ? 'deposit' : 'final'} payment of $${amountDollars.toLocaleString()} for ${qrNumber}.\n\nThank you!\nSkyfynd`,
   });
 }
 

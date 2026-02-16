@@ -4,8 +4,7 @@ import { cookies } from 'next/headers';
 import { sessionOptions } from '@/lib/auth/session';
 import type { SessionData } from '@/lib/types/admin';
 import type { QuoteJSON, ResolvedServiceConfig, ResolvedStep } from '@/lib/types/admin';
-import nodemailer from 'nodemailer';
-try { require('dns').setDefaultResultOrder('ipv4first'); } catch {}
+import { sendEmail } from '@/lib/email/resend';
 
 const LOGO_URL = 'https://f005.backblazeb2.com/file/SKYFYND-assets/Skyfynd+logo.png';
 
@@ -125,7 +124,7 @@ function buildQuoteHtml(q: QuoteJSON): string {
   });
 
   html += '<tr style="background-color:#1C1825;border-top:2px solid #1F1F23;">';
-  html += `<td style="padding:8px 14px;font-weight:700;font-size:13px;color:#E5E5E5;">Total One-Time</td>`;
+  html += `<td style="padding:8px 14px;font-weight:700;font-size:13px;color:#E5E5E5;">Project Total</td>`;
   html += `<td style="padding:8px 14px;font-weight:700;font-size:13px;color:#E5E5E5;text-align:center;">$${fmt(totals.oneTimeTotal || 0)}</td>`;
   html += '<td style="padding:8px 14px;font-size:13px;color:#71717A;text-align:right;"></td></tr>';
 
@@ -142,9 +141,17 @@ function buildQuoteHtml(q: QuoteJSON): string {
     html += `<td colspan="2" style="padding:8px 14px;font-weight:700;font-size:13px;color:#34D399;text-align:right;">-$${fmt(discounts.totalSaved)}</td></tr>`;
   }
 
+  const grandTotalVal = totals.grandTotal || 0;
+  const depositVal = Math.ceil(grandTotalVal / 2);
+  const completionVal = Math.floor(grandTotalVal / 2);
+
   html += '<tr style="background-color:#A78BFA;background:linear-gradient(to right,#A78BFA 0%,#60AFFA 40%,#34D399 100%);">';
-  html += '<td style="padding:14px;font-weight:700;font-size:16px;color:#ffffff;">DUE TODAY</td>';
-  html += `<td colspan="2" style="padding:14px;font-weight:700;font-size:20px;color:#ffffff;text-align:right;">$${fmt(totals.grandTotal || 0)}</td></tr>`;
+  html += '<td style="padding:14px;font-weight:700;font-size:16px;color:#ffffff;">DEPOSIT (50%)</td>';
+  html += `<td colspan="2" style="padding:14px;font-weight:700;font-size:20px;color:#ffffff;text-align:right;">$${fmt(depositVal)}</td></tr>`;
+
+  html += '<tr style="background-color:#1C1825;">';
+  html += '<td style="padding:10px 14px;font-weight:600;font-size:13px;color:#A1A1AA;">DUE ON COMPLETION (50%)</td>';
+  html += `<td colspan="2" style="padding:10px 14px;font-weight:600;font-size:15px;color:#A1A1AA;text-align:right;">$${fmt(completionVal)}</td></tr>`;
   html += '</table></td></tr>';
 
   // Notes
@@ -194,27 +201,11 @@ export async function POST(request: Request) {
     const htmlBody = buildQuoteHtml(quote);
     const subject = `Your Quote from SkyFynd \u2014 ${quote.qrNumber}`;
 
-    // Send via Nodemailer + Gmail SMTP
-    const gmailUser = process.env.GMAIL_USER;
-    const gmailPass = process.env.GMAIL_APP_PASSWORD;
-    if (!gmailUser || !gmailPass) {
-      return NextResponse.json({ error: 'Email credentials not configured' }, { status: 500 });
-    }
-
-    const transporter = nodemailer.createTransport({
-      service: 'gmail',
-      auth: {
-        user: gmailUser,
-        pass: gmailPass,
-      },
-    });
-
-    await transporter.sendMail({
-      from: `"SkyFynd" <${gmailUser}>`,
+    await sendEmail({
       to: clientEmail,
       subject,
-      text: `Your SkyFynd Quote\n\nQR Number: ${quote.qrNumber}\nOne-Time Total: $${quote.totals.oneTimeTotal || 0}\nMonthly Total: $${quote.totals.monthlyTotal || 0}\nDue Today: $${quote.totals.grandTotal || 0}`,
       html: htmlBody,
+      text: `Your SkyFynd Quote\n\nQR Number: ${quote.qrNumber}\nProject Total: $${quote.totals.oneTimeTotal || 0}\nMonthly Total: $${quote.totals.monthlyTotal || 0}\nGrand Total: $${quote.totals.grandTotal || 0}`,
     });
 
     return NextResponse.json({ status: 'success', message: `Quote sent to ${clientEmail}` });

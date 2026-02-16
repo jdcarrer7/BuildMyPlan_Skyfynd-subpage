@@ -5,8 +5,7 @@ import { sessionOptions } from '@/lib/auth/session';
 import type { SessionData } from '@/lib/types/admin';
 import { getSupabaseAdmin } from '@/lib/supabase/client';
 import { buildFinalPaymentEmail } from '@/lib/portal/email';
-import nodemailer from 'nodemailer';
-try { require('dns').setDefaultResultOrder('ipv4first'); } catch {}
+import { sendEmail } from '@/lib/email/resend';
 
 export async function POST(request: Request) {
   try {
@@ -78,26 +77,13 @@ export async function POST(request: Request) {
     );
 
     const subject = `Final Payment \u2014 ${portal.qr_number}`;
-
-    const gmailUser = process.env.GMAIL_USER;
-    const gmailPass = process.env.GMAIL_APP_PASSWORD;
-    if (!gmailUser || !gmailPass) {
-      return NextResponse.json({ error: 'Email credentials not configured' }, { status: 500 });
-    }
-
-    const transporter = nodemailer.createTransport({
-      service: 'gmail',
-      auth: { user: gmailUser, pass: gmailPass },
-    });
-
     const remainingBalance = grandTotal - depositDollars;
 
-    await transporter.sendMail({
-      from: `"SkyFynd" <${gmailUser}>`,
+    await sendEmail({
       to: clientEmail,
       subject,
-      text: `Hi ${clientName},\n\nYour project is nearing completion. Please complete your final payment of $${remainingBalance.toLocaleString()}.\n\nProject Total: $${grandTotal.toLocaleString()}\nDeposit Paid: $${depositDollars.toLocaleString()}\nRemaining Balance: $${remainingBalance.toLocaleString()}\n\nSkyfynd — Software for Businesses`,
       html: htmlBody,
+      text: `Hi ${clientName},\n\nYour project is nearing completion. Please complete your final payment of $${remainingBalance.toLocaleString()}.\n\nProject Total: $${grandTotal.toLocaleString()}\nDeposit Paid: $${depositDollars.toLocaleString()}\nRemaining Balance: $${remainingBalance.toLocaleString()}\n\nSkyfynd — Software for Businesses`,
     });
 
     return NextResponse.json({
