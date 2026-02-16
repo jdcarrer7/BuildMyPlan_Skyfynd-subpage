@@ -31,7 +31,7 @@ function buildQuoteHtml(q: QuoteJSON): string {
   // Header
   html += '<tr><td style="background-color:#A78BFA;background:linear-gradient(to right,#A78BFA 0%,#60AFFA 40%,#34D399 100%);padding:20px 24px;text-align:center;">';
   html += '<table cellpadding="0" cellspacing="0" style="margin:0 auto 10px;"><tr>';
-  html += `<td style="vertical-align:middle;"><img src="${LOGO_URL}" alt="SkyFynd" width="36" style="display:block;max-width:36px;" /></td>`;
+  html += `<td style="vertical-align:middle;"><img src="${LOGO_URL}" alt="Skyfynd" width="36" style="display:block;max-width:36px;" /></td>`;
   html += '<td style="vertical-align:middle;padding-left:10px;"><span style="color:#ffffff;font-size:22px;font-weight:600;font-family:Arial,Helvetica,sans-serif;letter-spacing:-0.3px;">Skyfynd</span></td>';
   html += '</tr></table>';
   html += '<h1 style="color:#ffffff;margin:0 0 4px;font-size:20px;font-weight:700;">Quote Estimate</h1>';
@@ -199,13 +199,13 @@ export async function POST(request: Request) {
 
     // Build HTML email
     const htmlBody = buildQuoteHtml(quote);
-    const subject = `Your Quote from SkyFynd \u2014 ${quote.qrNumber}`;
+    const subject = `Your Quote from Skyfynd \u2014 ${quote.qrNumber}`;
 
     await sendEmail({
       to: clientEmail,
       subject,
       html: htmlBody,
-      text: `Your SkyFynd Quote\n\nQR Number: ${quote.qrNumber}\nProject Total: $${quote.totals.oneTimeTotal || 0}\nMonthly Total: $${quote.totals.monthlyTotal || 0}\nGrand Total: $${quote.totals.grandTotal || 0}`,
+      text: `Your Skyfynd Quote\n\nQR Number: ${quote.qrNumber}\nProject Total: $${quote.totals.oneTimeTotal || 0}\nMonthly Total: $${quote.totals.monthlyTotal || 0}\nGrand Total: $${quote.totals.grandTotal || 0}`,
     });
 
     return NextResponse.json({ status: 'success', message: `Quote sent to ${clientEmail}` });

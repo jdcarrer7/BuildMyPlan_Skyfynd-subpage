@@ -20,7 +20,7 @@ export function buildQuoteConfirmationEmail(
   // Header
   html += '<tr><td style="background-color:#A78BFA;background:linear-gradient(to right,#A78BFA 0%,#60AFFA 40%,#34D399 100%);padding:20px 24px;text-align:center;">';
   html += '<table cellpadding="0" cellspacing="0" style="margin:0 auto 10px;"><tr>';
-  html += `<td style="vertical-align:middle;"><img src="${LOGO_URL}" alt="SkyFynd" width="36" style="display:block;max-width:36px;" /></td>`;
+  html += `<td style="vertical-align:middle;"><img src="${LOGO_URL}" alt="Skyfynd" width="36" style="display:block;max-width:36px;" /></td>`;
   html += '<td style="vertical-align:middle;padding-left:10px;"><span style="color:#ffffff;font-size:22px;font-weight:600;font-family:Arial,Helvetica,sans-serif;letter-spacing:-0.3px;">Skyfynd</span></td>';
   html += '</tr></table>';
   html += '<h1 style="color:#ffffff;margin:0 0 4px;font-size:20px;font-weight:700;">Quote Request Received</h1>';
@@ -87,7 +87,7 @@ export function buildPortalInviteEmail(
   // Header
   html += '<tr><td style="background-color:#A78BFA;background:linear-gradient(to right,#A78BFA 0%,#60AFFA 40%,#34D399 100%);padding:20px 24px;text-align:center;">';
   html += '<table cellpadding="0" cellspacing="0" style="margin:0 auto 10px;"><tr>';
-  html += `<td style="vertical-align:middle;"><img src="${LOGO_URL}" alt="SkyFynd" width="36" style="display:block;max-width:36px;" /></td>`;
+  html += `<td style="vertical-align:middle;"><img src="${LOGO_URL}" alt="Skyfynd" width="36" style="display:block;max-width:36px;" /></td>`;
   html += '<td style="vertical-align:middle;padding-left:10px;"><span style="color:#ffffff;font-size:22px;font-weight:600;font-family:Arial,Helvetica,sans-serif;letter-spacing:-0.3px;">Skyfynd</span></td>';
   html += '</tr></table>';
   html += '<h1 style="color:#ffffff;margin:0 0 4px;font-size:20px;font-weight:700;">Your Project Portal</h1>';
@@ -148,7 +148,7 @@ export function buildFinalPaymentEmail(
   // Header
   html += '<tr><td style="background-color:#A78BFA;background:linear-gradient(to right,#A78BFA 0%,#60AFFA 40%,#34D399 100%);padding:20px 24px;text-align:center;">';
   html += '<table cellpadding="0" cellspacing="0" style="margin:0 auto 10px;"><tr>';
-  html += `<td style="vertical-align:middle;"><img src="${LOGO_URL}" alt="SkyFynd" width="36" style="display:block;max-width:36px;" /></td>`;
+  html += `<td style="vertical-align:middle;"><img src="${LOGO_URL}" alt="Skyfynd" width="36" style="display:block;max-width:36px;" /></td>`;
   html += '<td style="vertical-align:middle;padding-left:10px;"><span style="color:#ffffff;font-size:22px;font-weight:600;font-family:Arial,Helvetica,sans-serif;letter-spacing:-0.3px;">Skyfynd</span></td>';
   html += '</tr></table>';
   html += '<h1 style="color:#ffffff;margin:0 0 4px;font-size:20px;font-weight:700;">Final Payment Request</h1>';
@@ -200,7 +200,7 @@ export function buildPaymentConfirmationEmail(
   const title = isDeposit ? 'Deposit Received' : 'Final Payment Received';
   const message = isDeposit
     ? 'We\'ve received your deposit and your project is now underway. We\'ll be in touch with next steps soon.'
-    : 'Your final payment has been received and your project balance is fully settled. Thank you for your trust in SkyFynd!';
+    : 'Your final payment has been received and your project balance is fully settled. Thank you for your trust in Skyfynd!';
 
   let html = '';
 
@@ -209,10 +209,10 @@ export function buildPaymentConfirmationEmail(
   html += '<table width="100%" cellpadding="0" cellspacing="0" style="background-color:#f5f5f5;padding:20px 0;">';
   html += '<tr><td align="center"><table width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;background-color:#111111;border-radius:8px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.4);">';
 
-  // Header — green gradient for confirmation
-  html += '<tr><td style="background-color:#10B981;background:linear-gradient(to right,#10B981 0%,#34D399 100%);padding:20px 24px;text-align:center;">';
+  // Header
+  html += '<tr><td style="background-color:#A78BFA;background:linear-gradient(to right,#A78BFA 0%,#60AFFA 40%,#34D399 100%);padding:20px 24px;text-align:center;">';
   html += '<table cellpadding="0" cellspacing="0" style="margin:0 auto 10px;"><tr>';
-  html += `<td style="vertical-align:middle;"><img src="${LOGO_URL}" alt="SkyFynd" width="36" style="display:block;max-width:36px;" /></td>`;
+  html += `<td style="vertical-align:middle;"><img src="${LOGO_URL}" alt="Skyfynd" width="36" style="display:block;max-width:36px;" /></td>`;
   html += '<td style="vertical-align:middle;padding-left:10px;"><span style="color:#ffffff;font-size:22px;font-weight:600;font-family:Arial,Helvetica,sans-serif;letter-spacing:-0.3px;">Skyfynd</span></td>';
   html += '</tr></table>';
   html += `<h1 style="color:#ffffff;margin:0 0 4px;font-size:20px;font-weight:700;">${title}</h1>`;
@@ -262,7 +262,7 @@ export function buildVerificationCodeEmail(clientName: string, code: string): st
   // Header
   html += '<tr><td style="background-color:#A78BFA;background:linear-gradient(to right,#A78BFA 0%,#60AFFA 40%,#34D399 100%);padding:16px 24px;text-align:center;">';
   html += '<table cellpadding="0" cellspacing="0" style="margin:0 auto;"><tr>';
-  html += `<td style="vertical-align:middle;"><img src="${LOGO_URL}" alt="SkyFynd" width="36" style="display:block;max-width:36px;" /></td>`;
+  html += `<td style="vertical-align:middle;"><img src="${LOGO_URL}" alt="Skyfynd" width="36" style="display:block;max-width:36px;" /></td>`;
   html += '<td style="vertical-align:middle;padding-left:10px;"><span style="color:#ffffff;font-size:22px;font-weight:600;font-family:Arial,Helvetica,sans-serif;letter-spacing:-0.3px;">Skyfynd</span></td>';
   html += '</tr></table>';
   html += '</td></tr>';

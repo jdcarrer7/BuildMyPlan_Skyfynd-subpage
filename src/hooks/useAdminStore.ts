@@ -120,7 +120,9 @@ export const useAdminStore = create<AdminState>((set, get) => ({
   },
 
   fetchQuotes: async () => {
-    set({ quotesLoading: true, quotesError: null });
+    const isInitial = get().quotes.length === 0;
+    if (isInitial) set({ quotesLoading: true });
+    set({ quotesError: null });
     try {
       const res = await fetch('/api/admin/quotes');
       const data = await res.json();
@@ -135,7 +137,8 @@ export const useAdminStore = create<AdminState>((set, get) => ({
   },
 
   fetchPortals: async () => {
-    set({ portalsLoading: true });
+    const isInitial = get().portals.length === 0;
+    if (isInitial) set({ portalsLoading: true });
     try {
       const res = await fetch('/api/admin/portals');
       const data = await res.json();

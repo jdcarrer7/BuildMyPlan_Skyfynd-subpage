@@ -25,7 +25,7 @@ var MASTER_LEAD_SHEET_ID = '1ESFbhqXwvV3douzXrX_VII1Eh8UqaU5s7mnSgKpd_6Q';
 var CUSTOMER_SHEET_ID = '1UHWQJI4wu0qoM1UycPTLNZUxcBrKLWtlFu4_LJXxG3A';
 var JSON_FOLDER_ID = '1o8KbnqJYpI4-A4cJ6uGcL5zBDHQSo72h';
 var ADMIN_BASE_URL = 'https://plans.skyfynd.io/admin/quotes';
-var NOTIFICATION_EMAIL = 'contact@skyfynd.io';
+var NOTIFICATION_EMAILS = ['contact@skyfynd.io', 'carlos@skyfynd.io'];
 var LOGO_URL = 'https://f005.backblazeb2.com/file/SKYFYND-assets/Skyfynd+logo.png';
 
 var MASTER_SHEET_NAME = 'Master Leads';
@@ -551,7 +551,9 @@ function sendNotificationEmail(quoteJSON, adminLink) {
       'Due Today: $' + (quoteJSON.totals.grandTotal || 0) + '\n\n' +
       'View in Admin: ' + adminLink + '\n';
 
-    MailApp.sendEmail(NOTIFICATION_EMAIL, subject, plainText, { htmlBody: htmlBody });
+    NOTIFICATION_EMAILS.forEach(function(email) {
+      MailApp.sendEmail(email, subject, plainText, { htmlBody: htmlBody });
+    });
   } catch (err) {
     // Don't fail the quote submission if email fails
     Logger.log('Email notification failed: ' + err.toString());

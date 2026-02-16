@@ -4,7 +4,7 @@ import { createQuote } from '@/lib/supabase/quotes';
 import { buildQuoteConfirmationEmail } from '@/lib/portal/email';
 
 const VALID_SOURCES = ['Main Page', 'Rent Me a Site', 'RentMe', 'Custom Builder'] as const;
-const ADMIN_EMAIL = 'contact@skyfynd.io';
+const ADMIN_EMAILS = ['contact@skyfynd.io', 'carlos@skyfynd.io'];
 
 export async function POST(request: Request) {
   try {
@@ -26,7 +26,7 @@ export async function POST(request: Request) {
     // Send emails — must await on Cloudflare Workers (runtime terminates after response)
     await Promise.allSettled([
       sendEmail({
-        to: ADMIN_EMAIL,
+        to: ADMIN_EMAILS,
         subject: `New Quote Request — ${body.name}`,
         html: `<p><strong>New quote submitted</strong></p>
 <p><strong>Name:</strong> ${body.name}</p>
@@ -45,7 +45,7 @@ export async function POST(request: Request) {
           body.serviceCount
         ),
         text: `Hi ${body.name},\n\nThank you for your quote request! We've received your submission (${qrNumber}) and our team will review it shortly. You can expect to hear from us within 24 hours.\n\nQuestions? Reply to this email or reach out to us anytime.\n\nSkyfynd — Software for Businesses`,
-        replyTo: ADMIN_EMAIL,
+        replyTo: ADMIN_EMAILS[0],
       }),
     ]);
 

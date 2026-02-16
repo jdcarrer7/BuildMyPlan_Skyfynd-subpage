@@ -3,6 +3,9 @@ import { getStripe } from '@/lib/stripe/client';
 import { getSupabaseAdmin } from '@/lib/supabase/client';
 import { buildPaymentConfirmationEmail } from '@/lib/portal/email';
 import { sendEmail } from '@/lib/email/resend';
+import { generateSignedAgreementPDFBuffer } from '@/lib/portal/generate-signed-pdf';
+
+const ADMIN_EMAILS = ['contact@skyfynd.io', 'carlos@skyfynd.io'];
 
 async function sendConfirmationEmail(
   clientEmail: string,
@@ -11,7 +14,8 @@ async function sendConfirmationEmail(
   amountCents: number,
   paymentType: 'deposit' | 'final',
   grandTotal?: number,
-  depositAmountDollars?: number
+  depositAmountDollars?: number,
+  attachments?: { filename: string; content: Uint8Array }[]
 ) {
   const amountDollars = amountCents / 100;
   const subject = paymentType === 'deposit'
@@ -27,12 +31,25 @@ async function sendConfirmationEmail(
     depositAmountDollars
   );
 
-  await sendEmail({
-    to: clientEmail,
-    subject,
-    html: htmlBody,
-    text: `Hi ${clientName},\n\nWe've received your ${paymentType === 'deposit' ? 'deposit' : 'final'} payment of $${amountDollars.toLocaleString()} for ${qrNumber}.\n\nThank you!\nSkyfynd`,
-  });
+  const textBody = `Hi ${clientName},\n\nWe've received your ${paymentType === 'deposit' ? 'deposit' : 'final'} payment of $${amountDollars.toLocaleString()} for ${qrNumber}.\n\nThank you!\nSkyfynd`;
+
+  // Send to client (with PDF attachment for deposit) and admins
+  await Promise.allSettled([
+    sendEmail({
+      to: clientEmail,
+      subject,
+      html: htmlBody,
+      text: textBody,
+      attachments,
+    }),
+    sendEmail({
+      to: ADMIN_EMAILS,
+      subject: `${paymentType === 'deposit' ? 'Deposit' : 'Final Payment'} Received — ${qrNumber} (${clientName})`,
+      html: htmlBody,
+      text: textBody,
+      attachments,
+    }),
+  ]);
 }
 
 export async function POST(request: Request) {
@@ -118,9 +135,54 @@ export async function POST(request: Request) {
               amountCents, 'final', grandTotal, depositDollars
             );
           } else {
+            // Generate signed agreement PDF for email attachment
+            let pdfAttachment: { filename: string; content: Uint8Array }[] | undefined;
+            try {
+              const [{ data: sig }, { data: paymentRecord }] = await Promise.all([
+                supabase
+                  .from('portal_signatures')
+                  .select('signature_data_url, signed_at')
+                  .eq('portal_id', portalId)
+                  .single(),
+                supabase
+                  .from('portal_payments')
+                  .select('amount, paid_at, stripe_session_id')
+                  .eq('portal_id', portalId)
+                  .eq('payment_type', 'deposit')
+                  .eq('status', 'completed')
+                  .single(),
+              ]);
+
+              if (sig && paymentRecord) {
+                const pdfBytes = await generateSignedAgreementPDFBuffer({
+                  portal: {
+                    qr_number: portal.qr_number,
+                    client_name: portal.client_name,
+                    client_email: portal.client_email,
+                    quote_data: portal.quote_data,
+                  },
+                  signature: {
+                    signature_data_url: sig.signature_data_url,
+                    signed_at: sig.signed_at,
+                  },
+                  payment: {
+                    amount: paymentRecord.amount,
+                    paid_at: paymentRecord.paid_at,
+                    confirmation_id: paymentRecord.stripe_session_id,
+                  },
+                });
+                pdfAttachment = [{
+                  filename: `${portal.qr_number}_Signed_Agreement.pdf`,
+                  content: pdfBytes,
+                }];
+              }
+            } catch (pdfErr) {
+              console.error('Failed to generate PDF attachment:', pdfErr);
+            }
+
             await sendConfirmationEmail(
               portal.client_email, portal.client_name, portal.qr_number,
-              amountCents, 'deposit'
+              amountCents, 'deposit', undefined, undefined, pdfAttachment
             );
           }
         }

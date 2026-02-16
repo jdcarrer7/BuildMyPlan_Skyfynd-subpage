@@ -51,9 +51,9 @@ export async function POST(
 
     await sendEmail({
       to: portal.client_email,
-      subject: 'Your SkyFynd Verification Code',
+      subject: 'Your Skyfynd Verification Code',
       html: htmlBody,
-      text: `Hi ${clientName},\n\nYour verification code is: ${code}\n\nThis code expires in 10 minutes.\n\nSkyFynd`,
+      text: `Hi ${clientName},\n\nYour verification code is: ${code}\n\nThis code expires in 10 minutes.\n\nSkyfynd`,
     });
 
     // Mask email for response

@@ -58,7 +58,7 @@ export async function POST(request: Request) {
     const serviceCount = quote.services?.length || 0;
     const grandTotal = quote.totals?.grandTotal || 0;
     const htmlBody = buildPortalInviteEmail(portal.id, clientName, quote.qrNumber, grandTotal, serviceCount);
-    const subject = `Your SkyFynd Project Portal \u2014 ${quote.qrNumber}`;
+    const subject = `Your Skyfynd Project Portal \u2014 ${quote.qrNumber}`;
 
     await sendEmail({
       to: clientEmail,

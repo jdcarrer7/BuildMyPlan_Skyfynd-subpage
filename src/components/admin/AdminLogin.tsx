@@ -28,10 +28,10 @@ export default function AdminLogin() {
   return (
     <div className="min-h-screen bg-[#0A0A0B] flex items-center justify-center px-4 relative overflow-hidden">
       <FloatingStars />
-      <div className="w-full max-w-md relative z-10">
+      <div className="w-full max-w-md relative z-10" style={{ marginTop: '-80px' }}>
         <div className="text-center mb-8">
           <div className="flex items-center justify-center gap-3 mb-3">
-            <img src={LOGO_URL} alt="SkyFynd" className="w-12 h-12 object-contain" />
+            <img src={LOGO_URL} alt="Skyfynd" className="w-12 h-12 object-contain" />
             <h1 className="text-4xl font-semibold text-[#FAFAFA]" style={{ fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif", letterSpacing: '-0.5px' }}>
               Skyfynd
             </h1>

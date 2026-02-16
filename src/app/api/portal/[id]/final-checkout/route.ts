@@ -70,7 +70,7 @@ export async function POST(
           price_data: {
             currency: 'usd',
             product_data: {
-              name: `SkyFynd Final Payment \u2014 ${portal.qr_number}`,
+              name: `Skyfynd Final Payment \u2014 ${portal.qr_number}`,
               description: `Remaining balance for ${portal.quote_data?.services?.length || 0} service(s)`,
             },
             unit_amount: remainingAmount,

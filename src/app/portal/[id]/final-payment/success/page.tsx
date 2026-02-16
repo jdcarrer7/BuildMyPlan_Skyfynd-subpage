@@ -39,7 +39,7 @@ export default function FinalPaymentSuccessPage() {
             Payment Complete!
           </h1>
           <p className="text-[#A1A1AA]">
-            Thank you for completing your final payment. Your project balance is now fully settled. We appreciate your trust in SkyFynd!
+            Thank you for completing your final payment. Your project balance is now fully settled. We appreciate your trust in Skyfynd!
           </p>
         </div>
         {sessionId && (

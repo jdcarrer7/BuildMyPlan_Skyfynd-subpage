@@ -10,7 +10,7 @@ import QuotePDFExport from '@/components/admin/QuotePDFExport';
 import PortalStatusBadge from '@/components/admin/PortalStatusBadge';
 import TrashBin from '@/components/admin/TrashBin';
 import QuoteEditor from '@/components/admin/QuoteEditor';
-import { Loader2, Send, LinkIcon, AlertCircle, Save, X, CheckCircle2, CreditCard } from 'lucide-react';
+import { Loader2, LinkIcon, AlertCircle, Save, X, CheckCircle2, CreditCard } from 'lucide-react';
 
 function AdminQuotesContent() {
   const {
@@ -26,14 +26,11 @@ function AdminQuotesContent() {
     quotes,
     portals,
     selectQuote,
-    sendQuote,
     sendPortal,
     completePortal,
     sendFinalPayment,
   } = useAdminStore();
 
-  const [sendingQuote, setSendingQuote] = useState(false);
-  const [sendQuoteResult, setSendQuoteResult] = useState<{ success: boolean; message: string } | null>(null);
   const [sendingPortal, setSendingPortal] = useState(false);
   const [sendPortalResult, setSendPortalResult] = useState<{ success: boolean; message: string } | null>(null);
   const [sendingFinalPayment, setSendingFinalPayment] = useState(false);
@@ -62,12 +59,16 @@ function AdminQuotesContent() {
     checkSession();
   }, [checkSession]);
 
-  // Fetch quotes and portals after login
+  // Fetch quotes and portals after login, then poll every 30s
   useEffect(() => {
-    if (session?.isLoggedIn) {
+    if (!session?.isLoggedIn) return;
+    fetchQuotes();
+    fetchPortals();
+    const interval = setInterval(() => {
       fetchQuotes();
       fetchPortals();
-    }
+    }, 30_000);
+    return () => clearInterval(interval);
   }, [session?.isLoggedIn, fetchQuotes, fetchPortals]);
 
   // Reset edit state when switching quotes
@@ -113,21 +114,6 @@ function AdminQuotesContent() {
   if (!session?.isLoggedIn) {
     return <AdminLogin />;
   }
-
-  const handleSendQuote = async () => {
-    if (!selectedQR) return;
-    setSendingQuote(true);
-    setSendQuoteResult(null);
-    const result = await sendQuote(selectedQR);
-    setSendingQuote(false);
-    setSendQuoteResult({
-      success: result.success,
-      message: result.success ? (result.message || 'Quote sent!') : (result.error || 'Failed to send'),
-    });
-    if (result.success) {
-      setTimeout(() => setSendQuoteResult(null), 4000);
-    }
-  };
 
   const handleSendPortal = async () => {
     if (!selectedQR) return;
@@ -286,24 +272,15 @@ function AdminQuotesContent() {
             </div>
           )}
 
-          {/* Actions: Send Quote + Send Portal + Final Payment + PDF Export */}
+          {/* Actions: Send Portal + Final Payment + PDF Export */}
           <div className="flex items-center justify-end gap-3">
-            {(sendQuoteResult || sendPortalResult || sendFinalPaymentResult) && (
+            {(sendPortalResult || sendFinalPaymentResult) && (
               <span className={`text-sm mr-auto ${
-                (sendQuoteResult || sendPortalResult || sendFinalPaymentResult)?.success ? 'text-[#10B981]' : 'text-red-400'
+                (sendPortalResult || sendFinalPaymentResult)?.success ? 'text-[#10B981]' : 'text-red-400'
               }`}>
-                {(sendQuoteResult || sendPortalResult || sendFinalPaymentResult)?.message}
+                {(sendPortalResult || sendFinalPaymentResult)?.message}
               </span>
             )}
-            <button
-              onClick={handleSendQuote}
-              disabled={sendingQuote}
-              className="flex items-center gap-2 px-4 py-2 rounded-md font-semibold text-white text-sm transition-all disabled:opacity-50 border border-[#A78BFA]/30 hover:shadow-[0_8px_32px_rgba(167,139,250,0.3)] hover:-translate-y-0.5"
-              style={{ background: 'linear-gradient(to right, rgba(167,139,250,0.75) 0%, rgba(96,175,250,0.85) 40%, rgba(52,211,153,0.8) 100%)' }}
-            >
-              <Send className="w-4 h-4" />
-              {sendingQuote ? 'Sending...' : 'Send Quote'}
-            </button>
             <button
               onClick={handleSendPortal}
               disabled={sendingPortal}

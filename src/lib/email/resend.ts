@@ -15,15 +15,21 @@ function getResend(): Resend {
 
 const FROM_ADDRESS = 'Skyfynd <contact@skyfynd.io>';
 
+interface EmailAttachment {
+  filename: string;
+  content: Uint8Array;
+}
+
 interface SendEmailOptions {
   to: string | string[];
   subject: string;
   html: string;
   text?: string;
   replyTo?: string;
+  attachments?: EmailAttachment[];
 }
 
-export async function sendEmail({ to, subject, html, text, replyTo }: SendEmailOptions) {
+export async function sendEmail({ to, subject, html, text, replyTo, attachments }: SendEmailOptions) {
   const resend = getResend();
 
   const { error } = await resend.emails.send({
@@ -33,6 +39,12 @@ export async function sendEmail({ to, subject, html, text, replyTo }: SendEmailO
     html,
     text,
     replyTo,
+    ...(attachments?.length ? {
+      attachments: attachments.map(a => ({
+        filename: a.filename,
+        content: Buffer.from(a.content),
+      })),
+    } : {}),
   });
 
   if (error) {

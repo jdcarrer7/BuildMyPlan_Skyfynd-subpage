@@ -1,12 +1,15 @@
 import type { jsPDF } from 'jspdf';
 import type { QuoteJSON, ResolvedStep } from '@/lib/types/admin';
 
-// Local paths avoid CORS issues with external B2 URLs
-const LOGO_URL = '/skyfynd-logo.png';
-const CARLOS_SIG_URL = '/signatures/carlos-carrero.png';
-const JUAN_SIG_URL = '/signatures/juan-carrero.png';
+// Client-side paths (relative for browser fetch)
+const LOGO_URL_CLIENT = '/skyfynd-logo.png';
+const CARLOS_SIG_CLIENT = '/signatures/carlos-carrero.png';
+const JUAN_SIG_CLIENT = '/signatures/juan-carrero.png';
 
-interface SignedPDFData {
+// Server-side: logo from B2, signatures from deployed site
+const LOGO_URL_SERVER = 'https://f005.backblazeb2.com/file/SKYFYND-assets/Skyfynd+logo.png';
+
+export interface SignedPDFData {
   portal: {
     qr_number: string;
     client_name: string;
@@ -17,6 +20,18 @@ interface SignedPDFData {
   payment?: { amount: number; paid_at: string; confirmation_id: string } | null;
 }
 
+function getImageUrls() {
+  if (typeof window === 'undefined') {
+    const base = process.env.NEXT_PUBLIC_BASE_URL || 'https://plans.skyfynd.io';
+    return {
+      logo: LOGO_URL_SERVER,
+      carlos: `${base}/signatures/carlos-carrero.png`,
+      juan: `${base}/signatures/juan-carrero.png`,
+    };
+  }
+  return { logo: LOGO_URL_CLIENT, carlos: CARLOS_SIG_CLIENT, juan: JUAN_SIG_CLIENT };
+}
+
 function fmt(n: number): string {
   return Number(n).toLocaleString('en-US');
 }
@@ -24,6 +39,22 @@ function fmt(n: number): string {
 async function fetchImageBase64(url: string): Promise<string | null> {
   try {
     const res = await fetch(url);
+    if (!res.ok) return null;
+
+    // Server-side: manual base64 conversion (no FileReader)
+    if (typeof window === 'undefined') {
+      const arrayBuffer = await res.arrayBuffer();
+      const bytes = new Uint8Array(arrayBuffer);
+      let binary = '';
+      for (let i = 0; i < bytes.length; i++) {
+        binary += String.fromCharCode(bytes[i]);
+      }
+      const base64 = btoa(binary);
+      const contentType = res.headers.get('content-type') || 'image/png';
+      return `data:${contentType};base64,${base64}`;
+    }
+
+    // Client-side: use FileReader
     const blob = await res.blob();
     return new Promise((resolve) => {
       const reader = new FileReader();
@@ -308,12 +339,13 @@ const ARTICLES: { title: string; paragraphs: string[] }[] = [
   },
 ];
 
-export async function generateSignedAgreementPDF(data: SignedPDFData): Promise<void> {
+async function buildPDF(data: SignedPDFData): Promise<jsPDF> {
+  const urls = getImageUrls();
   const [{ jsPDF }, logoBase64, carlosSigBase64, juanSigBase64] = await Promise.all([
     import('jspdf'),
-    fetchImageBase64(LOGO_URL),
-    fetchImageBase64(CARLOS_SIG_URL),
-    fetchImageBase64(JUAN_SIG_URL),
+    fetchImageBase64(urls.logo),
+    fetchImageBase64(urls.carlos),
+    fetchImageBase64(urls.juan),
   ]);
 
   const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
@@ -785,5 +817,18 @@ export async function generateSignedAgreementPDF(data: SignedPDFData): Promise<v
     drawPageFooter(doc, pageWidth, margin, i, totalPages);
   }
 
+  return doc;
+}
+
+/** Client-side: triggers browser download */
+export async function generateSignedAgreementPDF(data: SignedPDFData): Promise<void> {
+  const doc = await buildPDF(data);
   doc.save(`${data.portal.qr_number}_Signed_Agreement.pdf`);
+}
+
+/** Server-side: returns PDF as bytes for email attachment */
+export async function generateSignedAgreementPDFBuffer(data: SignedPDFData): Promise<Uint8Array> {
+  const doc = await buildPDF(data);
+  const arrayBuffer = doc.output('arraybuffer');
+  return new Uint8Array(arrayBuffer);
 }

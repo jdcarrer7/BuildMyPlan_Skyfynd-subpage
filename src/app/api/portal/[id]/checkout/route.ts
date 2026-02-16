@@ -58,7 +58,7 @@ export async function POST(
           price_data: {
             currency: 'usd',
             product_data: {
-              name: `SkyFynd Project Deposit — ${portal.qr_number}`,
+              name: `Skyfynd Project Deposit — ${portal.qr_number}`,
               description: `50% deposit for ${portal.quote_data?.services?.length || 0} service(s)`,
             },
             unit_amount: depositAmount,
