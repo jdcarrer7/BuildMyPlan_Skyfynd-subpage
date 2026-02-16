@@ -13,7 +13,7 @@ function getResend(): Resend {
   return resendClient;
 }
 
-const FROM_ADDRESS = 'SkyFynd <contact@skyfynd.io>';
+const FROM_ADDRESS = 'Skyfynd <contact@skyfynd.io>';
 
 interface SendEmailOptions {
   to: string | string[];
