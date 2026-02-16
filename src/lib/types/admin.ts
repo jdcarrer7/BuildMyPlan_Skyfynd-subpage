@@ -89,6 +89,8 @@ export interface MasterLeadRow {
   isCustomer: boolean;
   serviceStarted: string;
   serviceEnded: string;
+  isTrashed: boolean;
+  notes: string;
 }
 
 // ── Customer Sheet row ──

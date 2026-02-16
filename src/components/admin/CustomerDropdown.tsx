@@ -77,7 +77,7 @@ const CATEGORY_CONFIG: Record<PipelineCategory, { label: string; icon: typeof Fi
 };
 
 export default function CustomerDropdown() {
-  const { quotes, quotesLoading, quotesError, selectedQR, selectQuote, portals, trashedQRs, trashQuote } = useAdminStore();
+  const { quotes, quotesLoading, quotesError, selectedQR, selectQuote, portals, trashQuote } = useAdminStore();
   const [expandedCustomers, setExpandedCustomers] = useState<Set<string>>(new Set());
   const [expandedCategories, setExpandedCategories] = useState<Set<PipelineCategory>>(new Set(['quotes', 'inProgress']));
   const [search, setSearch] = useState('');
@@ -105,7 +105,7 @@ export default function CustomerDropdown() {
 
   // Build quote items and categorize
   const { quoteItems, inProgressItems, completedItems } = useMemo(() => {
-    const activeQuotes = quotes.filter(q => !trashedQRs.has(q.qrNumber));
+    const activeQuotes = quotes.filter(q => !q.isTrashed);
     const quoteArr: QuoteItem[] = [];
     const inProgressArr: QuoteItem[] = [];
     const completedArr: QuoteItem[] = [];
@@ -132,7 +132,7 @@ export default function CustomerDropdown() {
     }
 
     return { quoteItems: quoteArr, inProgressItems: inProgressArr, completedItems: completedArr };
-  }, [quotes, trashedQRs, getPortalForQuote]);
+  }, [quotes, getPortalForQuote]);
 
   // Apply search filter
   const filterItems = (items: QuoteItem[]): CustomerGroup[] => {

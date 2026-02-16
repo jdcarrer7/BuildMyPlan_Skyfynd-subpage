@@ -3,7 +3,7 @@ import { getIronSession } from 'iron-session';
 import { cookies } from 'next/headers';
 import { sessionOptions } from '@/lib/auth/session';
 import type { SessionData } from '@/lib/types/admin';
-try { require('dns').setDefaultResultOrder('ipv4first'); } catch {}
+import { updateQuoteDiscount } from '@/lib/supabase/quotes';
 
 export async function POST(request: Request) {
   try {
@@ -17,36 +17,13 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'QR number is required' }, { status: 400 });
     }
 
-    const scriptUrl = process.env.GOOGLE_APPS_SCRIPT_URL;
-    if (!scriptUrl) {
-      return NextResponse.json({ error: 'Script URL not configured' }, { status: 500 });
-    }
+    const updatedQuote = await updateQuoteDiscount(
+      body.qrNumber,
+      body.serviceDiscounts || [],
+      body.quoteDiscount || null
+    );
 
-    const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 30000);
-
-    try {
-      const response = await fetch(scriptUrl, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ action: 'save_discount', ...body }),
-        redirect: 'follow',
-        signal: controller.signal,
-      });
-      clearTimeout(timeout);
-
-      const text = await response.text();
-      let result;
-      try {
-        result = JSON.parse(text);
-      } catch {
-        return NextResponse.json({ error: 'Unexpected response' }, { status: 500 });
-      }
-
-      return NextResponse.json(result);
-    } finally {
-      clearTimeout(timeout);
-    }
+    return NextResponse.json({ status: 'success', quote: updatedQuote });
   } catch (error) {
     console.error('Save discount error:', error);
     return NextResponse.json({ error: 'Failed to save discount' }, { status: 500 });

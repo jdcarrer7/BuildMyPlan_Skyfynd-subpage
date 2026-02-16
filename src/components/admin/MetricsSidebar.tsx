@@ -5,12 +5,12 @@ import { FileText, Rocket, CheckCircle2, TrendingUp, LinkIcon, ChevronLeft, Chev
 import { useAdminStore } from '@/hooks/useAdminStore';
 
 export default function MetricsSidebar() {
-  const { quotes, portals, trashedQRs } = useAdminStore();
+  const { quotes, portals } = useAdminStore();
   const [isCollapsed, setIsCollapsed] = useState(false);
 
   const filteredQuotes = useMemo(
-    () => quotes.filter(q => !trashedQRs.has(q.qrNumber)),
-    [quotes, trashedQRs]
+    () => quotes.filter(q => !q.isTrashed),
+    [quotes]
   );
 
   const metrics = useMemo(() => {

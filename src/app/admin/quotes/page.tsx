@@ -28,7 +28,6 @@ function AdminQuotesContent() {
     selectQuote,
     sendQuote,
     sendPortal,
-    trashedQRs,
     completePortal,
     sendFinalPayment,
   } = useAdminStore();

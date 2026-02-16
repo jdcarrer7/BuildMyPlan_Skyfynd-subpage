@@ -3,8 +3,7 @@ import { getIronSession } from 'iron-session';
 import { cookies } from 'next/headers';
 import { sessionOptions } from '@/lib/auth/session';
 import type { SessionData } from '@/lib/types/admin';
-import { getSupabaseAdmin } from '@/lib/supabase/client';
-try { require('dns').setDefaultResultOrder('ipv4first'); } catch {}
+import { getQuote, deleteQuote } from '@/lib/supabase/quotes';
 
 export async function GET(
   _request: Request,
@@ -21,59 +20,38 @@ export async function GET(
       return NextResponse.json({ error: 'QR number is required' }, { status: 400 });
     }
 
-    // Check Supabase for overrides first
-    try {
-      const supabase = getSupabaseAdmin();
-      const { data: override } = await supabase
-        .from('quote_overrides')
-        .select('quote_data, admin_notes')
-        .eq('qr_number', qr)
-        .single();
-
-      if (override?.quote_data) {
-        return NextResponse.json({
-          status: 'success',
-          quote: override.quote_data,
-          adminNotes: override.admin_notes || '',
-          isEdited: true,
-        });
-      }
-    } catch {
-      // No override found or Supabase error — fall through to GAS
+    const result = await getQuote(qr);
+    if (!result) {
+      return NextResponse.json({ error: 'Quote not found' }, { status: 404 });
     }
 
-    // Fall back to GAS
-    const scriptUrl = process.env.GOOGLE_APPS_SCRIPT_URL;
-    if (!scriptUrl) {
-      return NextResponse.json({ error: 'Script URL not configured' }, { status: 500 });
-    }
-
-    const url = `${scriptUrl}?action=get_quote&qr=${encodeURIComponent(qr)}`;
-    const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 30000);
-
-    try {
-      const response = await fetch(url, {
-        method: 'GET',
-        redirect: 'follow',
-        signal: controller.signal,
-      });
-      clearTimeout(timeout);
-
-      const text = await response.text();
-      let result;
-      try {
-        result = JSON.parse(text);
-      } catch {
-        return NextResponse.json({ error: 'Unexpected response' }, { status: 500 });
-      }
-
-      return NextResponse.json(result);
-    } finally {
-      clearTimeout(timeout);
-    }
+    return NextResponse.json({
+      status: 'success',
+      quote: result.quote,
+      adminNotes: result.adminNotes,
+      isEdited: result.isEdited,
+    });
   } catch (error) {
     console.error('Get quote error:', error);
     return NextResponse.json({ error: 'Failed to get quote' }, { status: 500 });
+  }
+}
+
+export async function DELETE(
+  _request: Request,
+  { params }: { params: Promise<{ qr: string }> }
+) {
+  try {
+    const session = await getIronSession<SessionData>(await cookies(), sessionOptions);
+    if (!session.isLoggedIn) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
+    const { qr } = await params;
+    await deleteQuote(qr);
+    return NextResponse.json({ status: 'success' });
+  } catch (error) {
+    console.error('Delete quote error:', error);
+    return NextResponse.json({ error: 'Failed to delete quote' }, { status: 500 });
   }
 }

@@ -5,7 +5,7 @@ import { useAdminStore } from '@/hooks/useAdminStore';
 import { RotateCcw, X, Trash2, CheckSquare, Square } from 'lucide-react';
 
 export default function TrashBin({ onOpenChange, onPanelHeightChange }: { onOpenChange?: (open: boolean) => void; onPanelHeightChange?: (height: number) => void }) {
-  const { quotes, trashedQRs, restoreQuote, permanentlyDeleteQuote } = useAdminStore();
+  const { quotes, restoreQuote, permanentlyDeleteQuote } = useAdminStore();
   const [isOpen, setIsOpen] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState<string | null>(null);
   const [confirmDeleteAll, setConfirmDeleteAll] = useState(false);
@@ -13,7 +13,7 @@ export default function TrashBin({ onOpenChange, onPanelHeightChange }: { onOpen
   const [confirmDeleteSelected, setConfirmDeleteSelected] = useState(false);
   const panelRef = useRef<HTMLDivElement>(null);
 
-  const trashedQuotes = quotes.filter(q => trashedQRs.has(q.qrNumber));
+  const trashedQuotes = quotes.filter(q => q.isTrashed);
 
   // Notify parent of open state changes
   useEffect(() => {
@@ -69,17 +69,17 @@ export default function TrashBin({ onOpenChange, onPanelHeightChange }: { onOpen
     setConfirmDeleteSelected(false);
   }
 
-  function handleDeleteAll(e: React.MouseEvent) {
+  async function handleDeleteAll(e: React.MouseEvent) {
     e.stopPropagation();
     const qrs = trashedQuotes.map(q => q.qrNumber);
-    for (const qr of qrs) permanentlyDeleteQuote(qr);
+    await Promise.all(qrs.map(qr => permanentlyDeleteQuote(qr)));
     setConfirmDeleteAll(false);
     setSelected(new Set());
   }
 
-  function handleDeleteSelected(e: React.MouseEvent) {
+  async function handleDeleteSelected(e: React.MouseEvent) {
     e.stopPropagation();
-    for (const qr of selected) permanentlyDeleteQuote(qr);
+    await Promise.all([...selected].map(qr => permanentlyDeleteQuote(qr)));
     setSelected(new Set());
     setConfirmDeleteSelected(false);
   }
@@ -100,9 +100,9 @@ export default function TrashBin({ onOpenChange, onPanelHeightChange }: { onOpen
         }
       >
         <span className="text-2xl">🗑️</span>
-        {trashedQRs.size > 0 && (
+        {trashedQuotes.length > 0 && (
           <span className="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-red-500 text-white text-[10px] font-bold flex items-center justify-center">
-            {trashedQRs.size}
+            {trashedQuotes.length}
           </span>
         )}
         {/* Tooltip — only show when panel is closed */}
@@ -125,7 +125,7 @@ export default function TrashBin({ onOpenChange, onPanelHeightChange }: { onOpen
               <span className="text-lg">🗑️</span>
               <span className="text-sm font-semibold text-[#FAFAFA]">Trash</span>
               <span className="text-[10px] font-medium px-1.5 py-0.5 rounded-full bg-white/[0.06] text-[#A1A1AA]">
-                {trashedQRs.size}
+                {trashedQuotes.length}
               </span>
             </div>
             <button

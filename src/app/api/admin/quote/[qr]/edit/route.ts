@@ -3,7 +3,7 @@ import { getIronSession } from 'iron-session';
 import { cookies } from 'next/headers';
 import { sessionOptions } from '@/lib/auth/session';
 import type { SessionData, QuoteJSON } from '@/lib/types/admin';
-import { getSupabaseAdmin } from '@/lib/supabase/client';
+import { updateQuoteData } from '@/lib/supabase/quotes';
 
 export async function PUT(
   request: Request,
@@ -28,24 +28,7 @@ export async function PUT(
       return NextResponse.json({ error: 'quoteData is required' }, { status: 400 });
     }
 
-    const supabase = getSupabaseAdmin();
-
-    const { error } = await supabase
-      .from('quote_overrides')
-      .upsert(
-        {
-          qr_number: qr,
-          quote_data: quoteData,
-          admin_notes: adminNotes,
-          updated_at: new Date().toISOString(),
-        },
-        { onConflict: 'qr_number' }
-      );
-
-    if (error) {
-      console.error('Supabase upsert error:', error);
-      return NextResponse.json({ error: 'Failed to save quote edits' }, { status: 500 });
-    }
+    await updateQuoteData(qr, quoteData, adminNotes);
 
     return NextResponse.json({ status: 'success', quote: quoteData, adminNotes });
   } catch (error) {

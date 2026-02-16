@@ -37,10 +37,6 @@ interface AdminState {
   portals: PortalSummaryWithDetails[];
   portalsLoading: boolean;
 
-  // Trash
-  trashedQRs: Set<string>;
-  deletedQRs: Set<string>;
-
   // Actions
   checkSession: () => Promise<void>;
   login: (email: string, password: string) => Promise<{ success: boolean; error?: string }>;
@@ -65,43 +61,9 @@ interface AdminState {
   saveQuoteEdit: (quoteData: QuoteJSON, adminNotes: string) => Promise<{ success: boolean; error?: string }>;
   completePortal: (portalId: string) => Promise<{ success: boolean; error?: string }>;
   sendFinalPayment: (qrNumber: string) => Promise<{ success: boolean; message?: string; error?: string }>;
-  trashQuote: (qrNumber: string) => void;
-  restoreQuote: (qrNumber: string) => void;
-  permanentlyDeleteQuote: (qrNumber: string) => void;
-}
-
-function loadTrashedQRs(): Set<string> {
-  try {
-    const stored = typeof window !== 'undefined' ? localStorage.getItem('skyfynd_trashed_qrs') : null;
-    return stored ? new Set(JSON.parse(stored)) : new Set();
-  } catch {
-    return new Set();
-  }
-}
-
-function saveTrashedQRs(qrs: Set<string>) {
-  try {
-    localStorage.setItem('skyfynd_trashed_qrs', JSON.stringify([...qrs]));
-  } catch {
-    // ignore
-  }
-}
-
-function loadDeletedQRs(): Set<string> {
-  try {
-    const stored = typeof window !== 'undefined' ? localStorage.getItem('skyfynd_deleted_qrs') : null;
-    return stored ? new Set(JSON.parse(stored)) : new Set();
-  } catch {
-    return new Set();
-  }
-}
-
-function saveDeletedQRs(qrs: Set<string>) {
-  try {
-    localStorage.setItem('skyfynd_deleted_qrs', JSON.stringify([...qrs]));
-  } catch {
-    // ignore
-  }
+  trashQuote: (qrNumber: string) => Promise<{ success: boolean; error?: string }>;
+  restoreQuote: (qrNumber: string) => Promise<{ success: boolean; error?: string }>;
+  permanentlyDeleteQuote: (qrNumber: string) => Promise<{ success: boolean; error?: string }>;
 }
 
 export const useAdminStore = create<AdminState>((set, get) => ({
@@ -118,8 +80,6 @@ export const useAdminStore = create<AdminState>((set, get) => ({
   quoteEdited: false,
   portals: [],
   portalsLoading: false,
-  trashedQRs: loadTrashedQRs(),
-  deletedQRs: loadDeletedQRs(),
 
   checkSession: async () => {
     set({ sessionLoading: true });
@@ -165,9 +125,7 @@ export const useAdminStore = create<AdminState>((set, get) => ({
       const res = await fetch('/api/admin/quotes');
       const data = await res.json();
       if (data.status === 'success') {
-        const deleted = get().deletedQRs;
-        const filtered = (data.quotes || []).filter((q: MasterLeadRow) => !deleted.has(q.qrNumber));
-        set({ quotes: filtered, quotesLoading: false });
+        set({ quotes: data.quotes || [], quotesLoading: false });
       } else {
         set({ quotesError: data.message || 'Failed to load quotes', quotesLoading: false });
       }
@@ -350,37 +308,66 @@ export const useAdminStore = create<AdminState>((set, get) => ({
     }
   },
 
-  trashQuote: (qrNumber: string) => {
-    const next = new Set(get().trashedQRs);
-    next.add(qrNumber);
-    saveTrashedQRs(next);
-    // Clear selection if the trashed quote is currently selected
-    const updates: Partial<AdminState> = { trashedQRs: next };
-    if (get().selectedQR === qrNumber) {
-      updates.selectedQR = null;
-      updates.selectedQuote = null;
+  trashQuote: async (qrNumber: string) => {
+    try {
+      const res = await fetch(`/api/admin/quote/${encodeURIComponent(qrNumber)}/trash`, {
+        method: 'POST',
+      });
+      const data = await res.json();
+      if (data.status === 'success') {
+        // Update local state: mark as trashed
+        const updatedQuotes = get().quotes.map(q =>
+          q.qrNumber === qrNumber ? { ...q, isTrashed: true } : q
+        );
+        const updates: Partial<AdminState> = { quotes: updatedQuotes };
+        if (get().selectedQR === qrNumber) {
+          updates.selectedQR = null;
+          updates.selectedQuote = null;
+        }
+        set(updates);
+        return { success: true };
+      }
+      return { success: false, error: data.error || 'Failed to trash quote' };
+    } catch {
+      return { success: false, error: 'Network error' };
     }
-    set(updates);
   },
 
-  restoreQuote: (qrNumber: string) => {
-    const next = new Set(get().trashedQRs);
-    next.delete(qrNumber);
-    saveTrashedQRs(next);
-    set({ trashedQRs: next });
+  restoreQuote: async (qrNumber: string) => {
+    try {
+      const res = await fetch(`/api/admin/quote/${encodeURIComponent(qrNumber)}/restore`, {
+        method: 'POST',
+      });
+      const data = await res.json();
+      if (data.status === 'success') {
+        // Update local state: mark as not trashed
+        const updatedQuotes = get().quotes.map(q =>
+          q.qrNumber === qrNumber ? { ...q, isTrashed: false } : q
+        );
+        set({ quotes: updatedQuotes });
+        return { success: true };
+      }
+      return { success: false, error: data.error || 'Failed to restore quote' };
+    } catch {
+      return { success: false, error: 'Network error' };
+    }
   },
 
-  permanentlyDeleteQuote: (qrNumber: string) => {
-    // Remove from trash
-    const nextTrashed = new Set(get().trashedQRs);
-    nextTrashed.delete(qrNumber);
-    saveTrashedQRs(nextTrashed);
-    // Add to permanently deleted (persists across refreshes)
-    const nextDeleted = new Set(get().deletedQRs);
-    nextDeleted.add(qrNumber);
-    saveDeletedQRs(nextDeleted);
-    // Remove from quotes list in memory
-    const updatedQuotes = get().quotes.filter(q => q.qrNumber !== qrNumber);
-    set({ trashedQRs: nextTrashed, deletedQRs: nextDeleted, quotes: updatedQuotes });
+  permanentlyDeleteQuote: async (qrNumber: string) => {
+    try {
+      const res = await fetch(`/api/admin/quote/${encodeURIComponent(qrNumber)}`, {
+        method: 'DELETE',
+      });
+      const data = await res.json();
+      if (data.status === 'success') {
+        // Remove from quotes list in memory
+        const updatedQuotes = get().quotes.filter(q => q.qrNumber !== qrNumber);
+        set({ quotes: updatedQuotes });
+        return { success: true };
+      }
+      return { success: false, error: data.error || 'Failed to delete quote' };
+    } catch {
+      return { success: false, error: 'Network error' };
+    }
   },
 }));

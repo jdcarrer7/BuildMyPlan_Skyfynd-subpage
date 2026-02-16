@@ -20,7 +20,6 @@
   }
   // All secrets must be set via: npx wrangler secret put <KEY_NAME>
   // Required secrets:
-  //   GOOGLE_APPS_SCRIPT_URL
   //   SESSION_SECRET
   //   RESEND_API_KEY
   //   SUPABASE_SERVICE_ROLE_KEY
