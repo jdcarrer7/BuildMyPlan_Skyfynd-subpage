@@ -22,7 +22,7 @@ export const STATUS_LABELS: Record<PortalStatus, string> = {
   change_requested: 'Changes Requested',
   quote_accepted: 'Accepted',
   contract_signed: 'Signed',
-  payment_completed: 'Paid',
+  payment_completed: 'Deposit Paid',
   project_completed: 'Completed',
 };
 

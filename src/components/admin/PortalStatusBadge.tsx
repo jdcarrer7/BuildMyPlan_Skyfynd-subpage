@@ -6,11 +6,13 @@ import { STATUS_LABELS, STATUS_COLORS } from '@/lib/portal/status';
 interface Props {
   status: PortalStatus;
   size?: 'sm' | 'md';
+  hasFinalPayment?: boolean;
 }
 
-export default function PortalStatusBadge({ status, size = 'sm' }: Props) {
-  const label = STATUS_LABELS[status] || status;
-  const color = STATUS_COLORS[status] || '#71717A';
+export default function PortalStatusBadge({ status, size = 'sm', hasFinalPayment }: Props) {
+  const isFullyPaid = status === 'payment_completed' && hasFinalPayment;
+  const label = isFullyPaid ? 'Fully Paid' : STATUS_LABELS[status] || status;
+  const color = isFullyPaid ? '#10B981' : STATUS_COLORS[status] || '#71717A';
 
   return (
     <span

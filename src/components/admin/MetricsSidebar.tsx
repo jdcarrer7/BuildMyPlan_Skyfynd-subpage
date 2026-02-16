@@ -20,11 +20,12 @@ export default function MetricsSidebar() {
     const totalRevenue = filteredQuotes.reduce((sum, q) => sum + q.grandTotal, 0);
 
     const portalsSent = portals.length;
-    const portalsSigned = portals.filter(p => p.status === 'contract_signed' || p.status === 'payment_completed').length;
-    const portalsPaid = portals.filter(p => p.status === 'payment_completed').length;
+    const portalsSigned = portals.filter(p => p.status === 'contract_signed' || p.status === 'payment_completed' || p.status === 'project_completed').length;
+    const portalsDepositPaid = portals.filter(p => (p.status === 'payment_completed' || p.status === 'project_completed') && !p.finalPayment).length;
+    const portalsFullyPaid = portals.filter(p => p.finalPayment !== null).length;
     const pendingChanges = portals.filter(p => p.pending_changes.length > 0).length;
 
-    return { quotesReceived, inProgress, completed, totalRevenue, portalsSent, portalsSigned, portalsPaid, pendingChanges };
+    return { quotesReceived, inProgress, completed, totalRevenue, portalsSent, portalsSigned, portalsDepositPaid, portalsFullyPaid, pendingChanges };
   }, [filteredQuotes, portals]);
 
   if (quotes.length === 0) return null;
@@ -67,7 +68,8 @@ export default function MetricsSidebar() {
   const portalStages = [
     { label: 'Sent', value: metrics.portalsSent, dotColor: '#8B5CF6' },
     { label: 'Signed', value: metrics.portalsSigned, dotColor: '#22C55E' },
-    { label: 'Paid', value: metrics.portalsPaid, dotColor: '#F59E0B' },
+    { label: 'Deposit', value: metrics.portalsDepositPaid, dotColor: '#F59E0B' },
+    { label: 'Fully Paid', value: metrics.portalsFullyPaid, dotColor: '#10B981' },
   ];
 
   return (

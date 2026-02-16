@@ -216,7 +216,7 @@ export default function CustomerDropdown() {
         <div className="flex items-center justify-between gap-2 ml-5.5">
           <span className="text-[11px] text-[#52525B]">{formatShortDate(q.date)}</span>
           <div className="flex items-center gap-1.5">
-            {portal && <PortalStatusBadge status={portal.status} />}
+            {portal && <PortalStatusBadge status={portal.status} hasFinalPayment={!!portal.finalPayment} />}
             <span className={`text-[10px] font-medium px-1.5 py-0.5 rounded-full ${srcStyle.bg} ${srcStyle.text}`}>
               {q.source}
             </span>

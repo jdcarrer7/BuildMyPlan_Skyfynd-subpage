@@ -47,11 +47,14 @@ export async function GET() {
       changeRequestsByPortal[cr.portal_id].push({ message: cr.message, created_at: cr.created_at });
     }
 
-    // Use first (deposit) payment for backward-compatible `payment` field
-    const paymentsByPortal: Record<string, { amount: number; paid_at: string | null }> = {};
+    // Build deposit and final payment lookup maps
+    const depositByPortal: Record<string, { amount: number; paid_at: string | null }> = {};
+    const finalByPortal: Record<string, { amount: number; paid_at: string | null }> = {};
     for (const p of payments || []) {
-      if (!paymentsByPortal[p.portal_id]) {
-        paymentsByPortal[p.portal_id] = { amount: p.amount, paid_at: p.paid_at };
+      if (p.payment_type === 'final') {
+        finalByPortal[p.portal_id] = { amount: p.amount, paid_at: p.paid_at };
+      } else if (!depositByPortal[p.portal_id]) {
+        depositByPortal[p.portal_id] = { amount: p.amount, paid_at: p.paid_at };
       }
     }
 
@@ -59,7 +62,8 @@ export async function GET() {
     const enrichedPortals = (portals || []).map(p => ({
       ...p,
       pending_changes: changeRequestsByPortal[p.id] || [],
-      payment: paymentsByPortal[p.id] || null,
+      payment: depositByPortal[p.id] || null,
+      finalPayment: finalByPortal[p.id] || null,
     }));
 
     return NextResponse.json({ status: 'success', portals: enrichedPortals });

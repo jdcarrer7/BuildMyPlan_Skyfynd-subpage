@@ -254,7 +254,7 @@ function AdminQuotesContent() {
               {quotePortals.map(p => (
                 <div key={p.id} className="flex items-center justify-between gap-3 text-sm">
                   <div className="flex items-center gap-3 min-w-0">
-                    <PortalStatusBadge status={p.status} size="md" />
+                    <PortalStatusBadge status={p.status} size="md" hasFinalPayment={!!p.finalPayment} />
                     <span className="text-[#A1A1AA] text-xs truncate">
                       Sent {new Date(p.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
                     </span>
@@ -287,27 +287,22 @@ function AdminQuotesContent() {
             </div>
           )}
 
-          {/* Actions: Send Quote + Send Portal + PDF Export */}
-          <div className="flex items-center justify-end gap-3 flex-wrap">
-            {sendQuoteResult && (
-              <span className={`text-sm ${sendQuoteResult.success ? 'text-[#10B981]' : 'text-red-400'}`}>
-                {sendQuoteResult.message}
-              </span>
-            )}
-            {sendPortalResult && (
-              <span className={`text-sm ${sendPortalResult.success ? 'text-[#10B981]' : 'text-red-400'}`}>
-                {sendPortalResult.message}
-              </span>
-            )}
-            {sendFinalPaymentResult && (
-              <span className={`text-sm ${sendFinalPaymentResult.success ? 'text-[#10B981]' : 'text-red-400'}`}>
-                {sendFinalPaymentResult.message}
-              </span>
+          {/* Actions: Send Quote + Send Portal + Final Payment + PDF Export */}
+          <div className="relative flex items-center justify-end gap-3">
+            {/* Toast overlay for result messages — doesn't disrupt button layout */}
+            {(sendQuoteResult || sendPortalResult || sendFinalPaymentResult) && (
+              <div className="absolute -top-8 right-0 pointer-events-none">
+                <span className={`text-sm ${
+                  (sendQuoteResult || sendPortalResult || sendFinalPaymentResult)?.success ? 'text-[#10B981]' : 'text-red-400'
+                }`}>
+                  {(sendQuoteResult || sendPortalResult || sendFinalPaymentResult)?.message}
+                </span>
+              </div>
             )}
             <button
               onClick={handleSendQuote}
               disabled={sendingQuote}
-              className="flex items-center gap-2 px-5 py-3 rounded-lg font-semibold text-white transition-all disabled:opacity-50 border border-[#A78BFA]/30 hover:shadow-[0_8px_32px_rgba(167,139,250,0.3)] hover:-translate-y-0.5"
+              className="flex items-center gap-2 px-5 py-3 rounded-lg font-semibold text-white text-sm transition-all disabled:opacity-50 border border-[#A78BFA]/30 hover:shadow-[0_8px_32px_rgba(167,139,250,0.3)] hover:-translate-y-0.5"
               style={{ background: 'linear-gradient(to right, rgba(167,139,250,0.75) 0%, rgba(96,175,250,0.85) 40%, rgba(52,211,153,0.8) 100%)' }}
             >
               <Send className="w-4 h-4" />
@@ -316,7 +311,7 @@ function AdminQuotesContent() {
             <button
               onClick={handleSendPortal}
               disabled={sendingPortal}
-              className="flex items-center gap-2 px-5 py-3 rounded-lg font-semibold text-white transition-all disabled:opacity-50 border border-[#A78BFA]/30 hover:shadow-[0_8px_32px_rgba(167,139,250,0.3)] hover:-translate-y-0.5"
+              className="flex items-center gap-2 px-5 py-3 rounded-lg font-semibold text-white text-sm transition-all disabled:opacity-50 border border-[#A78BFA]/30 hover:shadow-[0_8px_32px_rgba(167,139,250,0.3)] hover:-translate-y-0.5"
               style={{ background: 'linear-gradient(to right, rgba(167,139,250,0.75) 0%, rgba(96,175,250,0.85) 40%, rgba(52,211,153,0.8) 100%)' }}
             >
               <LinkIcon className="w-4 h-4" />
@@ -326,11 +321,11 @@ function AdminQuotesContent() {
               <button
                 onClick={handleSendFinalPayment}
                 disabled={sendingFinalPayment}
-                className="flex items-center gap-2 px-5 py-3 rounded-lg font-semibold text-white transition-all disabled:opacity-50 border border-[#A78BFA]/30 hover:shadow-[0_8px_32px_rgba(167,139,250,0.3)] hover:-translate-y-0.5"
+                className="flex items-center gap-2 px-5 py-3 rounded-lg font-semibold text-white text-sm transition-all disabled:opacity-50 border border-[#A78BFA]/30 hover:shadow-[0_8px_32px_rgba(167,139,250,0.3)] hover:-translate-y-0.5"
                 style={{ background: 'linear-gradient(to right, rgba(167,139,250,0.75) 0%, rgba(96,175,250,0.85) 40%, rgba(52,211,153,0.8) 100%)' }}
               >
                 <CreditCard className="w-4 h-4" />
-                {sendingFinalPayment ? 'Sending...' : 'Send Final Payment'}
+                {sendingFinalPayment ? 'Sending...' : 'Final Payment'}
               </button>
             )}
             <QuotePDFExport quote={selectedQuote} />

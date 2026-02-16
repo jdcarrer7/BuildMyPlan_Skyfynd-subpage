@@ -12,6 +12,7 @@ export interface PortalSummaryWithDetails {
   expires_at: string;
   pending_changes: { message: string; created_at: string }[];
   payment: { amount: number; paid_at: string | null } | null;
+  finalPayment: { amount: number; paid_at: string | null } | null;
 }
 
 interface AdminState {
