@@ -78,7 +78,7 @@ export default function ChangeRequestForm({ portalId, onSubmitted, onCancel }: C
         placeholder="Describe the changes you'd like..."
         maxLength={2000}
         rows={5}
-        className="w-full bg-white/[0.04] border border-white/[0.1] rounded-lg px-4 py-3 text-[#FAFAFA] text-sm placeholder:text-[#52525B] focus:border-[#A78BFA] focus:ring-1 focus:ring-[#A78BFA] outline-none resize-none transition-all"
+        className="w-full bg-white/[0.04] border border-white/[0.1] rounded-lg px-4 py-3 text-[#FAFAFA] text-sm placeholder:text-[#52525B] focus:border-[#60AFFA] focus:ring-1 focus:ring-[#60AFFA] outline-none resize-none transition-all"
       />
 
       <div className="flex items-center justify-between mt-3">

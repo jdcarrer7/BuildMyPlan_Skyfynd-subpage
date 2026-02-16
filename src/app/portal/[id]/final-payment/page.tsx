@@ -68,7 +68,7 @@ export default function FinalPaymentPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
-        <Loader2 className="w-8 h-8 animate-spin text-[#A78BFA]" />
+        <Loader2 className="w-8 h-8 animate-spin text-[#60AFFA]" />
       </div>
     );
   }
@@ -121,8 +121,11 @@ export default function FinalPaymentPage() {
       <div className="w-full max-w-lg space-y-8">
         {/* Header */}
         <div className="text-center">
-          <div className="w-16 h-16 rounded-2xl bg-[#A78BFA]/10 flex items-center justify-center mx-auto mb-4">
-            <CreditCard className="w-8 h-8 text-[#A78BFA]" />
+          <div
+            className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4"
+            style={{ background: 'linear-gradient(to right, rgba(167,139,250,0.75) 0%, rgba(96,175,250,0.85) 40%, rgba(52,211,153,0.8) 100%)' }}
+          >
+            <CreditCard className="w-8 h-8 text-white" />
           </div>
           <h1
             className="text-3xl font-semibold text-[#FAFAFA] mb-2"
@@ -136,20 +139,20 @@ export default function FinalPaymentPage() {
         </div>
 
         {/* Payment Breakdown Card */}
-        <div className="rounded-2xl bg-[#111113] border border-white/[0.06] p-6 lg:p-8">
+        <div className="rounded-2xl bg-[#111113] border border-white/[0.06] p-4 sm:p-6 lg:p-8">
           <div className="text-center mb-6">
             <p className="text-[#71717A] text-sm">{data.qrNumber}</p>
           </div>
 
           <div className="rounded-lg border border-white/[0.06] overflow-hidden">
             {/* Project Total */}
-            <div className="flex justify-between px-5 py-3.5 text-sm">
+            <div className="flex justify-between px-3 sm:px-5 py-3.5 text-sm">
               <span className="text-[#71717A]">Project Total</span>
               <span className="text-[#A1A1AA] font-medium">${fmt(data.grandTotal)}</span>
             </div>
 
             {/* Deposit Paid */}
-            <div className="flex justify-between px-5 py-3.5 text-sm border-t border-white/[0.06]">
+            <div className="flex justify-between px-3 sm:px-5 py-3.5 text-sm border-t border-white/[0.06]">
               <div>
                 <span className="text-[#71717A]">Deposit Paid</span>
                 {depositDate && (
@@ -161,7 +164,7 @@ export default function FinalPaymentPage() {
 
             {/* Remaining Balance */}
             <div
-              className="flex justify-between items-center px-5 py-4 text-sm border-t border-white/[0.06]"
+              className="flex justify-between items-center px-3 sm:px-5 py-4 text-sm border-t border-white/[0.06]"
               style={{ background: 'linear-gradient(to right, rgba(167,139,250,0.08), rgba(52,211,153,0.08))' }}
             >
               <span className="text-[#FAFAFA] font-semibold">Remaining Balance</span>
@@ -181,7 +184,7 @@ export default function FinalPaymentPage() {
             <button
               onClick={handleCheckout}
               disabled={checkoutLoading}
-              className="inline-flex items-center gap-2 px-8 py-3 rounded-lg font-semibold text-white transition-all disabled:opacity-50 hover:opacity-90 hover:-translate-y-0.5 hover:shadow-[0_8px_32px_rgba(167,139,250,0.3)] border border-[#A78BFA]/30"
+              className="inline-flex items-center gap-2 px-8 py-3 rounded-lg font-semibold text-white transition-all disabled:opacity-50 hover:opacity-90 hover:-translate-y-0.5 hover:shadow-[0_8px_32px_rgba(96,175,250,0.25)] border border-white/[0.15]"
               style={{ background: 'linear-gradient(to right, rgba(167,139,250,0.75) 0%, rgba(96,175,250,0.85) 40%, rgba(52,211,153,0.8) 100%)' }}
             >
               {checkoutLoading ? (

@@ -39,8 +39,11 @@ export default function PaymentSection({ portalId, grandTotal }: PaymentSectionP
 
   return (
     <div className="text-center space-y-6">
-      <div className="w-16 h-16 rounded-2xl bg-[#A78BFA]/10 flex items-center justify-center mx-auto">
-        <CreditCard className="w-8 h-8 text-[#A78BFA]" />
+      <div
+        className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto"
+        style={{ background: 'linear-gradient(to right, rgba(167,139,250,0.75) 0%, rgba(96,175,250,0.85) 40%, rgba(52,211,153,0.8) 100%)' }}
+      >
+        <CreditCard className="w-8 h-8 text-white" />
       </div>
 
       <div>

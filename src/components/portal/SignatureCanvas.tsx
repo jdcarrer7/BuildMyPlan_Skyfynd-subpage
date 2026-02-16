@@ -277,7 +277,7 @@ export default function SignatureCanvas({ clientName, portalId, onSigned }: Sign
               value={typedName}
               onChange={(e) => { setTypedName(e.target.value); setIsEmpty(!e.target.value.trim()); }}
               placeholder={clientName}
-              className="w-full bg-white/[0.04] border border-white/[0.1] rounded-lg px-4 py-3 text-white text-center text-lg placeholder:text-[#52525B] focus:outline-none focus:border-[#A78BFA]/50 transition-colors"
+              className="w-full bg-white/[0.04] border border-white/[0.1] rounded-lg px-4 py-3 text-white text-center text-lg placeholder:text-[#52525B] focus:outline-none focus:border-[#60AFFA]/50 transition-colors"
             />
 
             {/* Font selector */}
@@ -288,7 +288,7 @@ export default function SignatureCanvas({ clientName, portalId, onSigned }: Sign
                   onClick={() => setSelectedFont(font.value)}
                   className={`px-3 py-1.5 rounded-md text-xs font-medium border transition-all ${
                     selectedFont === font.value
-                      ? 'border-[#A78BFA]/50 bg-[#A78BFA]/10 text-[#A78BFA]'
+                      ? 'border-[#60AFFA]/50 bg-[#60AFFA]/10 text-[#60AFFA]'
                       : 'border-white/[0.1] text-[#71717A] hover:text-[#A1A1AA] hover:bg-white/[0.04]'
                   }`}
                 >
