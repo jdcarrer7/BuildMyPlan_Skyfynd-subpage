@@ -29,19 +29,47 @@ function emailDocOpen(): string {
   ].join('');
 }
 
+/**
+ * VML gradient block for Outlook.
+ * Wraps inner content in a <v:rect> so Outlook renders a real gradient
+ * instead of falling back to bgcolor=. Modern clients ignore the VML
+ * and use the CSS linear-gradient on the <td>.
+ */
+function vmlGradientOpen(): string {
+  return [
+    '<!--[if gte mso 9]>',
+    '<v:rect xmlns:v="urn:schemas-microsoft-com:vml" fill="true" stroke="false" style="width:600px;mso-width-percent:1000;">',
+    '<v:fill type="gradient" color="#A78BFA" color2="#34D399" colors="0% #A78BFA, 40% #60AFFA, 100% #34D399" angle="90" />',
+    '<v:textbox style="mso-fit-shape-to-text:true" inset="0,0,0,0">',
+    '<![endif]-->',
+  ].join('\n');
+}
+
+function vmlGradientClose(): string {
+  return [
+    '<!--[if gte mso 9]>',
+    '</v:textbox>',
+    '</v:rect>',
+    '<![endif]-->',
+  ].join('\n');
+}
+
 function emailHeader(title: string, subtitle?: string): string {
   let h = '';
-  // bgcolor= is the Outlook fallback; CSS gradient works in modern clients
-  h += '<tr><td bgcolor="#A78BFA" style="background-color:#A78BFA;background:linear-gradient(to right,#A78BFA 0%,#60AFFA 40%,#34D399 100%);padding:20px 24px;text-align:center;">';
+  h += '<tr><td bgcolor="#A78BFA" style="background-color:#A78BFA;background:linear-gradient(to right,#A78BFA 0%,#60AFFA 40%,#34D399 100%);padding:0;text-align:center;">';
+  // VML gradient for Outlook
+  h += vmlGradientOpen();
+  h += '<div style="padding:20px 24px;text-align:center;">';
   h += '<table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin:0 auto 10px;"><tr>';
   h += `<td style="vertical-align:middle;"><img src="${LOGO_URL}" alt="Skyfynd" width="36" height="36" style="display:block;border:0;outline:none;" /></td>`;
   h += '<td style="vertical-align:middle;padding-left:10px;"><span style="color:#ffffff;font-size:22px;font-weight:600;font-family:Arial,Helvetica,sans-serif;">Skyfynd</span></td>';
   h += '</tr></table>';
   h += `<h1 style="color:#ffffff;margin:0 0 4px;font-size:20px;font-weight:700;font-family:Arial,Helvetica,sans-serif;">${title}</h1>`;
   if (subtitle) {
-    // Solid color — rgba() is not supported in Outlook
     h += `<p style="color:#D4D4D8;margin:0;font-size:13px;">${subtitle}</p>`;
   }
+  h += '</div>';
+  h += vmlGradientClose();
   h += '</td></tr>';
   return h;
 }
@@ -74,8 +102,19 @@ function ctaButton(url: string, label: string): string {
   b += '<table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%"><tr><td align="center" style="padding:0;">';
   b += '<table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin:0 auto;">';
   b += '<tr>';
-  b += `<td align="center" bgcolor="#A78BFA" style="background-color:#A78BFA;background:linear-gradient(to right,#A78BFA 0%,#60AFFA 40%,#34D399 100%);border-radius:8px;padding:14px 40px;">`;
-  b += `<a href="${url}" target="_blank" style="color:#ffffff;text-decoration:none;font-size:16px;font-weight:700;font-family:Arial,Helvetica,sans-serif;">${label}</a>`;
+  b += `<td align="center" bgcolor="#A78BFA" style="background-color:#A78BFA;background:linear-gradient(to right,#A78BFA 0%,#60AFFA 40%,#34D399 100%);border-radius:8px;padding:0;">`;
+  // VML gradient for Outlook button
+  b += '<!--[if gte mso 9]>';
+  b += `<v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="${url}" style="height:48px;v-text-anchor:middle;width:260px;" arcsize="17%" stroke="false" fillcolor="#A78BFA">`;
+  b += '<v:fill type="gradient" color="#A78BFA" color2="#34D399" colors="0% #A78BFA, 40% #60AFFA, 100% #34D399" angle="90" />';
+  b += '<w:anchorlock/>';
+  b += `<center style="color:#ffffff;font-family:Arial,Helvetica,sans-serif;font-size:16px;font-weight:bold;">${label}</center>`;
+  b += '</v:roundrect>';
+  b += '<![endif]-->';
+  // Non-Outlook link
+  b += '<!--[if !mso]><!-->';
+  b += `<a href="${url}" target="_blank" style="color:#ffffff;text-decoration:none;font-size:16px;font-weight:700;font-family:Arial,Helvetica,sans-serif;display:inline-block;padding:14px 40px;">${label}</a>`;
+  b += '<!--<![endif]-->';
   b += '</td>';
   b += '</tr></table>';
   b += '</td></tr></table>';
@@ -263,12 +302,16 @@ export function buildPaymentConfirmationEmail(
 export function buildVerificationCodeEmail(clientName: string, code: string): string {
   let html = emailDocOpen();
 
-  // Verification header — just logo, no title bar
-  html += '<tr><td bgcolor="#A78BFA" style="background-color:#A78BFA;background:linear-gradient(to right,#A78BFA 0%,#60AFFA 40%,#34D399 100%);padding:16px 24px;text-align:center;">';
+  // Verification header — just logo, no title bar (with VML gradient for Outlook)
+  html += '<tr><td bgcolor="#A78BFA" style="background-color:#A78BFA;background:linear-gradient(to right,#A78BFA 0%,#60AFFA 40%,#34D399 100%);padding:0;text-align:center;">';
+  html += vmlGradientOpen();
+  html += '<div style="padding:16px 24px;text-align:center;">';
   html += '<table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin:0 auto;"><tr>';
   html += `<td style="vertical-align:middle;"><img src="${LOGO_URL}" alt="Skyfynd" width="36" height="36" style="display:block;border:0;outline:none;" /></td>`;
   html += '<td style="vertical-align:middle;padding-left:10px;"><span style="color:#ffffff;font-size:22px;font-weight:600;font-family:Arial,Helvetica,sans-serif;">Skyfynd</span></td>';
   html += '</tr></table>';
+  html += '</div>';
+  html += vmlGradientClose();
   html += '</td></tr>';
 
   // Body

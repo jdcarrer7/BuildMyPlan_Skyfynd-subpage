@@ -284,6 +284,18 @@ export default function QuoteEditor({
     if (!draft) return;
     const next = cloneQuote(draft);
     next.services[serviceIndex][field] = value;
+
+    // Zero out all step prices when the service total is manually overridden
+    const zeroSteps = (steps: ResolvedStep[]) => {
+      for (const step of steps) {
+        if (step.priceImpact !== null) step.priceImpact = 0;
+        if (step.children) zeroSteps(step.children);
+      }
+    };
+    if (!overriddenServices.has(serviceIndex)) {
+      zeroSteps(next.services[serviceIndex].steps);
+    }
+
     // Mark this service as manually overridden so recalcTotals won't recalculate it from steps
     const nextOverrides = new Set(overriddenServices);
     nextOverrides.add(serviceIndex);
