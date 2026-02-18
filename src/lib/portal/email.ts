@@ -56,7 +56,7 @@ function vmlGradientClose(): string {
 
 function emailHeader(title: string, subtitle?: string): string {
   let h = '';
-  h += '<tr><td bgcolor="#A78BFA" style="background-color:#A78BFA;background:linear-gradient(to right,#A78BFA 0%,#60AFFA 40%,#34D399 100%);padding:0;text-align:center;">';
+  h += '<tr><td bgcolor="#A78BFA" style="background-color:#A78BFA;background-image:linear-gradient(to right,#A78BFA 0%,#60AFFA 40%,#34D399 100%);padding:0;text-align:center;">';
   // VML gradient for Outlook
   h += vmlGradientOpen();
   h += '<div style="padding:20px 24px;text-align:center;">';
@@ -102,7 +102,7 @@ function ctaButton(url: string, label: string): string {
   b += '<table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%"><tr><td align="center" style="padding:0;">';
   b += '<table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin:0 auto;">';
   b += '<tr>';
-  b += `<td align="center" bgcolor="#A78BFA" style="background-color:#A78BFA;background:linear-gradient(to right,#A78BFA 0%,#60AFFA 40%,#34D399 100%);border-radius:8px;padding:0;">`;
+  b += `<td align="center" bgcolor="#A78BFA" style="background-color:#A78BFA;background-image:linear-gradient(to right,#A78BFA 0%,#60AFFA 40%,#34D399 100%);border-radius:8px;padding:0;">`;
   // VML gradient for Outlook button
   b += '<!--[if gte mso 9]>';
   b += `<v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="${url}" style="height:48px;v-text-anchor:middle;width:260px;" arcsize="17%" stroke="false" fillcolor="#A78BFA">`;
@@ -341,7 +341,7 @@ export function buildVerificationCodeEmail(clientName: string, code: string): st
   let html = emailDocOpen();
 
   // Verification header — just logo, no title bar (with VML gradient for Outlook)
-  html += '<tr><td bgcolor="#A78BFA" style="background-color:#A78BFA;background:linear-gradient(to right,#A78BFA 0%,#60AFFA 40%,#34D399 100%);padding:0;text-align:center;">';
+  html += '<tr><td bgcolor="#A78BFA" style="background-color:#A78BFA;background-image:linear-gradient(to right,#A78BFA 0%,#60AFFA 40%,#34D399 100%);padding:0;text-align:center;">';
   html += vmlGradientOpen();
   html += '<div style="padding:16px 24px;text-align:center;">';
   html += '<table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin:0 auto;"><tr>';
