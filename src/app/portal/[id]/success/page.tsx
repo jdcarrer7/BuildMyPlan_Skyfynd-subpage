@@ -2,14 +2,14 @@
 
 import { useEffect, useState } from 'react';
 import { useParams, useSearchParams } from 'next/navigation';
-import { CheckCircle2, Loader2, Download } from 'lucide-react';
+import { CheckCircle2, Loader2, Download, ArrowRight } from 'lucide-react';
 
 export default function PaymentSuccessPage() {
   const params = useParams();
   const searchParams = useSearchParams();
   const portalId = params?.id as string;
   const sessionId = searchParams?.get('session_id');
-  const model = searchParams?.get('model'); // 'subscription' | 'mixed' | null
+  const model = searchParams?.get('model'); // 'subscription' | 'deposit' | null
   const [loading, setLoading] = useState(true);
   const [downloading, setDownloading] = useState(false);
 
@@ -64,15 +64,15 @@ export default function PaymentSuccessPage() {
           >
             {model === 'subscription'
               ? 'Subscription Active!'
-              : model === 'mixed'
-                ? 'Payment & Subscription Confirmed!'
+              : model === 'deposit'
+                ? 'Deposit Received!'
                 : 'Payment Received!'}
           </h1>
           <p className="text-[#A1A1AA]">
             {model === 'subscription'
               ? 'Your subscription is now active. You\'ll be billed monthly going forward. We\'ll be in touch shortly to kick things off.'
-              : model === 'mixed'
-                ? 'Your deposit has been received and your monthly subscription is now active. We\'ll be in touch shortly to kick things off.'
+              : model === 'deposit'
+                ? 'Thank you for your deposit. One more step \u2014 let\u2019s set up your monthly subscription.'
                 : 'Thank you for your deposit. Your project is now officially underway. We\'ll be in touch shortly to kick things off.'}
           </p>
         </div>
@@ -84,21 +84,32 @@ export default function PaymentSuccessPage() {
         )}
 
         <div className="flex flex-col items-center gap-3 pt-4">
-          <button
-            onClick={handleDownloadContract}
-            disabled={downloading}
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-lg font-semibold text-white transition-all disabled:opacity-50"
-            style={{ background: 'linear-gradient(to right, rgba(167,139,250,0.75) 0%, rgba(96,175,250,0.85) 40%, rgba(52,211,153,0.8) 100%)' }}
-          >
-            <Download className="w-4 h-4" />
-            {downloading ? 'Generating...' : 'Download Signed Agreement'}
-          </button>
+          {model === 'deposit' ? (
+            <a
+              href={`/portal/${portalId}`}
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-lg font-semibold text-white transition-all"
+              style={{ background: 'linear-gradient(to right, rgba(167,139,250,0.75) 0%, rgba(96,175,250,0.85) 40%, rgba(52,211,153,0.8) 100%)' }}
+            >
+              Continue to Subscription
+              <ArrowRight className="w-4 h-4" />
+            </a>
+          ) : (
+            <button
+              onClick={handleDownloadContract}
+              disabled={downloading}
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-lg font-semibold text-white transition-all disabled:opacity-50"
+              style={{ background: 'linear-gradient(to right, rgba(167,139,250,0.75) 0%, rgba(96,175,250,0.85) 40%, rgba(52,211,153,0.8) 100%)' }}
+            >
+              <Download className="w-4 h-4" />
+              {downloading ? 'Generating...' : 'Download Signed Agreement'}
+            </button>
+          )}
         </div>
 
         <p className="text-[#52525B] text-xs">
           A confirmation email will be sent to your inbox.
           {model === 'subscription' && ' Your subscription will renew automatically each month.'}
-          {model === 'mixed' && ' Your subscription will renew automatically each month.'} You can close this page.
+          {model === 'deposit' ? '' : ' You can close this page.'}
         </p>
       </div>
     </div>

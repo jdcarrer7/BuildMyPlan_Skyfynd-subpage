@@ -13,6 +13,7 @@ export async function POST(
 ) {
   try {
     const { id: portalId } = await params;
+    const body = await request.json().catch(() => ({}));
 
     // Verify portal session
     const session = await getIronSession<PortalSessionData>(await cookies(), portalSessionOptions);
@@ -33,7 +34,8 @@ export async function POST(
       return NextResponse.json({ error: 'Portal not found' }, { status: 404 });
     }
 
-    if (portal.status !== 'contract_signed') {
+    // Allow checkout from contract_signed OR payment_completed (for mixed: deposit done, subscription next)
+    if (portal.status !== 'contract_signed' && portal.status !== 'payment_completed') {
       return NextResponse.json({
         error: 'Contract must be signed before payment',
       }, { status: 400 });
@@ -46,8 +48,15 @@ export async function POST(
     const stripe = getStripe();
     const serviceCount = portal.quote_data?.services?.length || 0;
 
-    // ── Subscription-only: start a Stripe subscription, no deposit ──
-    if (paymentModel === 'subscription-only') {
+    // Determine checkout type:
+    // - Explicit from body (for mixed quotes doing step-by-step)
+    // - Auto-detect: subscription-only → subscription, otherwise → deposit
+    const checkoutType: 'deposit' | 'subscription' =
+      body.checkoutType ||
+      (paymentModel === 'subscription-only' ? 'subscription' : 'deposit');
+
+    // ── Subscription checkout ──
+    if (checkoutType === 'subscription') {
       const monthlyCents = Math.round(totals.monthlyTotal * 100);
       if (monthlyCents < 50) {
         return NextResponse.json({ error: 'Amount too low for payment' }, { status: 400 });
@@ -98,92 +107,24 @@ export async function POST(
       });
     }
 
-    // ── Mixed: deposit (50% of one-time) + subscription, single checkout ──
-    if (paymentModel === 'mixed') {
-      const depositCents = Math.round(totals.oneTimeTotal * 0.5 * 100);
-      const monthlyCents = Math.round(totals.monthlyTotal * 100);
-
-      if (depositCents < 50 && monthlyCents < 50) {
-        return NextResponse.json({ error: 'Amount too low for payment' }, { status: 400 });
-      }
-
-      const customer = await findOrCreateStripeCustomer(stripe, portal.client_email, portal.client_name);
-
-      // Add the one-time deposit as a pending invoice item on the customer.
-      // Stripe attaches it to the first subscription invoice automatically.
-      if (depositCents >= 50) {
-        await stripe.invoiceItems.create({
-          customer: customer.id,
-          amount: depositCents,
-          currency: 'usd',
-          description: `Project Deposit (50%) — ${portal.qr_number}`,
-        });
-      }
-
-      const checkoutSession = await stripe.checkout.sessions.create({
-        mode: 'subscription',
-        customer: customer.id,
-        line_items: [
-          {
-            price_data: {
-              currency: 'usd',
-              product_data: {
-                name: `Skyfynd Monthly Service — ${portal.qr_number}`,
-                description: `Monthly subscription for ${serviceCount} service(s)`,
-              },
-              unit_amount: monthlyCents,
-              recurring: { interval: 'month' },
-            },
-            quantity: 1,
-          },
-        ],
-        metadata: {
-          portal_id: portalId,
-          qr_number: portal.qr_number,
-          payment_type: 'mixed',
-          deposit_amount: String(depositCents),
-        },
-        success_url: `${baseUrl}/portal/${portalId}/success?session_id={CHECKOUT_SESSION_ID}&model=mixed`,
-        cancel_url: `${baseUrl}/portal/${portalId}`,
-      });
-
-      // Record both payment types
-      await Promise.all([
-        supabase
-          .from('portal_payments')
-          .upsert({
-            portal_id: portalId,
-            stripe_session_id: checkoutSession.id,
-            amount: depositCents,
-            currency: 'usd',
-            status: 'pending',
-            payment_type: 'deposit',
-          }, { onConflict: 'portal_id,payment_type' }),
-        supabase
-          .from('portal_payments')
-          .upsert({
-            portal_id: portalId,
-            stripe_session_id: checkoutSession.id,
-            amount: monthlyCents,
-            currency: 'usd',
-            status: 'pending',
-            payment_type: 'subscription',
-          }, { onConflict: 'portal_id,payment_type' }),
-      ]);
-
-      return NextResponse.json({
-        status: 'success',
-        checkoutUrl: checkoutSession.url,
-      });
-    }
-
-    // ── One-time only: unchanged 50% deposit flow ──
-    const grandTotal = totals.grandTotal || 0;
-    const depositAmount = Math.round(grandTotal * 0.5 * 100);
+    // ── Deposit checkout ──
+    const isOneTimeOnly = paymentModel === 'one-time';
+    const depositBase = isOneTimeOnly ? (totals.grandTotal || 0) : (totals.oneTimeTotal || 0);
+    const depositAmount = Math.round(depositBase * 0.5 * 100);
 
     if (depositAmount < 50) {
       return NextResponse.json({ error: 'Amount too low for payment' }, { status: 400 });
     }
+
+    const depositDescription = isOneTimeOnly
+      ? `50% deposit for ${serviceCount} service(s)`
+      : `50% deposit on one-time services`;
+
+    // For mixed quotes, after deposit redirect back to portal (subscription step next).
+    // For one-time quotes, go to success page.
+    const successUrl = paymentModel === 'mixed'
+      ? `${baseUrl}/portal/${portalId}/success?session_id={CHECKOUT_SESSION_ID}&model=deposit`
+      : `${baseUrl}/portal/${portalId}/success?session_id={CHECKOUT_SESSION_ID}`;
 
     const checkoutSession = await stripe.checkout.sessions.create({
       mode: 'payment',
@@ -194,7 +135,7 @@ export async function POST(
             currency: 'usd',
             product_data: {
               name: `Skyfynd Project Deposit — ${portal.qr_number}`,
-              description: `50% deposit for ${serviceCount} service(s)`,
+              description: depositDescription,
             },
             unit_amount: depositAmount,
           },
@@ -206,7 +147,7 @@ export async function POST(
         qr_number: portal.qr_number,
         payment_type: 'deposit',
       },
-      success_url: `${baseUrl}/portal/${portalId}/success?session_id={CHECKOUT_SESSION_ID}`,
+      success_url: successUrl,
       cancel_url: `${baseUrl}/portal/${portalId}`,
     });
 

@@ -4,6 +4,7 @@ import { getSupabaseAdmin } from '@/lib/supabase/client';
 import { buildPaymentConfirmationEmail } from '@/lib/portal/email';
 import { sendEmail } from '@/lib/email/resend';
 import { generateSignedAgreementPDFBuffer } from '@/lib/portal/generate-signed-pdf';
+import { getPaymentModel } from '@/lib/portal/payment-model';
 
 const ADMIN_EMAILS = ['contact@skyfynd.io', 'carlos@skyfynd.io'];
 
@@ -12,7 +13,7 @@ async function sendConfirmationEmail(
   clientName: string,
   qrNumber: string,
   amountCents: number,
-  paymentType: 'deposit' | 'final' | 'subscription' | 'mixed',
+  paymentType: 'deposit' | 'final' | 'subscription',
   grandTotal?: number,
   depositAmountDollars?: number,
   monthlyAmountDollars?: number,
@@ -24,7 +25,6 @@ async function sendConfirmationEmail(
     deposit: `Deposit Confirmation — ${qrNumber}`,
     final: `Payment Confirmation — ${qrNumber}`,
     subscription: `Subscription Confirmed — ${qrNumber}`,
-    mixed: `Payment & Subscription Confirmed — ${qrNumber}`,
   };
   const subject = subjectMap[paymentType];
 
@@ -32,7 +32,6 @@ async function sendConfirmationEmail(
     deposit: `Deposit Received — ${qrNumber} (${clientName})`,
     final: `Final Payment Received — ${qrNumber} (${clientName})`,
     subscription: `Subscription Started — ${qrNumber} (${clientName})`,
-    mixed: `Deposit + Subscription — ${qrNumber} (${clientName})`,
   };
 
   const htmlBody = buildPaymentConfirmationEmail(
@@ -49,7 +48,6 @@ async function sendConfirmationEmail(
     deposit: `Hi ${clientName},\n\nWe've received your deposit of $${amountDollars.toLocaleString()} for ${qrNumber}.\n\nThank you!\nSkyfynd`,
     final: `Hi ${clientName},\n\nWe've received your final payment of $${amountDollars.toLocaleString()} for ${qrNumber}.\n\nThank you!\nSkyfynd`,
     subscription: `Hi ${clientName},\n\nYour subscription of $${(monthlyAmountDollars || amountDollars).toLocaleString()}/mo for ${qrNumber} is now active.\n\nThank you!\nSkyfynd`,
-    mixed: `Hi ${clientName},\n\nWe've received your deposit and your subscription for ${qrNumber} is now active.\n\nThank you!\nSkyfynd`,
   };
   const textBody = textMap[paymentType];
 
@@ -92,7 +90,7 @@ export async function POST(request: Request) {
     if (event.type === 'checkout.session.completed') {
       const session = event.data.object;
       const portalId = session.metadata?.portal_id;
-      const paymentType = (session.metadata?.payment_type || 'deposit') as 'deposit' | 'final' | 'subscription' | 'mixed';
+      const paymentType = (session.metadata?.payment_type || 'deposit') as 'deposit' | 'final' | 'subscription';
       const stripeSessionId = session.id;
       const paymentIntentId = typeof session.payment_intent === 'string'
         ? session.payment_intent
@@ -108,10 +106,8 @@ export async function POST(request: Request) {
 
       const supabase = getSupabaseAdmin();
 
-      // ── Handle based on payment type ──
-
       if (paymentType === 'subscription') {
-        // Subscription-only: update subscription payment record
+        // Subscription: update payment record + set portal to payment_completed
         await supabase
           .from('portal_payments')
           .update({
@@ -121,7 +117,6 @@ export async function POST(request: Request) {
           })
           .eq('stripe_session_id', stripeSessionId);
 
-        // Update portal status
         await supabase
           .from('portals')
           .update({
@@ -130,41 +125,8 @@ export async function POST(request: Request) {
           })
           .eq('id', portalId);
 
-      } else if (paymentType === 'mixed') {
-        // Mixed: update both deposit and subscription records
-        const now = new Date().toISOString();
-
-        await Promise.all([
-          supabase
-            .from('portal_payments')
-            .update({
-              status: 'completed',
-              paid_at: now,
-            })
-            .eq('portal_id', portalId)
-            .eq('payment_type', 'deposit'),
-          supabase
-            .from('portal_payments')
-            .update({
-              status: 'completed',
-              stripe_subscription_id: subscriptionId,
-              paid_at: now,
-            })
-            .eq('portal_id', portalId)
-            .eq('payment_type', 'subscription'),
-        ]);
-
-        // Update portal status
-        await supabase
-          .from('portals')
-          .update({
-            status: 'payment_completed',
-            updated_at: now,
-          })
-          .eq('id', portalId);
-
-      } else {
-        // One-time deposit or final: existing behavior
+      } else if (paymentType === 'deposit') {
+        // Deposit: update payment record
         await supabase
           .from('portal_payments')
           .update({
@@ -174,8 +136,18 @@ export async function POST(request: Request) {
           })
           .eq('stripe_session_id', stripeSessionId);
 
-        // Update portal status for deposit payments
-        if (paymentType === 'deposit') {
+        // For mixed quotes, keep portal at contract_signed (subscription step next).
+        // For one-time quotes, set to payment_completed.
+        const { data: portal } = await supabase
+          .from('portals')
+          .select('quote_data')
+          .eq('id', portalId)
+          .single();
+
+        const totals = portal?.quote_data?.totals || { oneTimeTotal: 0, monthlyTotal: 0 };
+        const model = getPaymentModel(totals);
+
+        if (model !== 'mixed') {
           await supabase
             .from('portals')
             .update({
@@ -184,32 +156,36 @@ export async function POST(request: Request) {
             })
             .eq('id', portalId);
         }
+
+      } else {
+        // Final payment: existing behavior
+        await supabase
+          .from('portal_payments')
+          .update({
+            status: 'completed',
+            stripe_payment_intent_id: paymentIntentId,
+            paid_at: new Date().toISOString(),
+          })
+          .eq('stripe_session_id', stripeSessionId);
       }
 
       // ── Send confirmation email ──
       try {
-        const { data: portal } = await supabase
+        const { data: portalData } = await supabase
           .from('portals')
           .select('client_email, client_name, qr_number, quote_data')
           .eq('id', portalId)
           .single();
 
-        if (portal) {
+        if (portalData) {
           const amountCents = session.amount_total || 0;
-          const grandTotal = portal.quote_data?.totals?.grandTotal || 0;
-          const monthlyTotal = portal.quote_data?.totals?.monthlyTotal || 0;
-          const oneTimeTotal = portal.quote_data?.totals?.oneTimeTotal || 0;
+          const grandTotal = portalData.quote_data?.totals?.grandTotal || 0;
+          const monthlyTotal = portalData.quote_data?.totals?.monthlyTotal || 0;
 
           if (paymentType === 'subscription') {
             await sendConfirmationEmail(
-              portal.client_email, portal.client_name, portal.qr_number,
+              portalData.client_email, portalData.client_name, portalData.qr_number,
               amountCents, 'subscription', undefined, undefined, monthlyTotal
-            );
-          } else if (paymentType === 'mixed') {
-            const depositDollars = Math.round(oneTimeTotal * 0.5);
-            await sendConfirmationEmail(
-              portal.client_email, portal.client_name, portal.qr_number,
-              amountCents, 'mixed', grandTotal, depositDollars, monthlyTotal
             );
           } else if (paymentType === 'final') {
             const { data: deposit } = await supabase
@@ -222,7 +198,7 @@ export async function POST(request: Request) {
 
             const depositDollars = deposit ? deposit.amount / 100 : 0;
             await sendConfirmationEmail(
-              portal.client_email, portal.client_name, portal.qr_number,
+              portalData.client_email, portalData.client_name, portalData.qr_number,
               amountCents, 'final', grandTotal, depositDollars
             );
           } else {
@@ -247,10 +223,10 @@ export async function POST(request: Request) {
               if (sig && paymentRecord) {
                 const pdfBytes = await generateSignedAgreementPDFBuffer({
                   portal: {
-                    qr_number: portal.qr_number,
-                    client_name: portal.client_name,
-                    client_email: portal.client_email,
-                    quote_data: portal.quote_data,
+                    qr_number: portalData.qr_number,
+                    client_name: portalData.client_name,
+                    client_email: portalData.client_email,
+                    quote_data: portalData.quote_data,
                   },
                   signature: {
                     signature_data_url: sig.signature_data_url,
@@ -263,7 +239,7 @@ export async function POST(request: Request) {
                   },
                 });
                 pdfAttachment = [{
-                  filename: `${portal.qr_number}_Signed_Agreement.pdf`,
+                  filename: `${portalData.qr_number}_Signed_Agreement.pdf`,
                   content: pdfBytes,
                 }];
               }
@@ -272,7 +248,7 @@ export async function POST(request: Request) {
             }
 
             await sendConfirmationEmail(
-              portal.client_email, portal.client_name, portal.qr_number,
+              portalData.client_email, portalData.client_name, portalData.qr_number,
               amountCents, 'deposit', undefined, undefined, undefined, pdfAttachment
             );
           }

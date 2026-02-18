@@ -1,4 +1,5 @@
 const LOGO_URL = 'https://f005.backblazeb2.com/file/SKYFYND-assets/Skyfynd+logo.png';
+const GRADIENT_IMG_URL = 'https://f004.backblazeb2.com/file/carrero-biz/email-header-gradient.png';
 
 function fmt(n: number): string {
   return Number(n).toLocaleString('en-US');
@@ -19,6 +20,7 @@ function emailDocOpen(): string {
     '  body, table, td, a { -webkit-text-size-adjust:100%; -ms-text-size-adjust:100%; }',
     '  table, td { mso-table-lspace:0pt; mso-table-rspace:0pt; }',
     '  img { -ms-interpolation-mode:bicubic; border:0; outline:none; text-decoration:none; }',
+    '  .sf-grad { background-image:linear-gradient(to right,#A78BFA 0%,#60AFFA 40%,#34D399 100%) !important; }',
     '</style>',
     '</head>',
     '<body style="margin:0;padding:0;background-color:#f5f5f5;font-family:Arial,Helvetica,sans-serif;">',
@@ -56,7 +58,7 @@ function vmlGradientClose(): string {
 
 function emailHeader(title: string, subtitle?: string): string {
   let h = '';
-  h += '<tr><td bgcolor="#A78BFA" style="background-color:#A78BFA;background-image:linear-gradient(to right,#A78BFA 0%,#60AFFA 40%,#34D399 100%);padding:0;text-align:center;">';
+  h += `<tr><td class="sf-grad" bgcolor="#A78BFA" style="background-color:#A78BFA;background-image:url(${GRADIENT_IMG_URL});background-size:cover;background-repeat:no-repeat;padding:0;text-align:center;">`;
   // VML gradient for Outlook
   h += vmlGradientOpen();
   h += '<div style="padding:20px 24px;text-align:center;">';
@@ -102,7 +104,7 @@ function ctaButton(url: string, label: string): string {
   b += '<table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%"><tr><td align="center" style="padding:0;">';
   b += '<table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin:0 auto;">';
   b += '<tr>';
-  b += `<td align="center" bgcolor="#A78BFA" style="background-color:#A78BFA;background-image:linear-gradient(to right,#A78BFA 0%,#60AFFA 40%,#34D399 100%);border-radius:8px;padding:0;">`;
+  b += `<td align="center" class="sf-grad" bgcolor="#A78BFA" style="background-color:#A78BFA;background-image:url(${GRADIENT_IMG_URL});background-size:cover;background-repeat:no-repeat;border-radius:8px;padding:0;">`;
   // VML gradient for Outlook button
   b += '<!--[if gte mso 9]>';
   b += `<v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="${url}" style="height:48px;v-text-anchor:middle;width:260px;" arcsize="17%" stroke="false" fillcolor="#A78BFA">`;
@@ -272,7 +274,7 @@ export function buildPaymentConfirmationEmail(
   clientName: string,
   qrNumber: string,
   amountPaid: number,
-  paymentType: 'deposit' | 'final' | 'subscription' | 'mixed',
+  paymentType: 'deposit' | 'final' | 'subscription',
   grandTotal?: number,
   depositAmount?: number,
   monthlyAmount?: number
@@ -281,13 +283,11 @@ export function buildPaymentConfirmationEmail(
     deposit: 'Deposit Received',
     final: 'Final Payment Received',
     subscription: 'Subscription Confirmed',
-    mixed: 'Payment &amp; Subscription Confirmed',
   };
   const messageMap: Record<string, string> = {
     deposit: 'We\'ve received your deposit and your project is now underway. We\'ll be in touch with next steps soon.',
     final: 'Your final payment has been received and your project balance is fully settled. Thank you for your trust in Skyfynd!',
     subscription: 'Your monthly subscription is now active. You\'ll be billed automatically each month.',
-    mixed: 'We\'ve received your deposit and your monthly subscription is now active. We\'ll be in touch with next steps soon.',
   };
 
   let html = emailDocOpen();
@@ -306,24 +306,13 @@ export function buildPaymentConfirmationEmail(
 
   if (paymentType === 'subscription') {
     html += `<tr><td style="color:#ffffff;font-size:14px;font-weight:700;padding:8px 0;">Monthly Subscription</td><td style="text-align:right;font-weight:700;color:#10B981;font-size:16px;padding:8px 0;">$${fmt(monthlyAmount || amountPaid)}/mo</td></tr>`;
-  } else if (paymentType === 'mixed') {
-    if (depositAmount) {
-      html += infoRow('Deposit Paid', `$${fmt(depositAmount)}`, '#10B981');
-    }
-    if (monthlyAmount) {
-      html += infoRow('Monthly Subscription', `$${fmt(monthlyAmount)}/mo`, '#60AFFA');
-    }
-    if (grandTotal && depositAmount) {
-      html += '<tr><td colspan="2" style="border-top:1px solid #2A2435;padding:0;font-size:1px;line-height:1px;">&#160;</td></tr>';
-      html += infoRow('Remaining Balance (due on completion)', `$${fmt(grandTotal - (depositAmount * 2 > grandTotal ? depositAmount : depositAmount))}`);
-    }
   } else if (paymentType === 'final' && grandTotal && depositAmount) {
     html += infoRow('Project Total', `$${fmt(grandTotal)}`);
     html += `<tr><td style="color:#71717A;font-size:13px;padding:6px 0;">Deposit Paid</td><td style="text-align:right;font-weight:600;color:#10B981;font-size:13px;padding:6px 0;">-$${fmt(depositAmount)}</td></tr>`;
     html += '<tr><td colspan="2" style="border-top:1px solid #2A2435;padding:0;font-size:1px;line-height:1px;">&#160;</td></tr>';
     html += `<tr><td style="color:#ffffff;font-size:14px;font-weight:700;padding:8px 0;">Final Payment</td><td style="text-align:right;font-weight:700;color:#10B981;font-size:16px;padding:8px 0;">$${fmt(amountPaid)}</td></tr>`;
   } else {
-    // Deposit only
+    // Deposit
     html += `<tr><td style="color:#ffffff;font-size:14px;font-weight:700;padding:8px 0;">Deposit Paid</td><td style="text-align:right;font-weight:700;color:#10B981;font-size:16px;padding:8px 0;">$${fmt(amountPaid)}</td></tr>`;
   }
 
@@ -341,7 +330,7 @@ export function buildVerificationCodeEmail(clientName: string, code: string): st
   let html = emailDocOpen();
 
   // Verification header — just logo, no title bar (with VML gradient for Outlook)
-  html += '<tr><td bgcolor="#A78BFA" style="background-color:#A78BFA;background-image:linear-gradient(to right,#A78BFA 0%,#60AFFA 40%,#34D399 100%);padding:0;text-align:center;">';
+  html += `<tr><td class="sf-grad" bgcolor="#A78BFA" style="background-color:#A78BFA;background-image:url(${GRADIENT_IMG_URL});background-size:cover;background-repeat:no-repeat;padding:0;text-align:center;">`;
   html += vmlGradientOpen();
   html += '<div style="padding:16px 24px;text-align:center;">';
   html += '<table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin:0 auto;"><tr>';

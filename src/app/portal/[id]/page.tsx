@@ -12,9 +12,15 @@ import SignatureCanvas from '@/components/portal/SignatureCanvas';
 import PaymentSection from '@/components/portal/PaymentSection';
 import { getPaymentModel } from '@/lib/portal/payment-model';
 
-type PortalStep = 'verify' | 'review' | 'sign' | 'pay' | 'complete';
+type PortalStep = 'verify' | 'review' | 'sign' | 'pay' | 'subscribe' | 'complete';
 
-function getStepFromStatus(status: Portal['status']): PortalStep {
+type PaymentRecord = { payment_type: string; status: string };
+
+function getStepFromStatus(
+  status: Portal['status'],
+  paymentModel: ReturnType<typeof getPaymentModel>,
+  payments: PaymentRecord[]
+): PortalStep {
   switch (status) {
     case 'sent':
     case 'email_verified':
@@ -24,8 +30,16 @@ function getStepFromStatus(status: Portal['status']): PortalStep {
       return 'review';
     case 'quote_accepted':
       return 'sign';
-    case 'contract_signed':
+    case 'contract_signed': {
+      // For mixed quotes: if deposit is already paid, go to subscribe step
+      if (paymentModel === 'mixed') {
+        const depositDone = payments.some(p => p.payment_type === 'deposit' && p.status === 'completed');
+        if (depositDone) return 'subscribe';
+      }
+      // Subscription-only goes straight to subscribe
+      if (paymentModel === 'subscription-only') return 'subscribe';
       return 'pay';
+    }
     case 'payment_completed':
       return 'complete';
     default:
@@ -35,14 +49,28 @@ function getStepFromStatus(status: Portal['status']): PortalStep {
 
 function getSteps(totals?: { oneTimeTotal: number; monthlyTotal: number }) {
   const pm = totals ? getPaymentModel(totals) : 'one-time';
-  const payLabel = pm === 'subscription-only' ? 'Subscribe'
-    : pm === 'mixed' ? 'Pay & Subscribe'
-    : 'Pay Deposit';
-  const payIcon = pm === 'subscription-only' ? RefreshCw : CreditCard;
+
+  if (pm === 'subscription-only') {
+    return [
+      { key: 'review' as const, label: 'Review Quote', icon: FileText },
+      { key: 'sign' as const, label: 'Sign Agreement', icon: PenLine },
+      { key: 'subscribe' as const, label: 'Subscribe', icon: RefreshCw },
+    ];
+  }
+
+  if (pm === 'mixed') {
+    return [
+      { key: 'review' as const, label: 'Review Quote', icon: FileText },
+      { key: 'sign' as const, label: 'Sign Agreement', icon: PenLine },
+      { key: 'pay' as const, label: 'Pay Deposit', icon: CreditCard },
+      { key: 'subscribe' as const, label: 'Subscribe', icon: RefreshCw },
+    ];
+  }
+
   return [
     { key: 'review' as const, label: 'Review Quote', icon: FileText },
     { key: 'sign' as const, label: 'Sign Agreement', icon: PenLine },
-    { key: 'pay' as const, label: payLabel, icon: payIcon },
+    { key: 'pay' as const, label: 'Pay Deposit', icon: CreditCard },
   ];
 }
 
@@ -52,6 +80,7 @@ export default function PortalPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [portal, setPortal] = useState<Portal | null>(null);
+  const [payments, setPayments] = useState<PaymentRecord[]>([]);
   const [currentStep, setCurrentStep] = useState<PortalStep>('verify');
   const [maskedEmail, setMaskedEmail] = useState<string>('');
 
@@ -76,8 +105,14 @@ export default function PortalPage() {
         return;
       }
       const data = await res.json();
-      setPortal(data.portal);
-      setCurrentStep(getStepFromStatus(data.portal.status));
+      const p = data.portal;
+      const pays: PaymentRecord[] = data.payments || [];
+      setPortal(p);
+      setPayments(pays);
+
+      const totals = p.quote_data?.totals || { oneTimeTotal: 0, monthlyTotal: 0 };
+      const pm = getPaymentModel(totals);
+      setCurrentStep(getStepFromStatus(p.status, pm, pays));
       setLoading(false);
     } catch {
       setError('Failed to load portal.');
@@ -90,8 +125,18 @@ export default function PortalPage() {
     fetchPortal();
   }, [portalId, fetchPortal]);
 
+  // Re-fetch portal when page is restored from browser bfcache (back/forward nav)
+  useEffect(() => {
+    const handlePageShow = (e: PageTransitionEvent) => {
+      if (e.persisted) {
+        fetchPortal();
+      }
+    };
+    window.addEventListener('pageshow', handlePageShow);
+    return () => window.removeEventListener('pageshow', handlePageShow);
+  }, [fetchPortal]);
+
   const handleVerified = () => {
-    // Re-fetch portal data now that session is set
     setLoading(true);
     fetchPortal();
   };
@@ -110,9 +155,12 @@ export default function PortalPage() {
   };
 
   const handleSigned = () => {
-    setCurrentStep('pay');
     if (portal) {
       setPortal({ ...portal, status: 'contract_signed' });
+      const totals = portal.quote_data?.totals || { oneTimeTotal: 0, monthlyTotal: 0 };
+      const pm = getPaymentModel(totals);
+      // After signing: subscription-only goes to subscribe, otherwise pay deposit
+      setCurrentStep(pm === 'subscription-only' ? 'subscribe' : 'pay');
     }
   };
 
@@ -201,6 +249,7 @@ export default function PortalPage() {
                 portalId={portalId}
                 onAccepted={handleAccepted}
                 onChangeRequested={handleChangeRequested}
+                onStale={fetchPortal}
               />
             )}
           </div>
@@ -210,14 +259,12 @@ export default function PortalPage() {
           const clientName = portal.quote_data?.customer?.name || portal.client_name;
           return (
             <div className="space-y-4">
-              {/* Compact inline header */}
               <div className="flex items-center gap-2 text-sm text-[#A1A1AA]">
                 <PenLine className="w-4 h-4 text-[#3B82F6] shrink-0" />
                 <span className="text-[#FAFAFA] font-medium">Review &amp; Sign Agreement</span>
                 <span className="hidden sm:inline">— Read the contract below, then sign at the bottom to proceed.</span>
               </div>
 
-              {/* Full-width contract */}
               <div className="max-h-[75vh] overflow-y-auto rounded-lg border border-white/[0.06]">
                 <ContractViewer
                   clientName={clientName}
@@ -225,7 +272,6 @@ export default function PortalPage() {
                 />
               </div>
 
-              {/* Signature section below */}
               <div className="rounded-lg border border-white/[0.06] bg-[#0D0D0F] p-4 max-w-lg mx-auto">
                 <SignatureCanvas
                   clientName={clientName}
@@ -241,6 +287,19 @@ export default function PortalPage() {
           <div className="py-8">
             <PaymentSection
               portalId={portalId}
+              checkoutType="deposit"
+              grandTotal={portal.quote_data?.totals?.grandTotal || 0}
+              oneTimeTotal={portal.quote_data?.totals?.oneTimeTotal || 0}
+              monthlyTotal={portal.quote_data?.totals?.monthlyTotal || 0}
+            />
+          </div>
+        )}
+
+        {currentStep === 'subscribe' && portal && (
+          <div className="py-8">
+            <PaymentSection
+              portalId={portalId}
+              checkoutType="subscription"
               grandTotal={portal.quote_data?.totals?.grandTotal || 0}
               oneTimeTotal={portal.quote_data?.totals?.oneTimeTotal || 0}
               monthlyTotal={portal.quote_data?.totals?.monthlyTotal || 0}

@@ -51,7 +51,13 @@ export async function GET(
       portal.status = 'quote_viewed';
     }
 
-    return NextResponse.json({ status: 'success', portal });
+    // Fetch payment records so the portal page knows what's been paid
+    const { data: payments } = await supabase
+      .from('portal_payments')
+      .select('payment_type, status')
+      .eq('portal_id', portalId);
+
+    return NextResponse.json({ status: 'success', portal, payments: payments || [] });
   } catch (error) {
     console.error('Portal fetch error:', error);
     return NextResponse.json({ error: 'Failed to load portal' }, { status: 500 });

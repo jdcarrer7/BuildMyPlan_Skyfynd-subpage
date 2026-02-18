@@ -8,9 +8,10 @@ interface QuoteActionsProps {
   portalId: string;
   onAccepted: () => void;
   onChangeRequested: () => void;
+  onStale?: () => void;
 }
 
-export default function QuoteActions({ portalId, onAccepted, onChangeRequested }: QuoteActionsProps) {
+export default function QuoteActions({ portalId, onAccepted, onChangeRequested, onStale }: QuoteActionsProps) {
   const [showChangeForm, setShowChangeForm] = useState(false);
   const [accepting, setAccepting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -23,6 +24,9 @@ export default function QuoteActions({ portalId, onAccepted, onChangeRequested }
       const data = await res.json();
       if (res.ok) {
         onAccepted();
+      } else if (data.error?.includes('Cannot accept quote from current status') && onStale) {
+        // Portal has progressed past this step — re-sync
+        onStale();
       } else {
         setError(data.error || 'Failed to accept quote');
       }
