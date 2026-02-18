@@ -3,19 +3,26 @@
 import { useState } from 'react';
 import { CreditCard, Loader2, RefreshCw } from 'lucide-react';
 
+interface ServiceSummary {
+  label: string;
+  oneTimeTotal: number;
+  monthlyTotal: number;
+}
+
 interface PaymentSectionProps {
   portalId: string;
   checkoutType: 'deposit' | 'subscription';
   grandTotal: number;
   oneTimeTotal: number;
   monthlyTotal: number;
+  services?: ServiceSummary[];
 }
 
 function fmt(n: number): string {
   return Number(n).toLocaleString('en-US');
 }
 
-export default function PaymentSection({ portalId, checkoutType, grandTotal, oneTimeTotal, monthlyTotal }: PaymentSectionProps) {
+export default function PaymentSection({ portalId, checkoutType, grandTotal, oneTimeTotal, monthlyTotal, services = [] }: PaymentSectionProps) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -68,8 +75,14 @@ export default function PaymentSection({ portalId, checkoutType, grandTotal, one
         </div>
 
         <div className="max-w-sm mx-auto rounded-lg border border-white/[0.06] overflow-hidden">
-          <div className="flex justify-between px-5 py-3 text-sm">
-            <span className="text-[#71717A]">Monthly Subscription</span>
+          {services.filter(s => s.monthlyTotal > 0).map((s, i) => (
+            <div key={i} className={`flex justify-between px-5 py-3 text-sm ${i > 0 ? 'border-t border-white/[0.06]' : ''}`}>
+              <span className="text-[#A1A1AA]">{s.label}</span>
+              <span className="text-[#A1A1AA]">${fmt(s.monthlyTotal)}/mo</span>
+            </div>
+          ))}
+          <div className={`flex justify-between px-5 py-3 text-sm ${services.filter(s => s.monthlyTotal > 0).length > 0 ? 'border-t border-white/[0.06] bg-white/[0.02]' : ''}`}>
+            <span className="text-[#71717A]">Monthly Total</span>
             <span className="text-[#FAFAFA] font-semibold">${fmt(monthlyTotal)}/mo</span>
           </div>
         </div>
@@ -134,10 +147,23 @@ export default function PaymentSection({ portalId, checkoutType, grandTotal, one
       </div>
 
       <div className="max-w-sm mx-auto rounded-lg border border-white/[0.06] overflow-hidden">
-        <div className="flex justify-between px-5 py-3 text-sm">
-          <span className="text-[#71717A]">{hasMonthlySeparate ? 'One-Time Services' : 'Project Total'}</span>
-          <span className="text-[#A1A1AA]">${fmt(depositBase)}</span>
-        </div>
+        {(() => {
+          const oneTimeServices = services.filter(s => s.oneTimeTotal > 0);
+          if (oneTimeServices.length > 0) {
+            return oneTimeServices.map((s, i) => (
+              <div key={i} className={`flex justify-between px-5 py-3 text-sm ${i > 0 ? 'border-t border-white/[0.06]' : ''}`}>
+                <span className="text-[#A1A1AA]">{s.label}</span>
+                <span className="text-[#A1A1AA]">${fmt(s.oneTimeTotal)}</span>
+              </div>
+            ));
+          }
+          return (
+            <div className="flex justify-between px-5 py-3 text-sm">
+              <span className="text-[#71717A]">{hasMonthlySeparate ? 'One-Time Services' : 'Project Total'}</span>
+              <span className="text-[#A1A1AA]">${fmt(depositBase)}</span>
+            </div>
+          );
+        })()}
         <div className="flex justify-between px-5 py-3 text-sm border-t border-white/[0.06]">
           <span className="text-[#71717A]">Deposit (50%)</span>
           <span className="text-[#FAFAFA] font-semibold">${fmt(depositAmount)}</span>

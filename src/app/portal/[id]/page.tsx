@@ -190,7 +190,7 @@ export default function PortalPage() {
   return (
     <div className="space-y-8">
       {/* Step Indicator */}
-      <div className="flex items-center justify-center gap-2">
+      <div className="flex items-center justify-center gap-1.5 sm:gap-2 overflow-x-auto px-2 -mx-2 scrollbar-none">
         {getSteps(portal?.quote_data?.totals).map((step, index) => {
           const steps = getSteps(portal?.quote_data?.totals);
           const stepIndex = steps.findIndex(s => s.key === currentStep);
@@ -199,19 +199,19 @@ export default function PortalPage() {
           const Icon = isCompleted ? CheckCircle2 : step.icon;
 
           return (
-            <div key={step.key} className="flex items-center gap-2">
+            <div key={step.key} className="flex items-center gap-1.5 sm:gap-2 shrink-0">
               {index > 0 && (
-                <div className={`w-12 h-px ${isCompleted ? 'bg-[#10B981]' : 'bg-white/[0.06]'}`} />
+                <div className={`w-6 sm:w-12 h-px ${isCompleted ? 'bg-[#10B981]' : 'bg-white/[0.06]'}`} />
               )}
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-1.5 sm:gap-2">
                 <Icon
-                  className={`w-5 h-5 ${
+                  className={`w-5 h-5 shrink-0 ${
                     isCompleted ? 'text-[#10B981]' :
                     isActive ? 'text-[#3B82F6]' :
                     'text-[#71717A]'
                   }`}
                 />
-                <span className={`text-sm font-medium hidden sm:inline ${
+                <span className={`text-xs sm:text-sm font-medium hidden sm:inline whitespace-nowrap ${
                   isCompleted ? 'text-[#10B981]' :
                   isActive ? 'text-[#FAFAFA]' :
                   'text-[#71717A]'
@@ -225,7 +225,7 @@ export default function PortalPage() {
       </div>
 
       {/* Step Content */}
-      <div className="rounded-2xl bg-[#111113] border border-white/[0.06] p-6 lg:p-8">
+      <div className="rounded-xl sm:rounded-2xl bg-[#111113] border border-white/[0.06] p-4 sm:p-6 lg:p-8">
         {currentStep === 'verify' && (
           <EmailVerification
             portalId={portalId}
@@ -265,14 +265,14 @@ export default function PortalPage() {
                 <span className="hidden sm:inline">— Read the contract below, then sign at the bottom to proceed.</span>
               </div>
 
-              <div className="max-h-[75vh] overflow-y-auto rounded-lg border border-white/[0.06]">
+              <div className="max-h-[60vh] sm:max-h-[75vh] overflow-y-auto rounded-lg border border-white/[0.06] -webkit-overflow-scrolling-touch">
                 <ContractViewer
                   clientName={clientName}
                   effectiveDate={new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
                 />
               </div>
 
-              <div className="rounded-lg border border-white/[0.06] bg-[#0D0D0F] p-4 max-w-lg mx-auto">
+              <div className="rounded-lg border border-white/[0.06] bg-[#0D0D0F] p-3 sm:p-4 max-w-lg mx-auto">
                 <SignatureCanvas
                   clientName={clientName}
                   portalId={portalId}
@@ -291,6 +291,11 @@ export default function PortalPage() {
               grandTotal={portal.quote_data?.totals?.grandTotal || 0}
               oneTimeTotal={portal.quote_data?.totals?.oneTimeTotal || 0}
               monthlyTotal={portal.quote_data?.totals?.monthlyTotal || 0}
+              services={(portal.quote_data?.services || []).map((s: { serviceLabel: string; oneTimeTotal: number; monthlyTotal: number }) => ({
+                label: s.serviceLabel,
+                oneTimeTotal: s.oneTimeTotal || 0,
+                monthlyTotal: s.monthlyTotal || 0,
+              }))}
             />
           </div>
         )}
@@ -303,6 +308,11 @@ export default function PortalPage() {
               grandTotal={portal.quote_data?.totals?.grandTotal || 0}
               oneTimeTotal={portal.quote_data?.totals?.oneTimeTotal || 0}
               monthlyTotal={portal.quote_data?.totals?.monthlyTotal || 0}
+              services={(portal.quote_data?.services || []).map((s: { serviceLabel: string; oneTimeTotal: number; monthlyTotal: number }) => ({
+                label: s.serviceLabel,
+                oneTimeTotal: s.oneTimeTotal || 0,
+                monthlyTotal: s.monthlyTotal || 0,
+              }))}
             />
           </div>
         )}

@@ -18,18 +18,18 @@ function StepRow({ step, indent = 0 }: { step: ResolvedStep; indent?: number }) 
         <tr>
           <td
             colSpan={3}
-            className="pt-3 pb-1 text-xs font-bold uppercase text-[#71717A]"
+            className="pt-3 pb-1 px-1 text-xs font-bold uppercase text-[#71717A]"
           >
             {step.stepName}
           </td>
         </tr>
         {step.children.map((child, i) => (
           <tr key={i}>
-            <td className="py-1 text-sm text-[#71717A]" style={{ paddingLeft: indent + 12 }}>
+            <td className="py-1 pr-2 text-xs sm:text-sm text-[#71717A]" style={{ paddingLeft: indent + 12 }}>
               {child.stepName}
             </td>
-            <td className="py-1 text-sm text-[#A1A1AA]">{child.selectedLabel}</td>
-            <td className="py-1 text-sm text-right text-[#60AFFA] font-semibold whitespace-nowrap">
+            <td className="py-1 px-1 text-xs sm:text-sm text-[#A1A1AA]">{child.selectedLabel}</td>
+            <td className="py-1 pl-2 text-xs sm:text-sm text-right text-[#60AFFA] font-semibold whitespace-nowrap">
               {child.priceImpact !== null && child.priceImpact > 0
                 ? child.isRecurring
                   ? `$${fmt(child.priceImpact)}/mo`
@@ -44,11 +44,11 @@ function StepRow({ step, indent = 0 }: { step: ResolvedStep; indent?: number }) 
 
   return (
     <tr>
-      <td className="py-1 text-sm text-[#71717A]" style={{ paddingLeft: indent + 4 }}>
+      <td className="py-1 pr-2 text-xs sm:text-sm text-[#71717A]" style={{ paddingLeft: indent + 4 }}>
         {step.stepName}
       </td>
-      <td className="py-1 text-sm text-[#A1A1AA]">{step.selectedLabel}</td>
-      <td className="py-1 text-sm text-right text-[#60AFFA] font-semibold whitespace-nowrap">
+      <td className="py-1 px-1 text-xs sm:text-sm text-[#A1A1AA]">{step.selectedLabel}</td>
+      <td className="py-1 pl-2 text-xs sm:text-sm text-right text-[#60AFFA] font-semibold whitespace-nowrap">
         {step.priceImpact !== null && step.priceImpact > 0
           ? step.isRecurring
             ? `$${fmt(step.priceImpact)}/mo`
@@ -67,9 +67,9 @@ function ServiceBlock({ service }: { service: ResolvedServiceConfig }) {
   return (
     <div className="mb-5">
       {/* Service header */}
-      <div className="flex items-center justify-between bg-white/[0.04] rounded-lg px-4 py-2.5">
-        <span className="font-bold text-sm text-[#FAFAFA]">{service.serviceLabel}</span>
-        <span className="font-bold text-sm text-[#60AFFA]">{prices.join(' + ') || '$0'}</span>
+      <div className="flex items-center justify-between gap-3 bg-white/[0.04] rounded-lg px-3 sm:px-4 py-2.5">
+        <span className="font-bold text-sm text-[#FAFAFA] min-w-0 truncate">{service.serviceLabel}</span>
+        <span className="font-bold text-sm text-[#60AFFA] shrink-0">{prices.join(' + ') || '$0'}</span>
       </div>
 
       {/* Steps */}
@@ -128,7 +128,7 @@ export default function QuoteSummary({ quote }: QuoteSummaryProps) {
         </h3>
         <div className="rounded-lg border border-white/[0.06] overflow-x-auto">
           {/* Header row */}
-          <div className="grid grid-cols-3 bg-white/[0.04] px-4 py-2.5 text-xs font-bold uppercase text-[#71717A] min-w-[320px]">
+          <div className="grid grid-cols-3 bg-white/[0.04] px-3 sm:px-4 py-2.5 text-[10px] sm:text-xs font-bold uppercase text-[#71717A]">
             <span>Service</span>
             <span className="text-center">One-Time</span>
             <span className="text-right">Monthly</span>
@@ -138,9 +138,9 @@ export default function QuoteSummary({ quote }: QuoteSummaryProps) {
           {services.map((svc, i) => (
             <div
               key={i}
-              className={`grid grid-cols-3 px-4 py-2 text-sm ${i % 2 === 0 ? '' : 'bg-white/[0.02]'}`}
+              className={`grid grid-cols-3 px-3 sm:px-4 py-2 text-xs sm:text-sm ${i % 2 === 0 ? '' : 'bg-white/[0.02]'}`}
             >
-              <span className="text-[#A1A1AA] min-w-0 truncate">{svc.serviceLabel}</span>
+              <span className="text-[#A1A1AA] min-w-0 truncate pr-2">{svc.serviceLabel}</span>
               <span className="text-center text-[#A1A1AA]">
                 {svc.oneTimeTotal > 0 ? `$${fmt(svc.oneTimeTotal)}` : '\u2014'}
               </span>
@@ -151,14 +151,14 @@ export default function QuoteSummary({ quote }: QuoteSummaryProps) {
           ))}
 
           {/* Totals */}
-          <div className="grid grid-cols-3 bg-white/[0.04] px-4 py-2.5 border-t border-white/[0.06] text-sm font-semibold">
+          <div className="grid grid-cols-3 bg-white/[0.04] px-3 sm:px-4 py-2.5 border-t border-white/[0.06] text-xs sm:text-sm font-semibold">
             <span className="text-[#FAFAFA]">Project Total</span>
             <span className="text-center text-[#FAFAFA]">${fmt(totals.oneTimeTotal || 0)}</span>
             <span></span>
           </div>
 
           {(totals.monthlyTotal || 0) > 0 && (
-            <div className="grid grid-cols-3 bg-white/[0.04] px-4 py-2.5 text-sm font-semibold">
+            <div className="grid grid-cols-3 bg-white/[0.04] px-3 sm:px-4 py-2.5 text-xs sm:text-sm font-semibold">
               <span className="text-[#FAFAFA]">Total Monthly</span>
               <span></span>
               <span className="text-right text-[#FAFAFA]">${fmt(totals.monthlyTotal)}/mo</span>
@@ -166,7 +166,7 @@ export default function QuoteSummary({ quote }: QuoteSummaryProps) {
           )}
 
           {discounts && discounts.totalSaved > 0 && (
-            <div className="grid grid-cols-3 bg-[#10B981]/5 px-4 py-2.5 text-sm font-semibold">
+            <div className="grid grid-cols-3 bg-[#10B981]/5 px-3 sm:px-4 py-2.5 text-xs sm:text-sm font-semibold">
               <span className="text-[#10B981]">Discount ({totals.discountPercentage || 0}%)</span>
               <span className="text-right col-span-2 text-[#10B981]">
                 -${fmt(discounts.totalSaved)}
@@ -182,13 +182,13 @@ export default function QuoteSummary({ quote }: QuoteSummaryProps) {
               return (
                 <>
                   <div
-                    className="grid grid-cols-2 px-4 py-4 text-white"
+                    className="grid grid-cols-2 px-3 sm:px-4 py-3 sm:py-4 text-white"
                     style={{ background: 'linear-gradient(to right, rgba(167,139,250,0.75) 0%, rgba(96,175,250,0.85) 40%, rgba(52,211,153,0.8) 100%)' }}
                   >
-                    <span className="font-bold text-base">Monthly Total</span>
-                    <span className="text-right font-bold text-xl">${fmt(totals.monthlyTotal)}/mo</span>
+                    <span className="font-bold text-sm sm:text-base">Monthly Total</span>
+                    <span className="text-right font-bold text-lg sm:text-xl">${fmt(totals.monthlyTotal)}/mo</span>
                   </div>
-                  <div className="grid grid-cols-2 px-4 py-2.5 bg-white/[0.03] text-sm">
+                  <div className="grid grid-cols-2 px-3 sm:px-4 py-2.5 bg-white/[0.03] text-xs sm:text-sm">
                     <span className="text-[#A1A1AA] font-medium">Monthly Subscription</span>
                     <span className="text-right text-[#FAFAFA] font-semibold">${fmt(totals.monthlyTotal)}/mo</span>
                   </div>
@@ -201,21 +201,21 @@ export default function QuoteSummary({ quote }: QuoteSummaryProps) {
               return (
                 <>
                   <div
-                    className="grid grid-cols-2 px-4 py-4 text-white"
+                    className="grid grid-cols-2 px-3 sm:px-4 py-3 sm:py-4 text-white"
                     style={{ background: 'linear-gradient(to right, rgba(167,139,250,0.75) 0%, rgba(96,175,250,0.85) 40%, rgba(52,211,153,0.8) 100%)' }}
                   >
-                    <span className="font-bold text-base">Project Total</span>
-                    <span className="text-right font-bold text-xl">${fmt(totals.oneTimeTotal || 0)} + ${fmt(totals.monthlyTotal)}/mo</span>
+                    <span className="font-bold text-sm sm:text-base">Project Total</span>
+                    <span className="text-right font-bold text-base sm:text-xl">${fmt(totals.oneTimeTotal || 0)} + ${fmt(totals.monthlyTotal)}/mo</span>
                   </div>
-                  <div className="grid grid-cols-2 px-4 py-2.5 bg-white/[0.03] text-sm">
+                  <div className="grid grid-cols-2 px-3 sm:px-4 py-2.5 bg-white/[0.03] text-xs sm:text-sm">
                     <span className="text-[#A1A1AA] font-medium">Deposit (50% of one-time)</span>
                     <span className="text-right text-[#FAFAFA] font-semibold">${fmt(depositAmt)}</span>
                   </div>
-                  <div className="grid grid-cols-2 px-4 py-2.5 text-sm">
+                  <div className="grid grid-cols-2 px-3 sm:px-4 py-2.5 text-xs sm:text-sm">
                     <span className="text-[#71717A] font-medium">Due on Completion</span>
                     <span className="text-right text-[#A1A1AA] font-semibold">${fmt((totals.oneTimeTotal || 0) - depositAmt)}</span>
                   </div>
-                  <div className="grid grid-cols-2 px-4 py-2.5 bg-white/[0.03] text-sm">
+                  <div className="grid grid-cols-2 px-3 sm:px-4 py-2.5 bg-white/[0.03] text-xs sm:text-sm">
                     <span className="text-[#A1A1AA] font-medium">Monthly Subscription</span>
                     <span className="text-right text-[#FAFAFA] font-semibold">${fmt(totals.monthlyTotal)}/mo</span>
                   </div>
@@ -227,19 +227,19 @@ export default function QuoteSummary({ quote }: QuoteSummaryProps) {
             return (
               <>
                 <div
-                  className="grid grid-cols-2 px-4 py-4 text-white"
+                  className="grid grid-cols-2 px-3 sm:px-4 py-3 sm:py-4 text-white"
                   style={{ background: 'linear-gradient(to right, rgba(167,139,250,0.75) 0%, rgba(96,175,250,0.85) 40%, rgba(52,211,153,0.8) 100%)' }}
                 >
-                  <span className="font-bold text-base">Project Total</span>
-                  <span className="text-right font-bold text-xl">${fmt(totals.grandTotal || 0)}</span>
+                  <span className="font-bold text-sm sm:text-base">Project Total</span>
+                  <span className="text-right font-bold text-lg sm:text-xl">${fmt(totals.grandTotal || 0)}</span>
                 </div>
                 {(totals.grandTotal || 0) > 0 && (
                   <>
-                    <div className="grid grid-cols-2 px-4 py-2.5 bg-white/[0.03] text-sm">
+                    <div className="grid grid-cols-2 px-3 sm:px-4 py-2.5 bg-white/[0.03] text-xs sm:text-sm">
                       <span className="text-[#A1A1AA] font-medium">Deposit (50%)</span>
                       <span className="text-right text-[#FAFAFA] font-semibold">${fmt(Math.ceil((totals.grandTotal || 0) / 2))}</span>
                     </div>
-                    <div className="grid grid-cols-2 px-4 py-2.5 text-sm">
+                    <div className="grid grid-cols-2 px-3 sm:px-4 py-2.5 text-xs sm:text-sm">
                       <span className="text-[#71717A] font-medium">Due on Completion (50%)</span>
                       <span className="text-right text-[#A1A1AA] font-semibold">${fmt(Math.floor((totals.grandTotal || 0) / 2))}</span>
                     </div>

@@ -326,6 +326,69 @@ export function buildPaymentConfirmationEmail(
   return html;
 }
 
+export function buildChangeRequestNotificationEmail(
+  clientName: string,
+  qrNumber: string,
+  message: string
+): string {
+  let html = emailDocOpen();
+
+  html += emailHeader('Change Request Received', qrNumber);
+
+  html += '<tr><td style="padding:24px;">';
+  html += `<p style="color:#E5E5E5;font-size:16px;margin:0 0 16px;">${clientName} has requested changes to their quote.</p>`;
+
+  // Client message box
+  html += '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom:24px;">';
+  html += '<tr><td bgcolor="#1C1825" style="background-color:#1C1825;border-radius:8px;padding:16px 20px;border-left:4px solid #F59E0B;">';
+  html += '<p style="color:#71717A;font-size:11px;text-transform:uppercase;letter-spacing:1px;margin:0 0 8px;">Client Message</p>';
+  html += `<p style="color:#E5E5E5;font-size:14px;line-height:1.6;margin:0;white-space:pre-wrap;">${message}</p>`;
+  html += '</td></tr></table>';
+
+  // Info box
+  html += '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom:24px;">';
+  html += '<tr><td bgcolor="#1C1825" style="background-color:#1C1825;border-radius:8px;padding:16px 20px;">';
+  html += '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">';
+  html += infoRow('Quote', qrNumber);
+  html += infoRow('Client', clientName);
+  html += infoRow('Status', 'Changes Requested', '#F59E0B');
+  html += '</table></td></tr></table>';
+
+  html += '<p style="color:#A1A1AA;font-size:14px;line-height:1.6;margin:0 0 8px;">Review this request in the admin dashboard, update the quote if needed, then click &ldquo;Send Updated Quote&rdquo; to notify the client.</p>';
+  html += '</td></tr>';
+
+  html += emailFooter();
+  html += emailDocClose();
+  return html;
+}
+
+export function buildQuoteUpdatedEmail(
+  portalId: string,
+  clientName: string,
+  qrNumber: string
+): string {
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
+  const portalUrl = `${baseUrl}/portal/${portalId}`;
+
+  let html = emailDocOpen();
+
+  html += emailHeader('Your Quote Has Been Updated', qrNumber);
+
+  html += '<tr><td style="padding:24px;">';
+  html += `<p style="color:#E5E5E5;font-size:16px;margin:0 0 16px;">Hi ${clientName},</p>`;
+  html += '<p style="color:#A1A1AA;font-size:14px;line-height:1.6;margin:0 0 24px;">We\'ve reviewed your feedback and updated your quote. Please visit your portal to review the changes.</p>';
+
+  // CTA Button
+  html += ctaButton(portalUrl, 'Review Updated Quote');
+
+  html += '<p style="color:#71717A;font-size:12px;text-align:center;margin:24px 0 0;">This link is unique to you.</p>';
+  html += '</td></tr>';
+
+  html += emailFooter();
+  html += emailDocClose();
+  return html;
+}
+
 export function buildVerificationCodeEmail(clientName: string, code: string): string {
   let html = emailDocOpen();
 

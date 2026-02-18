@@ -107,6 +107,19 @@ export function buildTierQuotePayload(
     resolveTierService(item.serviceId, item.tierId, item.addOns, item.subtotal)
   );
 
+  // Separate one-time vs monthly totals from resolved services
+  let rawOneTime = 0;
+  let rawMonthly = 0;
+  for (const rs of resolvedServices) {
+    rawOneTime += rs.oneTimeTotal;
+    rawMonthly += rs.monthlyTotal;
+  }
+
+  // Apply bundle discount proportionally to both
+  const discountMultiplier = discountPercentage > 0 ? 1 - discountPercentage / 100 : 1;
+  const oneTimeTotal = Math.round(rawOneTime * discountMultiplier);
+  const monthlyTotal = Math.round(rawMonthly * discountMultiplier);
+
   return {
     source,
     name: formData.name,
@@ -117,10 +130,10 @@ export function buildTierQuotePayload(
     serviceCount: items.length,
     serviceNames,
     hasCustomQuote: false,
-    oneTimeTotal: subtotal,
-    monthlyTotal: 0,
+    oneTimeTotal,
+    monthlyTotal,
     discountPercentage,
-    grandTotal: total,
+    grandTotal: oneTimeTotal + monthlyTotal,
     servicesDetail,
     resolvedServices,
   };

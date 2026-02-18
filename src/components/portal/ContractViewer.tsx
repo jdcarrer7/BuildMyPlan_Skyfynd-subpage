@@ -10,7 +10,7 @@ interface ContractViewerProps {
 export default function ContractViewer({ clientName, effectiveDate }: ContractViewerProps) {
   return (
     <div className="bg-white text-[#1a1a2e] rounded-lg overflow-hidden" style={{ fontFamily: "'Inter', sans-serif", fontSize: '10pt', lineHeight: 1.5 }}>
-      <div className="p-8 sm:p-10 lg:p-12 max-w-none">
+      <div className="p-5 sm:p-8 md:p-10 lg:p-12 max-w-none">
         {/* Header */}
         <header className="text-center pb-4 mb-4 border-b-2 border-[#1a1a2e]">
           <div className="flex items-center justify-center gap-3 mb-3">
@@ -47,14 +47,14 @@ export default function ContractViewer({ clientName, effectiveDate }: ContractVi
         </Article>
 
         <Article num={3} title="Service Tiers">
-          <div className="overflow-x-auto my-1.5">
-            <table className="w-full border-collapse text-[9.5pt]">
+          <div className="overflow-x-auto my-1.5 -mx-1 px-1">
+            <table className="w-full border-collapse text-[8.5pt] sm:text-[9.5pt]" style={{ minWidth: '400px' }}>
               <thead>
                 <tr className="bg-[#1a1a2e] text-white">
-                  <th className="px-2.5 py-1.5 text-left font-semibold text-[8.5pt] uppercase tracking-wider">Tier</th>
-                  <th className="px-2.5 py-1.5 text-left font-semibold text-[8.5pt] uppercase tracking-wider">Scope</th>
-                  <th className="px-2.5 py-1.5 text-left font-semibold text-[8.5pt] uppercase tracking-wider">Revisions</th>
-                  <th className="px-2.5 py-1.5 text-left font-semibold text-[8.5pt] uppercase tracking-wider">License</th>
+                  <th className="px-2 sm:px-2.5 py-1.5 text-left font-semibold text-[7.5pt] sm:text-[8.5pt] uppercase tracking-wider">Tier</th>
+                  <th className="px-2 sm:px-2.5 py-1.5 text-left font-semibold text-[7.5pt] sm:text-[8.5pt] uppercase tracking-wider">Scope</th>
+                  <th className="px-2 sm:px-2.5 py-1.5 text-left font-semibold text-[7.5pt] sm:text-[8.5pt] uppercase tracking-wider">Revisions</th>
+                  <th className="px-2 sm:px-2.5 py-1.5 text-left font-semibold text-[7.5pt] sm:text-[8.5pt] uppercase tracking-wider">License</th>
                 </tr>
               </thead>
               <tbody>

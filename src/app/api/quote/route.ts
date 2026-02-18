@@ -1,10 +1,10 @@
 import { NextResponse } from 'next/server';
 import { sendEmail } from '@/lib/email/resend';
+import { ADMIN_EMAILS } from '@/lib/email/constants';
 import { createQuote } from '@/lib/supabase/quotes';
 import { buildQuoteConfirmationEmail } from '@/lib/portal/email';
 
 const VALID_SOURCES = ['Main Page', 'Rent Me a Site', 'RentMe', 'Custom Builder'] as const;
-const ADMIN_EMAILS = ['contact@skyfynd.io', 'carlos@skyfynd.io'];
 
 export async function POST(request: Request) {
   try {

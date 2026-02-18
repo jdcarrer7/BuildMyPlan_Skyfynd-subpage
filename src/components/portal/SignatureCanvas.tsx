@@ -171,11 +171,19 @@ export default function SignatureCanvas({ clientName, portalId, onSigned }: Sign
 
         {error && <p className="text-red-400 text-xs text-center">{error}</p>}
 
-        <div className="flex items-center justify-center gap-2">
+        <div className="flex flex-col-reverse sm:flex-row items-center justify-center gap-2">
+          <button
+            onClick={handleClear}
+            disabled={submitting}
+            className="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 px-4 py-2.5 sm:py-2 rounded-lg text-sm text-[#A1A1AA] border border-white/[0.1] hover:bg-white/[0.04] transition-all"
+          >
+            <RotateCcw className="w-3.5 h-3.5" />
+            Redo
+          </button>
           <button
             onClick={handleSubmit}
             disabled={submitting}
-            className="inline-flex items-center justify-center gap-2 px-5 py-2 rounded-lg text-sm font-semibold text-white transition-all disabled:opacity-50"
+            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-2.5 sm:py-2 rounded-lg text-sm font-semibold text-white transition-all disabled:opacity-50"
             style={{ background: 'linear-gradient(to right, rgba(167,139,250,0.75) 0%, rgba(96,175,250,0.85) 40%, rgba(52,211,153,0.8) 100%)' }}
           >
             {submitting ? (
@@ -189,14 +197,6 @@ export default function SignatureCanvas({ clientName, portalId, onSigned }: Sign
                 Submit
               </>
             )}
-          </button>
-          <button
-            onClick={handleClear}
-            disabled={submitting}
-            className="inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-lg text-sm text-[#A1A1AA] border border-white/[0.1] hover:bg-white/[0.04] transition-all"
-          >
-            <RotateCcw className="w-3.5 h-3.5" />
-            Redo
           </button>
         </div>
       </div>
@@ -298,9 +298,9 @@ export default function SignatureCanvas({ clientName, portalId, onSigned }: Sign
             </div>
 
             {/* Live preview */}
-            <div className="relative bg-white rounded-lg overflow-hidden border-2 border-white/[0.1] h-[150px] flex items-center justify-center">
+            <div className="relative bg-white rounded-lg overflow-hidden border-2 border-white/[0.1] h-[120px] sm:h-[150px] flex items-center justify-center px-3">
               <p
-                className="text-[#1a1a2e] text-4xl select-none"
+                className="text-[#1a1a2e] text-2xl sm:text-4xl select-none truncate max-w-full"
                 style={{ fontFamily: selectedFont }}
               >
                 {typedName || clientName}
@@ -317,10 +317,10 @@ export default function SignatureCanvas({ clientName, portalId, onSigned }: Sign
 
       {error && <p className="text-red-400 text-sm text-center">{error}</p>}
 
-      <div className="flex items-center justify-center gap-3">
+      <div className="flex flex-col-reverse sm:flex-row items-center justify-center gap-2 sm:gap-3">
         <button
           onClick={handleClear}
-          className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm text-[#71717A] border border-white/[0.1] hover:bg-white/[0.04] transition-all"
+          className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 py-2.5 sm:py-2 rounded-lg text-sm text-[#71717A] border border-white/[0.1] hover:bg-white/[0.04] transition-all"
         >
           <RotateCcw className="w-3.5 h-3.5" />
           Clear
@@ -328,7 +328,7 @@ export default function SignatureCanvas({ clientName, portalId, onSigned }: Sign
         <button
           onClick={handleReview}
           disabled={isReviewDisabled}
-          className="inline-flex items-center gap-2 px-6 py-2 rounded-lg text-sm font-semibold text-white transition-all disabled:opacity-30"
+          className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-2.5 sm:py-2 rounded-lg text-sm font-semibold text-white transition-all disabled:opacity-30"
           style={{ background: 'linear-gradient(to right, rgba(167,139,250,0.75) 0%, rgba(96,175,250,0.85) 40%, rgba(52,211,153,0.8) 100%)' }}
         >
           <Check className="w-3.5 h-3.5" />

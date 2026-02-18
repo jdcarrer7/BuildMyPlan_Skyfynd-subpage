@@ -714,3 +714,38 @@ input[type="number"] {
   margin: 0 auto;
   padding: 0 24px;
 }
+
+/* ========================================
+   MOBILE / CROSS-BROWSER UTILITIES
+   ======================================== */
+
+/* Hide scrollbar but allow scrolling (step indicator, tables) */
+.scrollbar-none {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+
+/* Smooth touch scrolling for iOS Safari */
+.-webkit-overflow-scrolling-touch {
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Prevent text size adjustment on orientation change (iOS Safari, Android) */
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+/* Improve tap highlight on mobile (WebKit browsers) */
+a, button, input, textarea, select {
+  -webkit-tap-highlight-color: rgba(59, 130, 246, 0.1);
+}
+
+/* Ensure buttons and inputs render consistently across browsers */
+button, input, textarea, select {
+  font-family: inherit;
+  font-size: inherit;
+}

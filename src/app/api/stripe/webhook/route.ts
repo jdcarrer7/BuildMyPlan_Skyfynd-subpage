@@ -3,10 +3,9 @@ import { getStripe } from '@/lib/stripe/client';
 import { getSupabaseAdmin } from '@/lib/supabase/client';
 import { buildPaymentConfirmationEmail } from '@/lib/portal/email';
 import { sendEmail } from '@/lib/email/resend';
+import { ADMIN_EMAILS } from '@/lib/email/constants';
 import { generateSignedAgreementPDFBuffer } from '@/lib/portal/generate-signed-pdf';
 import { getPaymentModel } from '@/lib/portal/payment-model';
-
-const ADMIN_EMAILS = ['contact@skyfynd.io', 'carlos@skyfynd.io'];
 
 async function sendConfirmationEmail(
   clientEmail: string,

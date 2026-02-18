@@ -401,26 +401,30 @@ export default function QuoteEditor({
             {isEditing ? (
               <div className="flex items-center gap-3">
                 <div className="flex items-center gap-1">
+                  <span className="text-[#71717A] text-xs mr-1">One-time</span>
                   <span className="text-white text-sm">$</span>
                   <input
                     type="number"
-                    value={svc.oneTimeTotal}
+                    value={svc.oneTimeTotal || ''}
+                    onFocus={(e) => { if (svc.oneTimeTotal === 0) e.target.value = ''; }}
                     onChange={(e) => updateServicePrice(svcIndex, 'oneTimeTotal', Number(e.target.value) || 0)}
+                    placeholder="0"
                     className="w-24 bg-white/[0.04] border border-white/[0.1] rounded px-2 py-1 text-sm text-white text-right font-medium focus:outline-none focus:border-[#3B82F6] tabular-nums [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                   />
                 </div>
-                {svc.monthlyTotal > 0 && (
-                  <div className="flex items-center gap-1">
-                    <span className="text-[#3B82F6] text-sm">$</span>
-                    <input
-                      type="number"
-                      value={svc.monthlyTotal}
-                      onChange={(e) => updateServicePrice(svcIndex, 'monthlyTotal', Number(e.target.value) || 0)}
-                      className="w-24 bg-white/[0.04] border border-[#3B82F6]/30 rounded px-2 py-1 text-sm text-[#3B82F6] text-right font-medium focus:outline-none focus:border-[#3B82F6] tabular-nums [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-                    />
-                    <span className="text-[#3B82F6] text-sm">/mo</span>
-                  </div>
-                )}
+                <div className="flex items-center gap-1">
+                  <span className="text-[#71717A] text-xs mr-1">Monthly</span>
+                  <span className="text-[#3B82F6] text-sm">$</span>
+                  <input
+                    type="number"
+                    value={svc.monthlyTotal || ''}
+                    onFocus={(e) => { if (svc.monthlyTotal === 0) e.target.value = ''; }}
+                    onChange={(e) => updateServicePrice(svcIndex, 'monthlyTotal', Number(e.target.value) || 0)}
+                    placeholder="0"
+                    className="w-24 bg-white/[0.04] border border-[#3B82F6]/30 rounded px-2 py-1 text-sm text-[#3B82F6] text-right font-medium focus:outline-none focus:border-[#3B82F6] tabular-nums [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                  />
+                  <span className="text-[#3B82F6] text-sm">/mo</span>
+                </div>
               </div>
             ) : (
               <div className="flex items-center gap-4 text-sm">
@@ -509,8 +513,9 @@ export default function QuoteEditor({
                   <span className="text-white text-xl font-bold">$</span>
                   <input
                     type="number"
-                    value={grandTotalOverride !== null ? grandTotalOverride : quote.totals.grandTotal}
+                    value={(grandTotalOverride !== null ? grandTotalOverride : quote.totals.grandTotal) || ''}
                     onChange={(e) => setGrandTotalOverride(Number(e.target.value) || 0)}
+                    placeholder="0"
                     className="w-32 bg-white/[0.04] border border-white/[0.1] rounded px-2 py-1 text-xl text-white text-right font-bold focus:outline-none focus:border-[#3B82F6] tabular-nums [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                   />
                 </div>

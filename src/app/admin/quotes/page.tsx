@@ -10,7 +10,7 @@ import QuotePDFExport from '@/components/admin/QuotePDFExport';
 import PortalStatusBadge from '@/components/admin/PortalStatusBadge';
 import TrashBin from '@/components/admin/TrashBin';
 import QuoteEditor from '@/components/admin/QuoteEditor';
-import { Loader2, LinkIcon, AlertCircle, Save, X, CheckCircle2, CreditCard } from 'lucide-react';
+import { Loader2, LinkIcon, AlertCircle, Save, X, CheckCircle2, CreditCard, Send } from 'lucide-react';
 
 function AdminQuotesContent() {
   const {
@@ -29,6 +29,7 @@ function AdminQuotesContent() {
     sendPortal,
     completePortal,
     sendFinalPayment,
+    resolveChangeRequest,
   } = useAdminStore();
 
   const [sendingPortal, setSendingPortal] = useState(false);
@@ -49,6 +50,9 @@ function AdminQuotesContent() {
   const [completePanelOpen, setCompletePanelOpen] = useState(false);
   const [completing, setCompleting] = useState(false);
   const [completeResult, setCompleteResult] = useState<{ success: boolean; message: string } | null>(null);
+  const [changeResponse, setChangeResponse] = useState('');
+  const [resolvingChanges, setResolvingChanges] = useState(false);
+  const [resolveResult, setResolveResult] = useState<{ success: boolean; message: string } | null>(null);
   const editPanelRef = useRef<HTMLDivElement>(null);
   const [editPanelHeight, setEditPanelHeight] = useState(0);
 
@@ -82,6 +86,9 @@ function AdminQuotesContent() {
     setCompletePanelOpen(false);
     setCompleteResult(null);
     setSendFinalPaymentResult(null);
+    setChangeResponse('');
+    setResolvingChanges(false);
+    setResolveResult(null);
   }, [selectedQR]);
 
   // Handle ?qr= deep link
@@ -257,18 +264,59 @@ function AdminQuotesContent() {
                   )}
                 </div>
               ))}
-              {quotePortals.some(p => p.pending_changes.length > 0) && (
-                <div className="border-t border-white/[0.06] pt-3 space-y-2">
-                  {quotePortals.flatMap(p => p.pending_changes).map((cr, i) => (
-                    <div key={i} className="bg-[#F59E0B]/5 border border-[#F59E0B]/20 rounded-lg p-3">
-                      <p className="text-xs text-[#FAFAFA]">&ldquo;{cr.message}&rdquo;</p>
-                      <p className="text-[10px] text-[#71717A] mt-1">
-                        {new Date(cr.created_at).toLocaleString('en-US', { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' })}
-                      </p>
-                    </div>
-                  ))}
-                </div>
-              )}
+              {quotePortals.some(p => p.pending_changes.length > 0) && (() => {
+                const portalWithChanges = quotePortals.find(p => p.pending_changes.length > 0)!;
+                return (
+                  <div className="border-t border-white/[0.06] pt-3 space-y-3">
+                    {quotePortals.flatMap(p => p.pending_changes).map((cr, i) => (
+                      <div key={i} className="bg-[#F59E0B]/5 border border-[#F59E0B]/20 rounded-lg p-3">
+                        <p className="text-xs text-[#FAFAFA]">&ldquo;{cr.message}&rdquo;</p>
+                        <p className="text-[10px] text-[#71717A] mt-1">
+                          {new Date(cr.created_at).toLocaleString('en-US', { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' })}
+                        </p>
+                      </div>
+                    ))}
+
+                    {/* Admin response + resolve */}
+                    <textarea
+                      value={changeResponse}
+                      onChange={(e) => setChangeResponse(e.target.value)}
+                      placeholder="Optional response to the client..."
+                      rows={2}
+                      className="w-full bg-white/[0.04] border border-white/[0.1] rounded-lg px-3 py-2 text-[#FAFAFA] text-xs placeholder:text-[#52525B] focus:border-[#60AFFA] focus:ring-1 focus:ring-[#60AFFA] outline-none resize-none transition-all"
+                    />
+                    {resolveResult && (
+                      <div className={`text-xs px-3 py-2 rounded-lg ${resolveResult.success ? 'bg-[#10B981]/10 text-[#10B981]' : 'bg-red-500/10 text-red-400'}`}>
+                        {resolveResult.message}
+                      </div>
+                    )}
+                    <button
+                      onClick={async () => {
+                        setResolvingChanges(true);
+                        setResolveResult(null);
+                        const result = await resolveChangeRequest(portalWithChanges.id, changeResponse || undefined);
+                        setResolvingChanges(false);
+                        if (result.success) {
+                          setResolveResult({ success: true, message: result.message || 'Updated quote sent!' });
+                          setChangeResponse('');
+                          setTimeout(() => setResolveResult(null), 4000);
+                        } else {
+                          setResolveResult({ success: false, message: result.error || 'Failed to resolve' });
+                        }
+                      }}
+                      disabled={resolvingChanges}
+                      className="w-full flex items-center justify-center gap-2 px-3 py-2.5 text-sm font-medium rounded-lg text-white transition-all disabled:opacity-50 hover:opacity-90"
+                      style={{ background: 'linear-gradient(to right, rgba(167,139,250,0.75) 0%, rgba(96,175,250,0.85) 40%, rgba(52,211,153,0.8) 100%)' }}
+                    >
+                      {resolvingChanges ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
+                      {resolvingChanges ? 'Sending...' : 'Send Updated Quote'}
+                    </button>
+                    <p className="text-[10px] text-[#52525B]">
+                      This will sync the latest quote data to the portal, notify the client, and mark change requests as resolved.
+                    </p>
+                  </div>
+                );
+              })()}
             </div>
           )}
 

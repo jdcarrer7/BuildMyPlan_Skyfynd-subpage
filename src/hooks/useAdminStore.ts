@@ -61,6 +61,7 @@ interface AdminState {
   saveQuoteEdit: (quoteData: QuoteJSON, adminNotes: string) => Promise<{ success: boolean; error?: string }>;
   completePortal: (portalId: string) => Promise<{ success: boolean; error?: string }>;
   sendFinalPayment: (qrNumber: string) => Promise<{ success: boolean; message?: string; error?: string }>;
+  resolveChangeRequest: (portalId: string, adminResponse?: string) => Promise<{ success: boolean; message?: string; error?: string }>;
   trashQuote: (qrNumber: string) => Promise<{ success: boolean; error?: string }>;
   restoreQuote: (qrNumber: string) => Promise<{ success: boolean; error?: string }>;
   permanentlyDeleteQuote: (qrNumber: string) => Promise<{ success: boolean; error?: string }>;
@@ -306,6 +307,24 @@ export const useAdminStore = create<AdminState>((set, get) => ({
         return { success: true };
       }
       return { success: false, error: data.error || 'Failed to save edits' };
+    } catch {
+      return { success: false, error: 'Network error' };
+    }
+  },
+
+  resolveChangeRequest: async (portalId: string, adminResponse?: string) => {
+    try {
+      const res = await fetch(`/api/admin/portals/${portalId}/resolve-changes`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ adminResponse }),
+      });
+      const data = await res.json();
+      if (data.status === 'success') {
+        get().fetchPortals();
+        return { success: true, message: data.message };
+      }
+      return { success: false, error: data.error || 'Failed to resolve change request' };
     } catch {
       return { success: false, error: 'Network error' };
     }

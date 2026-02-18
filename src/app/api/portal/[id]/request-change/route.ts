@@ -5,6 +5,9 @@ import { portalSessionOptions } from '@/lib/auth/portal-session';
 import type { PortalSessionData } from '@/lib/auth/portal-session';
 import { getSupabaseAdmin } from '@/lib/supabase/client';
 import { canTransitionTo } from '@/lib/portal/status';
+import { sendEmail } from '@/lib/email/resend';
+import { ADMIN_EMAILS } from '@/lib/email/constants';
+import { buildChangeRequestNotificationEmail } from '@/lib/portal/email';
 
 export async function POST(
   request: Request,
@@ -32,10 +35,10 @@ export async function POST(
 
     const supabase = getSupabaseAdmin();
 
-    // Get current status
+    // Get current status + info for admin notification
     const { data: portal, error } = await supabase
       .from('portals')
-      .select('status')
+      .select('status, client_name, qr_number')
       .eq('id', portalId)
       .single();
 
@@ -67,6 +70,20 @@ export async function POST(
       .from('portals')
       .update({ status: 'change_requested', updated_at: new Date().toISOString() })
       .eq('id', portalId);
+
+    // Notify admin via email
+    const trimmedMessage = message.trim();
+    const htmlBody = buildChangeRequestNotificationEmail(
+      portal.client_name,
+      portal.qr_number,
+      trimmedMessage
+    );
+    await sendEmail({
+      to: ADMIN_EMAILS,
+      subject: `Change Request \u2014 ${portal.qr_number} (${portal.client_name})`,
+      html: htmlBody,
+      text: `Change request from ${portal.client_name} (${portal.qr_number}):\n\n${trimmedMessage}`,
+    });
 
     return NextResponse.json({ status: 'success', message: 'Change request submitted' });
   } catch (error) {

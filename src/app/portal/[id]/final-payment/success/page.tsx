@@ -26,19 +26,19 @@ export default function FinalPaymentSuccessPage() {
   }
 
   return (
-    <div className="flex items-center justify-center min-h-[60vh]">
+    <div className="flex items-center justify-center min-h-[60vh] px-2">
       <div className="text-center max-w-md mx-auto space-y-6">
-        <div className="w-20 h-20 rounded-full bg-[#10B981]/10 flex items-center justify-center mx-auto">
-          <CheckCircle2 className="w-10 h-10 text-[#10B981]" />
+        <div className="w-16 sm:w-20 h-16 sm:h-20 rounded-full bg-[#10B981]/10 flex items-center justify-center mx-auto">
+          <CheckCircle2 className="w-8 sm:w-10 h-8 sm:h-10 text-[#10B981]" />
         </div>
         <div>
           <h1
-            className="text-3xl font-semibold text-[#FAFAFA] mb-3"
+            className="text-2xl sm:text-3xl font-semibold text-[#FAFAFA] mb-3"
             style={{ fontFamily: "'Source Serif Pro', Georgia, serif" }}
           >
             Payment Complete!
           </h1>
-          <p className="text-[#A1A1AA]">
+          <p className="text-[#A1A1AA] text-sm sm:text-base">
             Thank you for completing your final payment. Your project balance is now fully settled. We appreciate your trust in Skyfynd!
           </p>
         </div>
