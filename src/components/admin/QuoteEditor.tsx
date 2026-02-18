@@ -185,9 +185,34 @@ export default function QuoteEditor({
 
   const startEditing = useCallback(() => {
     if (!selectedQuote) return;
-    setDraft(cloneQuote(selectedQuote));
+    const clone = cloneQuote(selectedQuote);
+
+    // Detect services whose stored totals don't match step-calculated totals.
+    // These were previously manually overridden and must stay marked as such.
+    const preOverridden = new Set<number>();
+    for (let idx = 0; idx < clone.services.length; idx++) {
+      const svc = clone.services[idx];
+      let stepsOneTime = 0;
+      let stepsMonthly = 0;
+      const sumSteps = (steps: ResolvedStep[]) => {
+        for (const step of steps) {
+          if (step.priceImpact !== null && step.priceImpact > 0) {
+            if (step.isRecurring) stepsMonthly += step.priceImpact;
+            else stepsOneTime += step.priceImpact;
+          }
+          if (step.children) sumSteps(step.children);
+        }
+      };
+      sumSteps(svc.steps);
+      // If the service total doesn't match what steps add up to, it was manually set
+      if (svc.oneTimeTotal !== stepsOneTime || svc.monthlyTotal !== stepsMonthly) {
+        preOverridden.add(idx);
+      }
+    }
+
+    setDraft(clone);
     setNotesValue(adminNotes);
-    setOverriddenServices(new Set());
+    setOverriddenServices(preOverridden);
     setGrandTotalOverride(null);
     setIsEditing(true);
     setSaveResult(null);
