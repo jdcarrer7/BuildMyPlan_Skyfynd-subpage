@@ -16,7 +16,7 @@ export default function PortalLayout({ children }: { children: React.ReactNode }
             alt="Skyfynd"
             className="h-7 sm:h-8 w-auto"
           />
-          <span className="text-[#FAFAFA] text-base font-semibold" style={{ fontFamily: "'Source Serif Pro', Georgia, serif" }}>Client Portal</span>
+          <span className="text-[#FAFAFA] text-lg font-semibold" style={{ fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif", letterSpacing: '-0.5px' }}>Client Portal</span>
         </div>
       </header>
 

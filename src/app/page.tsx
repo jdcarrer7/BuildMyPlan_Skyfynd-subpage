@@ -70,9 +70,9 @@ export default function BuildMyPlan() {
   return (
     <>
       <Header />
-      <main className="min-h-screen bg-[var(--bg-primary)] bg-particles" style={{ paddingTop: '100px' }}>
+      <main className="min-h-screen bg-[var(--bg-primary)] bg-particles pt-[80px] md:pt-[100px]">
       {/* Header - More generous spacing */}
-      <header className="relative pt-6 pb-16 md:pt-12 md:pb-24 px-6 text-center">
+      <header className="relative pt-2 pb-10 md:pt-12 md:pb-24 px-6 text-center">
         {/* Ambient Background Glow */}
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
           <div className="w-[800px] h-[600px] bg-gradient-to-b from-[var(--accent-blue)]/4 via-[var(--accent-teal)]/3 to-transparent rounded-full blur-[150px]" />
@@ -106,20 +106,20 @@ export default function BuildMyPlan() {
             Bundle more to save more.
           </p>
 
-          {/* Discount Badges - Sophisticated, subtle */}
-          <div className="flex flex-wrap items-center justify-center gap-3 md:gap-4">
+          {/* Discount Badges - Compact pills on mobile, expanded on md+ */}
+          <div className="flex items-center justify-center gap-2.5 md:gap-4">
             {/* 10% OFF - Purple */}
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: 0.4, duration: 0.5 }}
-              className="flex items-center gap-2.5 px-5 py-3 bg-gradient-to-r from-[var(--accent-purple)]/10 to-[var(--accent-purple-light)]/10 backdrop-blur-sm rounded-2xl border border-[var(--accent-purple)]/20"
+              className="flex items-center gap-1.5 md:gap-2.5 px-4 py-2.5 md:px-5 md:py-3 bg-[var(--accent-purple)]/8 backdrop-blur-sm rounded-xl md:rounded-2xl border border-[var(--accent-purple)]/20"
             >
-              <div className="w-7 h-7 rounded-full bg-[var(--accent-purple)]/15 flex items-center justify-center">
+              <div className="hidden md:flex w-7 h-7 rounded-full bg-[var(--accent-purple)]/15 items-center justify-center">
                 <Percent className="w-3.5 h-3.5 text-[var(--accent-purple)]" />
               </div>
-              <div className="text-left">
-                <span className="text-xs text-[var(--text-muted)] block">3+ services</span>
+              <div className="text-center md:text-left">
+                <span className="text-[11px] md:text-xs text-[var(--text-muted)] block">3+ services</span>
                 <span className="text-sm font-semibold text-[var(--accent-purple)]">10% OFF</span>
               </div>
             </motion.div>
@@ -129,13 +129,13 @@ export default function BuildMyPlan() {
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: 0.5, duration: 0.5 }}
-              className="flex items-center gap-2.5 px-5 py-3 bg-[var(--bg-card)]/40 backdrop-blur-sm rounded-2xl border border-[var(--accent-blue)]/20"
+              className="flex items-center gap-1.5 md:gap-2.5 px-4 py-2.5 md:px-5 md:py-3 bg-[var(--accent-blue)]/8 backdrop-blur-sm rounded-xl md:rounded-2xl border border-[var(--accent-blue)]/20"
             >
-              <div className="w-7 h-7 rounded-full bg-[var(--accent-blue)]/10 flex items-center justify-center">
+              <div className="hidden md:flex w-7 h-7 rounded-full bg-[var(--accent-blue)]/10 items-center justify-center">
                 <Percent className="w-3.5 h-3.5 text-[var(--accent-blue)]" />
               </div>
-              <div className="text-left">
-                <span className="text-xs text-[var(--text-muted)] block">5+ services</span>
+              <div className="text-center md:text-left">
+                <span className="text-[11px] md:text-xs text-[var(--text-muted)] block">5+ services</span>
                 <span className="text-sm font-semibold text-[var(--accent-blue)]">15% OFF</span>
               </div>
             </motion.div>
@@ -145,13 +145,13 @@ export default function BuildMyPlan() {
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: 0.6, duration: 0.5 }}
-              className="flex items-center gap-2.5 px-5 py-3 bg-[var(--bg-card)]/40 backdrop-blur-sm rounded-2xl border border-[var(--accent-teal)]/20"
+              className="flex items-center gap-1.5 md:gap-2.5 px-4 py-2.5 md:px-5 md:py-3 bg-[var(--accent-teal)]/8 backdrop-blur-sm rounded-xl md:rounded-2xl border border-[var(--accent-teal)]/20"
             >
-              <div className="w-7 h-7 rounded-full bg-[var(--accent-teal)]/15 flex items-center justify-center">
+              <div className="hidden md:flex w-7 h-7 rounded-full bg-[var(--accent-teal)]/15 items-center justify-center">
                 <Percent className="w-3.5 h-3.5 text-[var(--accent-teal)]" />
               </div>
-              <div className="text-left">
-                <span className="text-xs text-[var(--text-muted)] block">7+ services</span>
+              <div className="text-center md:text-left">
+                <span className="text-[11px] md:text-xs text-[var(--text-muted)] block">7+ services</span>
                 <span className="text-sm font-semibold text-[var(--accent-teal)]">20% OFF</span>
               </div>
             </motion.div>
@@ -203,12 +203,12 @@ export default function BuildMyPlan() {
         )}
 
         {/* Grid Layout - Services with sidebar using flexbox for sticky support */}
-        <div className="lg:flex lg:gap-8 lg:items-start">
+        <div className="xl:flex xl:gap-8 xl:items-start">
           {/* Services Grid */}
           <div className="flex-1 min-w-0">
             <motion.div
               layout
-              className="grid md:grid-cols-2 gap-6 lg:gap-8"
+              className="grid md:grid-cols-2 gap-6 xl:gap-8"
             >
               {filteredServices.map((service, index) => (
                 <motion.div
@@ -234,17 +234,23 @@ export default function BuildMyPlan() {
                   />
                 </motion.div>
               ))}
-            </motion.div>
 
-            {/* Mobile Plan Summary - Shows below services on mobile */}
-            <div className="lg:hidden mt-10">
-              <PlanSummary onRequestQuote={() => setIsQuoteFormOpen(true)} />
-            </div>
+              {/* Plan Summary as grid tile - visible on tablet/mobile, hidden when xl sidebar shows */}
+              <motion.div
+                key="plan-summary-tile"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: filteredServices.length * 0.1, duration: 0.5 }}
+                className="xl:hidden scroll-mt-4"
+              >
+                <PlanSummary onRequestQuote={() => setIsQuoteFormOpen(true)} />
+              </motion.div>
+            </motion.div>
           </div>
 
           {/* Plan Summary Sidebar - CSS sticky positioning */}
           <div
-            className="hidden lg:block w-[380px] flex-shrink-0 sticky top-4 max-h-[calc(100vh-2rem)] overflow-y-auto z-30"
+            className="hidden xl:block w-[380px] flex-shrink-0 sticky top-4 max-h-[calc(100vh-2rem)] overflow-y-auto z-30"
           >
             <PlanSummary onRequestQuote={() => setIsQuoteFormOpen(true)} />
           </div>
@@ -257,7 +263,7 @@ export default function BuildMyPlan() {
           initial={{ y: 100, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-          className="fixed bottom-0 left-0 right-0 p-5 glass border-t border-[var(--border-subtle)] lg:hidden z-40"
+          className="fixed bottom-0 left-0 right-0 p-5 glass border-t border-[var(--border-subtle)] xl:hidden z-40"
         >
           <div className="flex items-center justify-between mb-4">
             <div>

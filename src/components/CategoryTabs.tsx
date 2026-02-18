@@ -23,7 +23,7 @@ export default function CategoryTabs({
   onCategoryChange,
 }: CategoryTabsProps) {
   return (
-    <div className="flex flex-wrap gap-2 justify-center mb-10">
+    <div className="grid grid-cols-2 gap-2 md:flex md:flex-wrap md:gap-2 md:justify-center mb-10 max-w-md md:max-w-none mx-auto">
       {categories.map((category) => {
         const isActive = category.id === activeCategory;
         return (
@@ -31,22 +31,21 @@ export default function CategoryTabs({
             key={category.id}
             onClick={() => onCategoryChange(category.id)}
             className={`
-              relative flex items-center gap-2.5 px-6 py-3.5 rounded-full
+              relative flex items-center justify-center md:justify-start gap-2 md:gap-2.5 px-4 py-3 md:px-6 md:py-3.5 rounded-xl
               font-medium transition-all duration-400
               ${isActive
                 ? 'text-white'
                 : 'bg-transparent text-[var(--text-secondary)] hover:text-white hover:bg-[var(--bg-card)]/60'
               }
             `}
-            style={{ fontSize: '15px' }}
+            style={{ fontSize: '14px' }}
             whileHover={{ scale: isActive ? 1 : 1.02 }}
             whileTap={{ scale: 0.98 }}
           >
             {isActive && (
               <motion.div
                 layoutId="activeTab"
-                className="absolute inset-0 rounded-full border border-[var(--accent-blue)]/40"
-                style={{ background: 'linear-gradient(135deg, rgba(139, 92, 246, 0.4) 0%, rgba(59, 130, 246, 0.5) 50%, rgba(16, 185, 129, 0.4) 100%)' }}
+                className="absolute inset-0 rounded-xl bg-white/[0.08] border border-white/20"
                 transition={{ type: 'spring', bounce: 0.15, duration: 0.5 }}
               />
             )}
