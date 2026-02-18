@@ -6,6 +6,7 @@ import type { SessionData } from '@/lib/types/admin';
 import { getSupabaseAdmin } from '@/lib/supabase/client';
 import { buildFinalPaymentEmail } from '@/lib/portal/email';
 import { sendEmail } from '@/lib/email/resend';
+import { getPaymentModel } from '@/lib/portal/payment-model';
 
 export async function POST(request: Request) {
   try {
@@ -61,8 +62,17 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Final payment has already been completed' }, { status: 400 });
     }
 
-    // Build and send email
-    const grandTotal = portal.quote_data?.totals?.grandTotal || 0;
+    // Subscription-only portals have no final payment
+    const totals = portal.quote_data?.totals || { oneTimeTotal: 0, monthlyTotal: 0, grandTotal: 0 };
+    const paymentModel = getPaymentModel(totals);
+    if (paymentModel === 'subscription-only') {
+      return NextResponse.json({ error: 'Subscription-only portals have no final payment' }, { status: 400 });
+    }
+
+    // Build and send email — for mixed quotes, base on one-time total only
+    const baseForDeposit = paymentModel === 'mixed'
+      ? (totals.oneTimeTotal || 0)
+      : (totals.grandTotal || 0);
     const depositDollars = deposit.amount / 100;
     const clientEmail = portal.client_email;
     const clientName = portal.client_name;
@@ -71,19 +81,19 @@ export async function POST(request: Request) {
       portal.id,
       clientName,
       portal.qr_number,
-      grandTotal,
+      baseForDeposit,
       depositDollars,
       deposit.paid_at || portal.created_at
     );
 
     const subject = `Final Payment \u2014 ${portal.qr_number}`;
-    const remainingBalance = grandTotal - depositDollars;
+    const remainingBalance = baseForDeposit - depositDollars;
 
     await sendEmail({
       to: clientEmail,
       subject,
       html: htmlBody,
-      text: `Hi ${clientName},\n\nYour project is nearing completion. Please complete your final payment of $${remainingBalance.toLocaleString()}.\n\nProject Total: $${grandTotal.toLocaleString()}\nDeposit Paid: $${depositDollars.toLocaleString()}\nRemaining Balance: $${remainingBalance.toLocaleString()}\n\nSkyfynd — Software for Businesses`,
+      text: `Hi ${clientName},\n\nYour project is nearing completion. Please complete your final payment of $${remainingBalance.toLocaleString()}.\n\nProject Total: $${baseForDeposit.toLocaleString()}\nDeposit Paid: $${depositDollars.toLocaleString()}\nRemaining Balance: $${remainingBalance.toLocaleString()}\n\nSkyfynd — Software for Businesses`,
     });
 
     return NextResponse.json({

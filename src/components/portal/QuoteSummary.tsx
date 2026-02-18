@@ -1,6 +1,7 @@
 'use client';
 
 import type { QuoteJSON, ResolvedServiceConfig, ResolvedStep } from '@/lib/types/admin';
+import { getPaymentModel } from '@/lib/portal/payment-model';
 
 interface QuoteSummaryProps {
   quote: QuoteJSON;
@@ -174,27 +175,79 @@ export default function QuoteSummary({ quote }: QuoteSummaryProps) {
           )}
 
           {/* Grand Total */}
-          <div
-            className="grid grid-cols-2 px-4 py-4 text-white"
-            style={{ background: 'linear-gradient(to right, rgba(167,139,250,0.75) 0%, rgba(96,175,250,0.85) 40%, rgba(52,211,153,0.8) 100%)' }}
-          >
-            <span className="font-bold text-base">Project Total</span>
-            <span className="text-right font-bold text-xl">${fmt(totals.grandTotal || 0)}</span>
-          </div>
+          {(() => {
+            const pm = getPaymentModel(totals);
 
-          {/* Payment Structure */}
-          {(totals.grandTotal || 0) > 0 && (
-            <>
-              <div className="grid grid-cols-2 px-4 py-2.5 bg-white/[0.03] text-sm">
-                <span className="text-[#A1A1AA] font-medium">Deposit (50%)</span>
-                <span className="text-right text-[#FAFAFA] font-semibold">${fmt(Math.ceil((totals.grandTotal || 0) / 2))}</span>
-              </div>
-              <div className="grid grid-cols-2 px-4 py-2.5 text-sm">
-                <span className="text-[#71717A] font-medium">Due on Completion (50%)</span>
-                <span className="text-right text-[#A1A1AA] font-semibold">${fmt(Math.floor((totals.grandTotal || 0) / 2))}</span>
-              </div>
-            </>
-          )}
+            if (pm === 'subscription-only') {
+              return (
+                <>
+                  <div
+                    className="grid grid-cols-2 px-4 py-4 text-white"
+                    style={{ background: 'linear-gradient(to right, rgba(167,139,250,0.75) 0%, rgba(96,175,250,0.85) 40%, rgba(52,211,153,0.8) 100%)' }}
+                  >
+                    <span className="font-bold text-base">Monthly Total</span>
+                    <span className="text-right font-bold text-xl">${fmt(totals.monthlyTotal)}/mo</span>
+                  </div>
+                  <div className="grid grid-cols-2 px-4 py-2.5 bg-white/[0.03] text-sm">
+                    <span className="text-[#A1A1AA] font-medium">Monthly Subscription</span>
+                    <span className="text-right text-[#FAFAFA] font-semibold">${fmt(totals.monthlyTotal)}/mo</span>
+                  </div>
+                </>
+              );
+            }
+
+            if (pm === 'mixed') {
+              const depositAmt = Math.round((totals.oneTimeTotal || 0) * 0.5);
+              return (
+                <>
+                  <div
+                    className="grid grid-cols-2 px-4 py-4 text-white"
+                    style={{ background: 'linear-gradient(to right, rgba(167,139,250,0.75) 0%, rgba(96,175,250,0.85) 40%, rgba(52,211,153,0.8) 100%)' }}
+                  >
+                    <span className="font-bold text-base">Project Total</span>
+                    <span className="text-right font-bold text-xl">${fmt(totals.oneTimeTotal || 0)} + ${fmt(totals.monthlyTotal)}/mo</span>
+                  </div>
+                  <div className="grid grid-cols-2 px-4 py-2.5 bg-white/[0.03] text-sm">
+                    <span className="text-[#A1A1AA] font-medium">Deposit (50% of one-time)</span>
+                    <span className="text-right text-[#FAFAFA] font-semibold">${fmt(depositAmt)}</span>
+                  </div>
+                  <div className="grid grid-cols-2 px-4 py-2.5 text-sm">
+                    <span className="text-[#71717A] font-medium">Due on Completion</span>
+                    <span className="text-right text-[#A1A1AA] font-semibold">${fmt((totals.oneTimeTotal || 0) - depositAmt)}</span>
+                  </div>
+                  <div className="grid grid-cols-2 px-4 py-2.5 bg-white/[0.03] text-sm">
+                    <span className="text-[#A1A1AA] font-medium">Monthly Subscription</span>
+                    <span className="text-right text-[#FAFAFA] font-semibold">${fmt(totals.monthlyTotal)}/mo</span>
+                  </div>
+                </>
+              );
+            }
+
+            // One-time only
+            return (
+              <>
+                <div
+                  className="grid grid-cols-2 px-4 py-4 text-white"
+                  style={{ background: 'linear-gradient(to right, rgba(167,139,250,0.75) 0%, rgba(96,175,250,0.85) 40%, rgba(52,211,153,0.8) 100%)' }}
+                >
+                  <span className="font-bold text-base">Project Total</span>
+                  <span className="text-right font-bold text-xl">${fmt(totals.grandTotal || 0)}</span>
+                </div>
+                {(totals.grandTotal || 0) > 0 && (
+                  <>
+                    <div className="grid grid-cols-2 px-4 py-2.5 bg-white/[0.03] text-sm">
+                      <span className="text-[#A1A1AA] font-medium">Deposit (50%)</span>
+                      <span className="text-right text-[#FAFAFA] font-semibold">${fmt(Math.ceil((totals.grandTotal || 0) / 2))}</span>
+                    </div>
+                    <div className="grid grid-cols-2 px-4 py-2.5 text-sm">
+                      <span className="text-[#71717A] font-medium">Due on Completion (50%)</span>
+                      <span className="text-right text-[#A1A1AA] font-semibold">${fmt(Math.floor((totals.grandTotal || 0) / 2))}</span>
+                    </div>
+                  </>
+                )}
+              </>
+            );
+          })()}
         </div>
       </div>
 

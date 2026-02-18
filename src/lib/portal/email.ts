@@ -178,10 +178,14 @@ export function buildPortalInviteEmail(
   clientName: string,
   qrNumber: string,
   grandTotal: number,
-  serviceCount: number
+  serviceCount: number,
+  monthlyTotal?: number
 ): string {
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
   const portalUrl = `${baseUrl}/portal/${portalId}`;
+  const hasMonthly = (monthlyTotal || 0) > 0;
+  const oneTimeTotal = grandTotal - (monthlyTotal || 0);
+  const isSubscriptionOnly = hasMonthly && oneTimeTotal <= 0;
 
   let html = emailDocOpen();
 
@@ -190,14 +194,24 @@ export function buildPortalInviteEmail(
   // Body
   html += '<tr><td style="padding:24px;">';
   html += `<p style="color:#E5E5E5;font-size:16px;margin:0 0 16px;">Hi ${clientName},</p>`;
-  html += '<p style="color:#A1A1AA;font-size:14px;line-height:1.6;margin:0 0 24px;">Your quote is ready for review. We\'ve prepared a portal where you can review the details, sign the service agreement, and complete your deposit &#8212; all in one place.</p>';
+  if (isSubscriptionOnly) {
+    html += '<p style="color:#A1A1AA;font-size:14px;line-height:1.6;margin:0 0 24px;">Your quote is ready for review. We\'ve prepared a portal where you can review the details, sign the service agreement, and start your subscription &#8212; all in one place.</p>';
+  } else {
+    html += '<p style="color:#A1A1AA;font-size:14px;line-height:1.6;margin:0 0 24px;">Your quote is ready for review. We\'ve prepared a portal where you can review the details, sign the service agreement, and complete your deposit &#8212; all in one place.</p>';
+  }
 
   // Summary box
   html += '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom:24px;">';
   html += '<tr><td bgcolor="#1C1825" style="background-color:#1C1825;border-radius:8px;padding:16px 20px;">';
   html += '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">';
   html += infoRow('Services', `${serviceCount} selected`);
-  html += infoRow('Estimated Total', `$${fmt(grandTotal)}`);
+  if (isSubscriptionOnly) {
+    html += infoRow('Monthly', `$${fmt(monthlyTotal!)}/mo`);
+  } else if (hasMonthly) {
+    html += infoRow('Estimated Total', `$${fmt(oneTimeTotal)} + $${fmt(monthlyTotal!)}/mo`);
+  } else {
+    html += infoRow('Estimated Total', `$${fmt(grandTotal)}`);
+  }
   html += '</table></td></tr></table>';
 
   // CTA Button
@@ -258,37 +272,61 @@ export function buildPaymentConfirmationEmail(
   clientName: string,
   qrNumber: string,
   amountPaid: number,
-  paymentType: 'deposit' | 'final',
+  paymentType: 'deposit' | 'final' | 'subscription' | 'mixed',
   grandTotal?: number,
-  depositAmount?: number
+  depositAmount?: number,
+  monthlyAmount?: number
 ): string {
-  const isDeposit = paymentType === 'deposit';
-  const title = isDeposit ? 'Deposit Received' : 'Final Payment Received';
-  const message = isDeposit
-    ? 'We\'ve received your deposit and your project is now underway. We\'ll be in touch with next steps soon.'
-    : 'Your final payment has been received and your project balance is fully settled. Thank you for your trust in Skyfynd!';
+  const titleMap: Record<string, string> = {
+    deposit: 'Deposit Received',
+    final: 'Final Payment Received',
+    subscription: 'Subscription Confirmed',
+    mixed: 'Payment &amp; Subscription Confirmed',
+  };
+  const messageMap: Record<string, string> = {
+    deposit: 'We\'ve received your deposit and your project is now underway. We\'ll be in touch with next steps soon.',
+    final: 'Your final payment has been received and your project balance is fully settled. Thank you for your trust in Skyfynd!',
+    subscription: 'Your monthly subscription is now active. You\'ll be billed automatically each month.',
+    mixed: 'We\'ve received your deposit and your monthly subscription is now active. We\'ll be in touch with next steps soon.',
+  };
 
   let html = emailDocOpen();
 
-  html += emailHeader(title, qrNumber);
+  html += emailHeader(titleMap[paymentType], qrNumber);
 
   // Body
   html += '<tr><td style="padding:24px;">';
   html += `<p style="color:#E5E5E5;font-size:16px;margin:0 0 16px;">Hi ${clientName},</p>`;
-  html += `<p style="color:#A1A1AA;font-size:14px;line-height:1.6;margin:0 0 24px;">${message}</p>`;
+  html += `<p style="color:#A1A1AA;font-size:14px;line-height:1.6;margin:0 0 24px;">${messageMap[paymentType]}</p>`;
 
   // Payment summary
   html += '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom:24px;">';
   html += '<tr><td bgcolor="#1C1825" style="background-color:#1C1825;border-radius:8px;padding:16px 20px;">';
   html += '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">';
 
-  if (!isDeposit && grandTotal && depositAmount) {
+  if (paymentType === 'subscription') {
+    html += `<tr><td style="color:#ffffff;font-size:14px;font-weight:700;padding:8px 0;">Monthly Subscription</td><td style="text-align:right;font-weight:700;color:#10B981;font-size:16px;padding:8px 0;">$${fmt(monthlyAmount || amountPaid)}/mo</td></tr>`;
+  } else if (paymentType === 'mixed') {
+    if (depositAmount) {
+      html += infoRow('Deposit Paid', `$${fmt(depositAmount)}`, '#10B981');
+    }
+    if (monthlyAmount) {
+      html += infoRow('Monthly Subscription', `$${fmt(monthlyAmount)}/mo`, '#60AFFA');
+    }
+    if (grandTotal && depositAmount) {
+      html += '<tr><td colspan="2" style="border-top:1px solid #2A2435;padding:0;font-size:1px;line-height:1px;">&#160;</td></tr>';
+      html += infoRow('Remaining Balance (due on completion)', `$${fmt(grandTotal - (depositAmount * 2 > grandTotal ? depositAmount : depositAmount))}`);
+    }
+  } else if (paymentType === 'final' && grandTotal && depositAmount) {
     html += infoRow('Project Total', `$${fmt(grandTotal)}`);
     html += `<tr><td style="color:#71717A;font-size:13px;padding:6px 0;">Deposit Paid</td><td style="text-align:right;font-weight:600;color:#10B981;font-size:13px;padding:6px 0;">-$${fmt(depositAmount)}</td></tr>`;
     html += '<tr><td colspan="2" style="border-top:1px solid #2A2435;padding:0;font-size:1px;line-height:1px;">&#160;</td></tr>';
+    html += `<tr><td style="color:#ffffff;font-size:14px;font-weight:700;padding:8px 0;">Final Payment</td><td style="text-align:right;font-weight:700;color:#10B981;font-size:16px;padding:8px 0;">$${fmt(amountPaid)}</td></tr>`;
+  } else {
+    // Deposit only
+    html += `<tr><td style="color:#ffffff;font-size:14px;font-weight:700;padding:8px 0;">Deposit Paid</td><td style="text-align:right;font-weight:700;color:#10B981;font-size:16px;padding:8px 0;">$${fmt(amountPaid)}</td></tr>`;
   }
 
-  html += `<tr><td style="color:#ffffff;font-size:14px;font-weight:700;padding:8px 0;">${isDeposit ? 'Deposit Paid' : 'Final Payment'}</td><td style="text-align:right;font-weight:700;color:#10B981;font-size:16px;padding:8px 0;">$${fmt(amountPaid)}</td></tr>`;
   html += '</table></td></tr></table>';
 
   html += '<p style="color:#71717A;font-size:12px;text-align:center;margin:0;">This is your payment confirmation. No further action is needed.</p>';

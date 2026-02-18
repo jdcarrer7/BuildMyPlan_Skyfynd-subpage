@@ -62,9 +62,10 @@ export interface PortalSignature {
 export interface PortalPayment {
   id: string;
   portal_id: string;
-  payment_type: 'deposit' | 'final';
+  payment_type: 'deposit' | 'final' | 'subscription';
   stripe_session_id: string;
   stripe_payment_intent_id: string | null;
+  stripe_subscription_id: string | null;
   amount: number;
   currency: string;
   status: 'pending' | 'completed' | 'failed' | 'refunded';

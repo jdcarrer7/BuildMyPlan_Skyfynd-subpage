@@ -9,6 +9,7 @@ export default function PaymentSuccessPage() {
   const searchParams = useSearchParams();
   const portalId = params?.id as string;
   const sessionId = searchParams?.get('session_id');
+  const model = searchParams?.get('model'); // 'subscription' | 'mixed' | null
   const [loading, setLoading] = useState(true);
   const [downloading, setDownloading] = useState(false);
 
@@ -41,7 +42,9 @@ export default function PaymentSuccessPage() {
       <div className="flex items-center justify-center min-h-[60vh]">
         <div className="text-center">
           <Loader2 className="w-8 h-8 animate-spin text-[#10B981] mx-auto mb-4" />
-          <p className="text-[#71717A] text-sm">Confirming your payment...</p>
+          <p className="text-[#71717A] text-sm">
+            {model === 'subscription' ? 'Activating your subscription...' : 'Confirming your payment...'}
+          </p>
         </div>
       </div>
     );
@@ -59,10 +62,18 @@ export default function PaymentSuccessPage() {
             className="text-3xl font-semibold text-[#FAFAFA] mb-3"
             style={{ fontFamily: "'Source Serif Pro', Georgia, serif" }}
           >
-            Payment Received!
+            {model === 'subscription'
+              ? 'Subscription Active!'
+              : model === 'mixed'
+                ? 'Payment & Subscription Confirmed!'
+                : 'Payment Received!'}
           </h1>
           <p className="text-[#A1A1AA]">
-            Thank you for your deposit. Your project is now officially underway. We&apos;ll be in touch shortly to kick things off.
+            {model === 'subscription'
+              ? 'Your subscription is now active. You\'ll be billed monthly going forward. We\'ll be in touch shortly to kick things off.'
+              : model === 'mixed'
+                ? 'Your deposit has been received and your monthly subscription is now active. We\'ll be in touch shortly to kick things off.'
+                : 'Thank you for your deposit. Your project is now officially underway. We\'ll be in touch shortly to kick things off.'}
           </p>
         </div>
 
@@ -85,7 +96,9 @@ export default function PaymentSuccessPage() {
         </div>
 
         <p className="text-[#52525B] text-xs">
-          A confirmation email will be sent to your inbox. You can close this page.
+          A confirmation email will be sent to your inbox.
+          {model === 'subscription' && ' Your subscription will renew automatically each month.'}
+          {model === 'mixed' && ' Your subscription will renew automatically each month.'} You can close this page.
         </p>
       </div>
     </div>

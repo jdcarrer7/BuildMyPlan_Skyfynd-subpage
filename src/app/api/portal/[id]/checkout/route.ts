@@ -4,7 +4,8 @@ import { cookies } from 'next/headers';
 import { portalSessionOptions } from '@/lib/auth/portal-session';
 import type { PortalSessionData } from '@/lib/auth/portal-session';
 import { getSupabaseAdmin } from '@/lib/supabase/client';
-import { getStripe } from '@/lib/stripe/client';
+import { getStripe, findOrCreateStripeCustomer } from '@/lib/stripe/client';
+import { getPaymentModel } from '@/lib/portal/payment-model';
 
 export async function POST(
   request: Request,
@@ -38,18 +39,152 @@ export async function POST(
       }, { status: 400 });
     }
 
-    // Calculate 50% deposit in cents
-    const grandTotal = portal.quote_data?.totals?.grandTotal || 0;
-    const depositAmount = Math.round(grandTotal * 0.5 * 100); // 50% in cents
+    const totals = portal.quote_data?.totals || { oneTimeTotal: 0, monthlyTotal: 0, grandTotal: 0 };
+    const paymentModel = getPaymentModel(totals);
+
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
+    const stripe = getStripe();
+    const serviceCount = portal.quote_data?.services?.length || 0;
+
+    // ── Subscription-only: start a Stripe subscription, no deposit ──
+    if (paymentModel === 'subscription-only') {
+      const monthlyCents = Math.round(totals.monthlyTotal * 100);
+      if (monthlyCents < 50) {
+        return NextResponse.json({ error: 'Amount too low for payment' }, { status: 400 });
+      }
+
+      const customer = await findOrCreateStripeCustomer(stripe, portal.client_email, portal.client_name);
+
+      const checkoutSession = await stripe.checkout.sessions.create({
+        mode: 'subscription',
+        customer: customer.id,
+        line_items: [
+          {
+            price_data: {
+              currency: 'usd',
+              product_data: {
+                name: `Skyfynd Monthly Service — ${portal.qr_number}`,
+                description: `Monthly subscription for ${serviceCount} service(s)`,
+              },
+              unit_amount: monthlyCents,
+              recurring: { interval: 'month' },
+            },
+            quantity: 1,
+          },
+        ],
+        metadata: {
+          portal_id: portalId,
+          qr_number: portal.qr_number,
+          payment_type: 'subscription',
+        },
+        success_url: `${baseUrl}/portal/${portalId}/success?session_id={CHECKOUT_SESSION_ID}&model=subscription`,
+        cancel_url: `${baseUrl}/portal/${portalId}`,
+      });
+
+      await supabase
+        .from('portal_payments')
+        .upsert({
+          portal_id: portalId,
+          stripe_session_id: checkoutSession.id,
+          amount: monthlyCents,
+          currency: 'usd',
+          status: 'pending',
+          payment_type: 'subscription',
+        }, { onConflict: 'portal_id,payment_type' });
+
+      return NextResponse.json({
+        status: 'success',
+        checkoutUrl: checkoutSession.url,
+      });
+    }
+
+    // ── Mixed: deposit (50% of one-time) + subscription, single checkout ──
+    if (paymentModel === 'mixed') {
+      const depositCents = Math.round(totals.oneTimeTotal * 0.5 * 100);
+      const monthlyCents = Math.round(totals.monthlyTotal * 100);
+
+      if (depositCents < 50 && monthlyCents < 50) {
+        return NextResponse.json({ error: 'Amount too low for payment' }, { status: 400 });
+      }
+
+      const customer = await findOrCreateStripeCustomer(stripe, portal.client_email, portal.client_name);
+
+      // Add the one-time deposit as a pending invoice item on the customer.
+      // Stripe attaches it to the first subscription invoice automatically.
+      if (depositCents >= 50) {
+        await stripe.invoiceItems.create({
+          customer: customer.id,
+          amount: depositCents,
+          currency: 'usd',
+          description: `Project Deposit (50%) — ${portal.qr_number}`,
+        });
+      }
+
+      const checkoutSession = await stripe.checkout.sessions.create({
+        mode: 'subscription',
+        customer: customer.id,
+        line_items: [
+          {
+            price_data: {
+              currency: 'usd',
+              product_data: {
+                name: `Skyfynd Monthly Service — ${portal.qr_number}`,
+                description: `Monthly subscription for ${serviceCount} service(s)`,
+              },
+              unit_amount: monthlyCents,
+              recurring: { interval: 'month' },
+            },
+            quantity: 1,
+          },
+        ],
+        metadata: {
+          portal_id: portalId,
+          qr_number: portal.qr_number,
+          payment_type: 'mixed',
+          deposit_amount: String(depositCents),
+        },
+        success_url: `${baseUrl}/portal/${portalId}/success?session_id={CHECKOUT_SESSION_ID}&model=mixed`,
+        cancel_url: `${baseUrl}/portal/${portalId}`,
+      });
+
+      // Record both payment types
+      await Promise.all([
+        supabase
+          .from('portal_payments')
+          .upsert({
+            portal_id: portalId,
+            stripe_session_id: checkoutSession.id,
+            amount: depositCents,
+            currency: 'usd',
+            status: 'pending',
+            payment_type: 'deposit',
+          }, { onConflict: 'portal_id,payment_type' }),
+        supabase
+          .from('portal_payments')
+          .upsert({
+            portal_id: portalId,
+            stripe_session_id: checkoutSession.id,
+            amount: monthlyCents,
+            currency: 'usd',
+            status: 'pending',
+            payment_type: 'subscription',
+          }, { onConflict: 'portal_id,payment_type' }),
+      ]);
+
+      return NextResponse.json({
+        status: 'success',
+        checkoutUrl: checkoutSession.url,
+      });
+    }
+
+    // ── One-time only: unchanged 50% deposit flow ──
+    const grandTotal = totals.grandTotal || 0;
+    const depositAmount = Math.round(grandTotal * 0.5 * 100);
 
     if (depositAmount < 50) {
       return NextResponse.json({ error: 'Amount too low for payment' }, { status: 400 });
     }
 
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
-    const stripe = getStripe();
-
-    // Create Stripe Checkout session
     const checkoutSession = await stripe.checkout.sessions.create({
       mode: 'payment',
       customer_email: portal.client_email,
@@ -59,7 +194,7 @@ export async function POST(
             currency: 'usd',
             product_data: {
               name: `Skyfynd Project Deposit — ${portal.qr_number}`,
-              description: `50% deposit for ${portal.quote_data?.services?.length || 0} service(s)`,
+              description: `50% deposit for ${serviceCount} service(s)`,
             },
             unit_amount: depositAmount,
           },
@@ -75,7 +210,6 @@ export async function POST(
       cancel_url: `${baseUrl}/portal/${portalId}`,
     });
 
-    // Record payment in Supabase (upsert in case of retry)
     await supabase
       .from('portal_payments')
       .upsert({

@@ -10,3 +10,13 @@ export function getStripe(): Stripe {
     httpClient: Stripe.createFetchHttpClient(),
   });
 }
+
+export async function findOrCreateStripeCustomer(
+  stripe: Stripe,
+  email: string,
+  name: string
+): Promise<Stripe.Customer> {
+  const existing = await stripe.customers.list({ email, limit: 1 });
+  if (existing.data.length > 0) return existing.data[0];
+  return stripe.customers.create({ email, name });
+}

@@ -290,7 +290,7 @@ function AdminQuotesContent() {
               <LinkIcon className="w-4 h-4" />
               {sendingPortal ? 'Sending...' : 'Send Portal'}
             </button>
-            {isInProgress && (
+            {isInProgress && (selectedQuote?.totals?.oneTimeTotal || 0) > 0 && (
               <button
                 onClick={handleSendFinalPayment}
                 disabled={sendingFinalPayment}

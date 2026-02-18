@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useCallback } from 'react';
 import { useParams } from 'next/navigation';
-import { Loader2, FileText, PenLine, CreditCard, CheckCircle2, AlertCircle } from 'lucide-react';
+import { Loader2, FileText, PenLine, CreditCard, CheckCircle2, AlertCircle, RefreshCw } from 'lucide-react';
 import type { Portal } from '@/lib/supabase/types';
 import EmailVerification from '@/components/portal/EmailVerification';
 import QuoteSummary from '@/components/portal/QuoteSummary';
@@ -10,6 +10,7 @@ import QuoteActions from '@/components/portal/QuoteActions';
 import ContractViewer from '@/components/portal/ContractViewer';
 import SignatureCanvas from '@/components/portal/SignatureCanvas';
 import PaymentSection from '@/components/portal/PaymentSection';
+import { getPaymentModel } from '@/lib/portal/payment-model';
 
 type PortalStep = 'verify' | 'review' | 'sign' | 'pay' | 'complete';
 
@@ -32,11 +33,18 @@ function getStepFromStatus(status: Portal['status']): PortalStep {
   }
 }
 
-const STEPS = [
-  { key: 'review', label: 'Review Quote', icon: FileText },
-  { key: 'sign', label: 'Sign Agreement', icon: PenLine },
-  { key: 'pay', label: 'Pay Deposit', icon: CreditCard },
-] as const;
+function getSteps(totals?: { oneTimeTotal: number; monthlyTotal: number }) {
+  const pm = totals ? getPaymentModel(totals) : 'one-time';
+  const payLabel = pm === 'subscription-only' ? 'Subscribe'
+    : pm === 'mixed' ? 'Pay & Subscribe'
+    : 'Pay Deposit';
+  const payIcon = pm === 'subscription-only' ? RefreshCw : CreditCard;
+  return [
+    { key: 'review' as const, label: 'Review Quote', icon: FileText },
+    { key: 'sign' as const, label: 'Sign Agreement', icon: PenLine },
+    { key: 'pay' as const, label: payLabel, icon: payIcon },
+  ];
+}
 
 export default function PortalPage() {
   const params = useParams();
@@ -135,8 +143,9 @@ export default function PortalPage() {
     <div className="space-y-8">
       {/* Step Indicator */}
       <div className="flex items-center justify-center gap-2">
-        {STEPS.map((step, index) => {
-          const stepIndex = STEPS.findIndex(s => s.key === currentStep);
+        {getSteps(portal?.quote_data?.totals).map((step, index) => {
+          const steps = getSteps(portal?.quote_data?.totals);
+          const stepIndex = steps.findIndex(s => s.key === currentStep);
           const isActive = step.key === currentStep;
           const isCompleted = index < stepIndex || currentStep === 'complete';
           const Icon = isCompleted ? CheckCircle2 : step.icon;
@@ -233,6 +242,8 @@ export default function PortalPage() {
             <PaymentSection
               portalId={portalId}
               grandTotal={portal.quote_data?.totals?.grandTotal || 0}
+              oneTimeTotal={portal.quote_data?.totals?.oneTimeTotal || 0}
+              monthlyTotal={portal.quote_data?.totals?.monthlyTotal || 0}
             />
           </div>
         )}

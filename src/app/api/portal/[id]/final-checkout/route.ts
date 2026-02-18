@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { getSupabaseAdmin } from '@/lib/supabase/client';
 import { getStripe } from '@/lib/stripe/client';
+import { getPaymentModel } from '@/lib/portal/payment-model';
 
 export async function POST(
   request: Request,
@@ -23,6 +24,13 @@ export async function POST(
 
     if (portal.status !== 'payment_completed') {
       return NextResponse.json({ error: 'Portal not eligible for final payment' }, { status: 400 });
+    }
+
+    // Subscription-only portals have no final payment
+    const totals = portal.quote_data?.totals || { oneTimeTotal: 0, monthlyTotal: 0, grandTotal: 0 };
+    const paymentModel = getPaymentModel(totals);
+    if (paymentModel === 'subscription-only') {
+      return NextResponse.json({ error: 'Subscription-only portals have no final payment' }, { status: 400 });
     }
 
     // Get deposit payment to calculate remaining balance
@@ -51,8 +59,11 @@ export async function POST(
       return NextResponse.json({ error: 'Final payment has already been completed' }, { status: 400 });
     }
 
-    const grandTotal = portal.quote_data?.totals?.grandTotal || 0;
-    const grandTotalCents = Math.round(grandTotal * 100);
+    // For mixed quotes, final payment is only the remaining one-time portion
+    const baseForDeposit = paymentModel === 'mixed'
+      ? (totals.oneTimeTotal || 0)
+      : (totals.grandTotal || 0);
+    const grandTotalCents = Math.round(baseForDeposit * 100);
     const remainingAmount = grandTotalCents - deposit.amount;
 
     if (remainingAmount < 50) {

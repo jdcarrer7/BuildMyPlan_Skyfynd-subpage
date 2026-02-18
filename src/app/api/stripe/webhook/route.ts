@@ -12,15 +12,28 @@ async function sendConfirmationEmail(
   clientName: string,
   qrNumber: string,
   amountCents: number,
-  paymentType: 'deposit' | 'final',
+  paymentType: 'deposit' | 'final' | 'subscription' | 'mixed',
   grandTotal?: number,
   depositAmountDollars?: number,
+  monthlyAmountDollars?: number,
   attachments?: { filename: string; content: Uint8Array }[]
 ) {
   const amountDollars = amountCents / 100;
-  const subject = paymentType === 'deposit'
-    ? `Deposit Confirmation — ${qrNumber}`
-    : `Payment Confirmation — ${qrNumber}`;
+
+  const subjectMap: Record<string, string> = {
+    deposit: `Deposit Confirmation — ${qrNumber}`,
+    final: `Payment Confirmation — ${qrNumber}`,
+    subscription: `Subscription Confirmed — ${qrNumber}`,
+    mixed: `Payment & Subscription Confirmed — ${qrNumber}`,
+  };
+  const subject = subjectMap[paymentType];
+
+  const adminSubjectMap: Record<string, string> = {
+    deposit: `Deposit Received — ${qrNumber} (${clientName})`,
+    final: `Final Payment Received — ${qrNumber} (${clientName})`,
+    subscription: `Subscription Started — ${qrNumber} (${clientName})`,
+    mixed: `Deposit + Subscription — ${qrNumber} (${clientName})`,
+  };
 
   const htmlBody = buildPaymentConfirmationEmail(
     clientName,
@@ -28,12 +41,18 @@ async function sendConfirmationEmail(
     amountDollars,
     paymentType,
     grandTotal,
-    depositAmountDollars
+    depositAmountDollars,
+    monthlyAmountDollars
   );
 
-  const textBody = `Hi ${clientName},\n\nWe've received your ${paymentType === 'deposit' ? 'deposit' : 'final'} payment of $${amountDollars.toLocaleString()} for ${qrNumber}.\n\nThank you!\nSkyfynd`;
+  const textMap: Record<string, string> = {
+    deposit: `Hi ${clientName},\n\nWe've received your deposit of $${amountDollars.toLocaleString()} for ${qrNumber}.\n\nThank you!\nSkyfynd`,
+    final: `Hi ${clientName},\n\nWe've received your final payment of $${amountDollars.toLocaleString()} for ${qrNumber}.\n\nThank you!\nSkyfynd`,
+    subscription: `Hi ${clientName},\n\nYour subscription of $${(monthlyAmountDollars || amountDollars).toLocaleString()}/mo for ${qrNumber} is now active.\n\nThank you!\nSkyfynd`,
+    mixed: `Hi ${clientName},\n\nWe've received your deposit and your subscription for ${qrNumber} is now active.\n\nThank you!\nSkyfynd`,
+  };
+  const textBody = textMap[paymentType];
 
-  // Send to client (with PDF attachment for deposit) and admins
   await Promise.allSettled([
     sendEmail({
       to: clientEmail,
@@ -44,7 +63,7 @@ async function sendConfirmationEmail(
     }),
     sendEmail({
       to: ADMIN_EMAILS,
-      subject: `${paymentType === 'deposit' ? 'Deposit' : 'Final Payment'} Received — ${qrNumber} (${clientName})`,
+      subject: adminSubjectMap[paymentType],
       html: htmlBody,
       text: textBody,
       attachments,
@@ -73,11 +92,14 @@ export async function POST(request: Request) {
     if (event.type === 'checkout.session.completed') {
       const session = event.data.object;
       const portalId = session.metadata?.portal_id;
-      const paymentType = (session.metadata?.payment_type || 'deposit') as 'deposit' | 'final';
+      const paymentType = (session.metadata?.payment_type || 'deposit') as 'deposit' | 'final' | 'subscription' | 'mixed';
       const stripeSessionId = session.id;
       const paymentIntentId = typeof session.payment_intent === 'string'
         ? session.payment_intent
         : session.payment_intent?.id || null;
+      const subscriptionId = typeof session.subscription === 'string'
+        ? session.subscription
+        : (session.subscription as { id?: string })?.id || null;
 
       if (!portalId) {
         console.error('No portal_id in session metadata');
@@ -86,18 +108,20 @@ export async function POST(request: Request) {
 
       const supabase = getSupabaseAdmin();
 
-      // Update payment record
-      await supabase
-        .from('portal_payments')
-        .update({
-          status: 'completed',
-          stripe_payment_intent_id: paymentIntentId,
-          paid_at: new Date().toISOString(),
-        })
-        .eq('stripe_session_id', stripeSessionId);
+      // ── Handle based on payment type ──
 
-      // Only update portal status for deposit payments
-      if (paymentType === 'deposit') {
+      if (paymentType === 'subscription') {
+        // Subscription-only: update subscription payment record
+        await supabase
+          .from('portal_payments')
+          .update({
+            status: 'completed',
+            stripe_subscription_id: subscriptionId,
+            paid_at: new Date().toISOString(),
+          })
+          .eq('stripe_session_id', stripeSessionId);
+
+        // Update portal status
         await supabase
           .from('portals')
           .update({
@@ -105,9 +129,64 @@ export async function POST(request: Request) {
             updated_at: new Date().toISOString(),
           })
           .eq('id', portalId);
+
+      } else if (paymentType === 'mixed') {
+        // Mixed: update both deposit and subscription records
+        const now = new Date().toISOString();
+
+        await Promise.all([
+          supabase
+            .from('portal_payments')
+            .update({
+              status: 'completed',
+              paid_at: now,
+            })
+            .eq('portal_id', portalId)
+            .eq('payment_type', 'deposit'),
+          supabase
+            .from('portal_payments')
+            .update({
+              status: 'completed',
+              stripe_subscription_id: subscriptionId,
+              paid_at: now,
+            })
+            .eq('portal_id', portalId)
+            .eq('payment_type', 'subscription'),
+        ]);
+
+        // Update portal status
+        await supabase
+          .from('portals')
+          .update({
+            status: 'payment_completed',
+            updated_at: now,
+          })
+          .eq('id', portalId);
+
+      } else {
+        // One-time deposit or final: existing behavior
+        await supabase
+          .from('portal_payments')
+          .update({
+            status: 'completed',
+            stripe_payment_intent_id: paymentIntentId,
+            paid_at: new Date().toISOString(),
+          })
+          .eq('stripe_session_id', stripeSessionId);
+
+        // Update portal status for deposit payments
+        if (paymentType === 'deposit') {
+          await supabase
+            .from('portals')
+            .update({
+              status: 'payment_completed',
+              updated_at: new Date().toISOString(),
+            })
+            .eq('id', portalId);
+        }
       }
 
-      // Send confirmation email
+      // ── Send confirmation email ──
       try {
         const { data: portal } = await supabase
           .from('portals')
@@ -118,9 +197,21 @@ export async function POST(request: Request) {
         if (portal) {
           const amountCents = session.amount_total || 0;
           const grandTotal = portal.quote_data?.totals?.grandTotal || 0;
+          const monthlyTotal = portal.quote_data?.totals?.monthlyTotal || 0;
+          const oneTimeTotal = portal.quote_data?.totals?.oneTimeTotal || 0;
 
-          if (paymentType === 'final') {
-            // Get deposit amount for the breakdown
+          if (paymentType === 'subscription') {
+            await sendConfirmationEmail(
+              portal.client_email, portal.client_name, portal.qr_number,
+              amountCents, 'subscription', undefined, undefined, monthlyTotal
+            );
+          } else if (paymentType === 'mixed') {
+            const depositDollars = Math.round(oneTimeTotal * 0.5);
+            await sendConfirmationEmail(
+              portal.client_email, portal.client_name, portal.qr_number,
+              amountCents, 'mixed', grandTotal, depositDollars, monthlyTotal
+            );
+          } else if (paymentType === 'final') {
             const { data: deposit } = await supabase
               .from('portal_payments')
               .select('amount')
@@ -135,7 +226,7 @@ export async function POST(request: Request) {
               amountCents, 'final', grandTotal, depositDollars
             );
           } else {
-            // Generate signed agreement PDF for email attachment
+            // Deposit — generate signed agreement PDF for email attachment
             let pdfAttachment: { filename: string; content: Uint8Array }[] | undefined;
             try {
               const [{ data: sig }, { data: paymentRecord }] = await Promise.all([
@@ -182,13 +273,12 @@ export async function POST(request: Request) {
 
             await sendConfirmationEmail(
               portal.client_email, portal.client_name, portal.qr_number,
-              amountCents, 'deposit', undefined, undefined, pdfAttachment
+              amountCents, 'deposit', undefined, undefined, undefined, pdfAttachment
             );
           }
         }
       } catch (emailErr) {
         console.error('Failed to send confirmation email:', emailErr);
-        // Don't fail the webhook for email errors
       }
     }
 
