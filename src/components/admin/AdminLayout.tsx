@@ -1,13 +1,19 @@
 'use client';
 
-import Image from 'next/image';
 import { useAdminStore } from '@/hooks/useAdminStore';
 import CustomerDropdown from './CustomerDropdown';
 import MetricsSidebar from './MetricsSidebar';
+import AdminNav from './AdminNav';
 
 const LOGO_URL = 'https://f005.backblazeb2.com/file/SKYFYND-assets/Skyfynd+logo.png';
 
-export default function AdminLayout({ children }: { children: React.ReactNode }) {
+interface AdminLayoutProps {
+  children: React.ReactNode;
+  sidebarContent?: React.ReactNode;
+  metricsContent?: React.ReactNode;
+}
+
+export default function AdminLayout({ children, sidebarContent, metricsContent }: AdminLayoutProps) {
   const { session, logout } = useAdminStore();
 
   return (
@@ -32,9 +38,12 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           </div>
         </div>
 
-        {/* Customer Dropdown / Quote List */}
+        {/* Navigation Tabs */}
+        <AdminNav />
+
+        {/* Sidebar Content */}
         <div className="flex-1 overflow-y-auto">
-          <CustomerDropdown />
+          {sidebarContent ?? <CustomerDropdown />}
         </div>
 
         {/* User Info - bottom of sidebar */}
@@ -43,8 +52,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         </div>
       </aside>
 
-      {/* Pipeline Metrics Sidebar */}
-      <MetricsSidebar />
+      {/* Metrics Sidebar */}
+      {metricsContent ?? <MetricsSidebar />}
 
       {/* Main Content */}
       <main className="flex-1 overflow-y-auto p-6">

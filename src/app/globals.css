@@ -745,7 +745,10 @@ a, button, input, textarea, select {
 }
 
 /* Ensure buttons and inputs render consistently across browsers */
-button, input, textarea, select {
-  font-family: inherit;
-  font-size: inherit;
+/* Wrapped in @layer base so Tailwind utilities (text-xs, text-[12px], etc.) can override */
+@layer base {
+  button, input, textarea, select {
+    font-family: inherit;
+    font-size: inherit;
+  }
 }
