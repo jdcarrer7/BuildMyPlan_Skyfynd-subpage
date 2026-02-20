@@ -1,30 +1,34 @@
 'use client';
 
 import { useState, useRef, useEffect, useMemo, useCallback } from 'react';
-import { Plus, Search, Clock, ChevronRight } from 'lucide-react';
+import { Plus, Search, Clock, ChevronRight, Loader2 } from 'lucide-react';
 import { useEditor, EditorContent } from '@tiptap/react';
+import { mergeAttributes } from '@tiptap/core';
 import StarterKit from '@tiptap/starter-kit';
+import Heading from '@tiptap/extension-heading';
 import Placeholder from '@tiptap/extension-placeholder';
 import TaskList from '@tiptap/extension-task-list';
 import TaskItem from '@tiptap/extension-task-item';
 import TextAlign from '@tiptap/extension-text-align';
 import Highlight from '@tiptap/extension-highlight';
 import Underline from '@tiptap/extension-underline';
-import { usePersistedState } from '@/hooks/usePersistedState';
+
+const HEADING_STYLES: Record<number, string> = {
+  1: 'font-size: 28px; font-weight: 700; color: #FAFAFA; margin: 20px 0 8px; line-height: 1.3;',
+  2: 'font-size: 22px; font-weight: 600; color: #FAFAFA; margin: 16px 0 6px; line-height: 1.35;',
+  3: 'font-size: 18px; font-weight: 600; color: #E4E4E7; margin: 12px 0 4px; line-height: 1.4;',
+};
+
+const StyledHeading = Heading.extend({
+  renderHTML({ node, HTMLAttributes }) {
+    const level = node.attrs.level as number;
+    const tag = `h${level}` as keyof HTMLElementTagNameMap;
+    return [tag, mergeAttributes(this.options.HTMLAttributes, HTMLAttributes, { style: HEADING_STYLES[level] || '' }), 0];
+  },
+});
 import { useResizable } from '@/hooks/useResizable';
 import NoteToolbar from './NoteToolbar';
-
-interface Note {
-  id: string;
-  title: string;
-  content: string;
-  created_at: string;
-  updated_at: string;
-}
-
-function generateId() {
-  return `note-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
-}
+import type { Note } from '@/lib/types/project';
 
 function formatRelativeDate(dateStr: string) {
   const d = new Date(dateStr);
@@ -100,8 +104,12 @@ function parseNoteContent(content: string): Record<string, unknown> | string {
   return content;
 }
 
+const LOCALSTORAGE_KEY = 'projects-notes';
+const MIGRATION_FLAG = 'projects-notes-migrated';
+
 export default function NotesPage() {
-  const [notes, setNotes] = usePersistedState<Note[]>('projects-notes', []);
+  const [notes, setNotes] = useState<Note[]>([]);
+  const [loading, setLoading] = useState(true);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [search, setSearch] = useState('');
 
@@ -124,10 +132,7 @@ export default function NotesPage() {
     immediatelyRender: false,
     extensions: [
       StarterKit.configure({
-        heading: {
-          levels: [1, 2, 3],
-          HTMLAttributes: { style: 'background: rgba(255,0,0,0.15); font-size: 24px; font-weight: 700; color: #FAFAFA;' },
-        },
+        heading: false,
         bulletList: {
           HTMLAttributes: { style: 'list-style-type: disc; padding-left: 24px; margin: 6px 0;' },
         },
@@ -138,7 +143,8 @@ export default function NotesPage() {
           HTMLAttributes: { style: 'border-left: 3px solid #3B82F6; padding-left: 16px; margin: 12px 0; color: #A1A1AA; font-style: italic;' },
         },
       }),
-      Highlight,
+      StyledHeading.configure({ levels: [1, 2, 3] }),
+      Highlight.configure({ multicolor: true }),
       Underline,
       TaskList,
       TaskItem.configure({ nested: true }),
@@ -158,9 +164,91 @@ export default function NotesPage() {
       saveTimerRef.current = setTimeout(() => {
         const id = selectedIdRef.current;
         if (id && persistNoteRef.current) persistNoteRef.current(id, { content: json });
-      }, 150);
+      }, 500);
     },
   });
+
+  // ── Fetch notes from Supabase + migrate localStorage if needed ──
+  useEffect(() => {
+    let cancelled = false;
+
+    async function init() {
+      try {
+        const res = await fetch('/api/admin/notes');
+        const data = await res.json();
+        if (cancelled) return;
+
+        if (data.status === 'success') {
+          let dbNotes: Note[] = data.notes || [];
+
+          // Migrate localStorage notes if they haven't been migrated yet
+          const alreadyMigrated = localStorage.getItem(MIGRATION_FLAG);
+          if (!alreadyMigrated) {
+            try {
+              const raw = localStorage.getItem(LOCALSTORAGE_KEY);
+              if (raw) {
+                const localNotes: Note[] = JSON.parse(raw);
+                if (localNotes.length > 0) {
+                  // Upload to Supabase
+                  const migrateRes = await fetch('/api/admin/notes', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ notes: localNotes.map((n) => ({ title: n.title, content: n.content })) }),
+                  });
+                  const migrateData = await migrateRes.json();
+                  if (!cancelled && migrateData.status === 'success') {
+                    dbNotes = [...(migrateData.notes || []), ...dbNotes];
+                    // Only mark migration done if it actually succeeded
+                    localStorage.setItem(MIGRATION_FLAG, '1');
+                  }
+                } else {
+                  // No local notes to migrate — mark done
+                  localStorage.setItem(MIGRATION_FLAG, '1');
+                }
+              } else {
+                // No localStorage key — mark done
+                localStorage.setItem(MIGRATION_FLAG, '1');
+              }
+            } catch {
+              // localStorage parse failure — don't mark as migrated so it retries
+            }
+          }
+
+          if (!cancelled) {
+            setNotes(dbNotes);
+            setLoading(false);
+          }
+        } else {
+          // API failed (table may not exist yet) — fall back to localStorage
+          // Also clear migration flag so it retries once table is created
+          localStorage.removeItem(MIGRATION_FLAG);
+          if (!cancelled) {
+            try {
+              const raw = localStorage.getItem(LOCALSTORAGE_KEY);
+              if (raw) {
+                setNotes(JSON.parse(raw));
+              }
+            } catch { /* ignore */ }
+            setLoading(false);
+          }
+        }
+      } catch {
+        // Network error — fall back to localStorage
+        if (!cancelled) {
+          try {
+            const raw = localStorage.getItem(LOCALSTORAGE_KEY);
+            if (raw) {
+              setNotes(JSON.parse(raw));
+            }
+          } catch { /* ignore */ }
+          setLoading(false);
+        }
+      }
+    }
+
+    init();
+    return () => { cancelled = true; };
+  }, []);
 
   const selectedNote = useMemo(
     () => notes.find((n) => n.id === selectedId) ?? null,
@@ -213,15 +301,28 @@ export default function NotesPage() {
     }
   }, [selectedId, sorted]);
 
+  // Persist note update to Supabase (debounced in the Tiptap onUpdate)
   const persistNote = useCallback(
     (id: string, updates: Partial<Pick<Note, 'title' | 'content'>>) => {
-      setNotes((prev) =>
-        prev.map((n) =>
+      // Optimistic local update
+      setNotes((prev) => {
+        const updated = prev.map((n) =>
           n.id === id ? { ...n, ...updates, updated_at: new Date().toISOString() } : n,
-        ),
-      );
+        );
+        // Write-through to localStorage as backup
+        try { localStorage.setItem(LOCALSTORAGE_KEY, JSON.stringify(updated)); } catch { /* ignore */ }
+        return updated;
+      });
+      // Save to Supabase
+      fetch(`/api/admin/notes/${id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updates),
+      }).catch(() => {
+        // Silent fail — localStorage backup ensures no data loss
+      });
     },
-    [setNotes],
+    [],
   );
 
   // Keep refs in sync for Tiptap onUpdate closure
@@ -244,30 +345,45 @@ export default function NotesPage() {
     [selectedId, localTitle, editor, persistNote],
   );
 
-  const createNote = () => {
-    const now = new Date().toISOString();
-    const newNote: Note = {
-      id: generateId(),
-      title: '',
-      content: '',
-      created_at: now,
-      updated_at: now,
-    };
-    setNotes((prev) => [newNote, ...prev]);
-    setSelectedId(newNote.id);
-    setLocalTitle('');
-    if (editor) {
-      suppressEditorUpdate.current = true;
-      editor.commands.setContent('');
-      suppressEditorUpdate.current = false;
+  const handleCreateNote = async () => {
+    try {
+      const res = await fetch('/api/admin/notes', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ title: '', content: '' }),
+      });
+      const data = await res.json();
+      if (data.status === 'success' && data.note) {
+        setNotes((prev) => {
+          const updated = [data.note, ...prev];
+          try { localStorage.setItem(LOCALSTORAGE_KEY, JSON.stringify(updated)); } catch { /* ignore */ }
+          return updated;
+        });
+        setSelectedId(data.note.id);
+        setLocalTitle('');
+        if (editor) {
+          suppressEditorUpdate.current = true;
+          editor.commands.setContent('');
+          suppressEditorUpdate.current = false;
+        }
+        setTimeout(() => titleRef.current?.focus(), 50);
+      }
+    } catch {
+      // Silent fail
     }
-    setTimeout(() => titleRef.current?.focus(), 50);
   };
 
-  const deleteNote = (id: string) => {
+  const handleDeleteNote = async (id: string) => {
     if (saveTimerRef.current) clearTimeout(saveTimerRef.current);
-    setNotes((prev) => prev.filter((n) => n.id !== id));
+    // Optimistic remove
+    setNotes((prev) => {
+      const updated = prev.filter((n) => n.id !== id);
+      try { localStorage.setItem(LOCALSTORAGE_KEY, JSON.stringify(updated)); } catch { /* ignore */ }
+      return updated;
+    });
     if (selectedId === id) setSelectedId(null);
+    // Delete from Supabase
+    fetch(`/api/admin/notes/${id}`, { method: 'DELETE' }).catch(() => {});
   };
 
   const handleTitleChange = (value: string) => {
@@ -286,21 +402,21 @@ export default function NotesPage() {
         {/* Header + search */}
         <div className="p-3 space-y-2 border-b border-white/[0.06]">
           <div className="flex items-center justify-between">
-            <h3 className="text-[13px] font-semibold text-[#FAFAFA]">Notes</h3>
-            <span className="text-[10px] text-[#52525B]">{notes.length}</span>
+            <h3 className="text-[15px] font-semibold text-[#FAFAFA]">Notes</h3>
+            <span className="text-[12px] text-[#71717A]">{notes.length}</span>
           </div>
           <div className="relative">
-            <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-[#3F3F46]" />
+            <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[#52525B]" />
             <input
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Search notes..."
-              className="w-full bg-[#0A0A0B] border border-white/[0.06] rounded-lg pl-8 pr-3 py-1.5 text-[12px] text-[#FAFAFA] placeholder:text-[#3F3F46] outline-none focus:border-[#3B82F6] transition-colors"
+              className="w-full bg-[#0A0A0B] border border-white/[0.06] rounded-lg pl-8 pr-3 py-2 text-[13px] text-[#FAFAFA] placeholder:text-[#52525B] outline-none focus:border-[#3B82F6] transition-colors"
             />
           </div>
           <button
-            onClick={createNote}
-            className="w-full flex items-center justify-center gap-1.5 px-3 py-1.5 text-[12px] font-medium text-white rounded-lg transition-all hover:opacity-90"
+            onClick={handleCreateNote}
+            className="w-full flex items-center justify-center gap-1.5 px-3 py-2 text-[13px] font-medium text-white rounded-lg transition-all hover:opacity-90"
             style={{
               background: 'linear-gradient(to right, rgba(167,139,250,0.75) 0%, rgba(96,175,250,0.85) 40%, rgba(52,211,153,0.8) 100%)',
             }}
@@ -312,7 +428,11 @@ export default function NotesPage() {
 
         {/* Notes list */}
         <div className="flex-1 overflow-y-auto">
-          {sorted.length === 0 ? (
+          {loading ? (
+            <div className="flex items-center justify-center py-12">
+              <Loader2 className="w-5 h-5 text-[#3B82F6] animate-spin" />
+            </div>
+          ) : sorted.length === 0 ? (
             <div className="px-4 py-8 text-center text-[11px] text-[#3F3F46]">
               {search ? 'No matching notes' : 'No notes yet — create one to get started'}
             </div>
@@ -329,19 +449,19 @@ export default function NotesPage() {
                 >
                   <div className="flex items-start justify-between gap-2">
                     <div className="flex-1 min-w-0">
-                      <p className={`text-[12px] font-medium truncate ${isActive ? 'text-[#FAFAFA]' : 'text-[#A1A1AA]'}`}>
+                      <p className={`text-[14px] font-semibold truncate ${isActive ? 'text-[#FAFAFA]' : 'text-[#D4D4D8]'}`}>
                         {note.title || 'Untitled'}
                       </p>
-                      <p className="text-[10px] text-[#52525B] truncate mt-0.5">
+                      <p className="text-[12px] text-[#A1A1AA] truncate mt-1">
                         {getPreview(note.content)}
                       </p>
-                      <div className="flex items-center gap-1 mt-1">
-                        <Clock className="w-2.5 h-2.5 text-[#3F3F46]" />
-                        <span className="text-[9px] text-[#3F3F46]">{formatRelativeDate(note.updated_at)}</span>
+                      <div className="flex items-center gap-1.5 mt-1.5">
+                        <Clock className="w-3 h-3 text-[#71717A]" />
+                        <span className="text-[11px] text-[#71717A]">{formatRelativeDate(note.updated_at)}</span>
                       </div>
                     </div>
                     {isActive && (
-                      <ChevronRight className="w-3 h-3 text-[#3B82F6] mt-0.5 flex-shrink-0" />
+                      <ChevronRight className="w-4 h-4 text-[#3B82F6] mt-0.5 flex-shrink-0" />
                     )}
                   </div>
                 </button>
@@ -385,7 +505,7 @@ export default function NotesPage() {
             </div>
 
             {/* Formatting toolbar */}
-            <NoteToolbar editor={editor} onDelete={() => deleteNote(selectedNote.id)} />
+            <NoteToolbar editor={editor} onDelete={() => handleDeleteNote(selectedNote.id)} />
 
             {/* Rich text editor */}
             <div className="flex-1 overflow-y-auto">
@@ -397,7 +517,7 @@ export default function NotesPage() {
             <div className="text-center">
               <p className="text-[14px] text-[#3F3F46] mb-3">Select a note or create a new one</p>
               <button
-                onClick={createNote}
+                onClick={handleCreateNote}
                 className="inline-flex items-center gap-1.5 px-4 py-2 text-[12px] font-medium text-white rounded-lg transition-all hover:opacity-90"
                 style={{
                   background: 'linear-gradient(to right, rgba(167,139,250,0.75) 0%, rgba(96,175,250,0.85) 40%, rgba(52,211,153,0.8) 100%)',

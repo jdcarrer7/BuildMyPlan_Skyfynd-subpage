@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { Plus, Trash2, MoreHorizontal, FileText } from 'lucide-react';
 import { usePersistedState } from '@/hooks/usePersistedState';
+import { useSidebarContext } from '@/hooks/useSidebarContext';
 
 export interface Subpage {
   id: string;
@@ -89,13 +90,17 @@ export default function SubpageSidebar({ activeId, onSelect }: SubpageSidebarPro
     }, 50);
   };
 
+  const { isCompact } = useSidebarContext();
+
   return (
     <div className="flex flex-col h-full">
       {/* Section header */}
-      <div className="px-4 py-3 border-b border-white/[0.06]">
-        <span className="text-[10px] font-bold uppercase tracking-widest text-[#52525B]">
-          Pages
-        </span>
+      <div className={`${isCompact ? 'px-2.5' : 'px-4'} py-3 border-b border-white/[0.06]`}>
+        {!isCompact && (
+          <span className="text-[10px] font-bold uppercase tracking-widest text-[#52525B]">
+            Pages
+          </span>
+        )}
       </div>
 
       {/* Subpage list */}
@@ -111,40 +116,45 @@ export default function SubpageSidebar({ activeId, onSelect }: SubpageSidebarPro
               <button
                 onClick={() => onSelect(subpage.id)}
                 onDoubleClick={() => startRename(subpage)}
-                className={`w-full flex items-center gap-2.5 px-4 py-2 text-left transition-all border-l-2 ${
+                title={isCompact ? subpage.name : undefined}
+                className={`w-full flex items-center ${isCompact ? 'justify-center gap-0 px-2' : 'gap-2.5 px-4'} py-2 text-left transition-all border-l-2 ${
                   isActive
                     ? 'bg-white/[0.04] border-l-[#3B82F6] text-[#FAFAFA]'
                     : 'border-l-transparent text-[#A1A1AA] hover:bg-white/[0.02] hover:text-[#FAFAFA]'
                 }`}
               >
                 <span className="text-sm flex-shrink-0">{subpage.icon}</span>
-                {editingId === subpage.id ? (
-                  <input
-                    ref={editRef}
-                    value={editValue}
-                    onChange={(e) => setEditValue(e.target.value)}
-                    onBlur={saveRename}
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter') saveRename();
-                      if (e.key === 'Escape') { setEditingId(null); setEditValue(''); }
-                    }}
-                    onClick={(e) => e.stopPropagation()}
-                    className="flex-1 bg-transparent text-[13px] text-[#FAFAFA] outline-none caret-[#3B82F6] border-b border-[#3B82F6]/50"
-                  />
-                ) : (
-                  <span className="text-[13px] font-medium truncate flex-1">{subpage.name}</span>
+                {!isCompact && (
+                  editingId === subpage.id ? (
+                    <input
+                      ref={editRef}
+                      value={editValue}
+                      onChange={(e) => setEditValue(e.target.value)}
+                      onBlur={saveRename}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') saveRename();
+                        if (e.key === 'Escape') { setEditingId(null); setEditValue(''); }
+                      }}
+                      onClick={(e) => e.stopPropagation()}
+                      className="flex-1 bg-transparent text-[13px] text-[#FAFAFA] outline-none caret-[#3B82F6] border-b border-[#3B82F6]/50"
+                    />
+                  ) : (
+                    <span className="text-[13px] font-medium truncate flex-1">{subpage.name}</span>
+                  )
                 )}
 
                 {/* Context menu trigger */}
-                <div
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setMenuOpenId(menuOpenId === subpage.id ? null : subpage.id);
-                  }}
-                  className="p-0.5 rounded opacity-0 group-hover:opacity-100 text-[#52525B] hover:text-[#A1A1AA] hover:bg-white/[0.06] transition-all cursor-pointer"
-                >
-                  <MoreHorizontal className="w-3.5 h-3.5" />
-                </div>
+                {!isCompact && (
+                  <div
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setMenuOpenId(menuOpenId === subpage.id ? null : subpage.id);
+                    }}
+                    className="p-0.5 rounded opacity-0 group-hover:opacity-100 text-[#52525B] hover:text-[#A1A1AA] hover:bg-white/[0.06] transition-all cursor-pointer"
+                  >
+                    <MoreHorizontal className="w-3.5 h-3.5" />
+                  </div>
+                )}
               </button>
 
               {/* Context menu */}
@@ -177,13 +187,14 @@ export default function SubpageSidebar({ activeId, onSelect }: SubpageSidebarPro
       </div>
 
       {/* Add subpage button */}
-      <div className="px-3 py-3 border-t border-white/[0.06]">
+      <div className={`${isCompact ? 'px-2' : 'px-3'} py-3 border-t border-white/[0.06]`}>
         <button
           onClick={addSubpage}
-          className="w-full flex items-center gap-2 px-2.5 py-2 text-[11px] text-[#52525B] hover:text-[#A1A1AA] hover:bg-white/[0.04] rounded-md transition-colors"
+          title="Add page"
+          className={`w-full flex items-center ${isCompact ? 'justify-center' : 'gap-2'} px-2.5 py-2 text-[11px] text-[#52525B] hover:text-[#A1A1AA] hover:bg-white/[0.04] rounded-md transition-colors`}
         >
           <Plus className="w-3.5 h-3.5" />
-          Add page
+          {!isCompact && 'Add page'}
         </button>
       </div>
     </div>

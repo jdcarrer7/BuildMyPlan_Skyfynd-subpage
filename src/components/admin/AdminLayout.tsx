@@ -1,10 +1,11 @@
 'use client';
 
-import { useState, useRef, useEffect, useCallback } from 'react';
-import { GripHorizontal } from 'lucide-react';
+import { useState, useRef, useEffect, useCallback, useMemo } from 'react';
+import { GripHorizontal, LogOut } from 'lucide-react';
 import { useAdminStore } from '@/hooks/useAdminStore';
 import { useResizable } from '@/hooks/useResizable';
 import { usePersistedState } from '@/hooks/usePersistedState';
+import { SidebarProvider } from '@/hooks/useSidebarContext';
 import CustomerDropdown from './CustomerDropdown';
 import MetricsSidebar from './MetricsSidebar';
 import AdminNav from './AdminNav';
@@ -212,9 +213,14 @@ export default function AdminLayout({ children, sidebarContent, metricsContent, 
   const sidebar = useResizable({
     storageKey: 'admin-sidebar-width',
     defaultWidth: 320,
-    minWidth: 320,
+    minWidth: 160,
     maxWidth: 480,
   });
+
+  const sidebarCtx = useMemo(
+    () => ({ width: sidebar.width, isCompact: sidebar.width < 240 }),
+    [sidebar.width],
+  );
 
   const metricsPanel = useResizable({
     storageKey: 'admin-metrics-width',
@@ -245,37 +251,46 @@ export default function AdminLayout({ children, sidebarContent, metricsContent, 
   return (
     <div className="min-h-screen bg-[#0A0A0B] flex">
       {/* Sidebar */}
-      <aside
-        className="bg-[#111113] border-r border-white/[0.06] flex flex-col h-screen sticky top-0 flex-shrink-0"
-        style={{ width: sidebar.width }}
-      >
-        <div className="p-4 border-b border-white/[0.06]">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-1.5">
-              <img src={LOGO_URL} alt="Skyfynd" className="w-7 h-7 object-contain" />
-              <h1 className="text-[24px] font-semibold text-white" style={{ fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif", letterSpacing: '-0.5px' }}>
-                Skyfynd
-              </h1>
+      <SidebarProvider value={sidebarCtx}>
+        <aside
+          className="bg-[#111113] border-r border-white/[0.06] flex flex-col h-screen sticky top-0 flex-shrink-0"
+          style={{ width: sidebar.width }}
+        >
+          <div className={`border-b border-white/[0.06] ${sidebarCtx.isCompact ? 'px-2.5 py-3' : 'p-4'}`}>
+            <div className="flex items-center justify-between gap-1">
+              <div className="flex items-center gap-1.5 min-w-0">
+                <img src={LOGO_URL} alt="Skyfynd" className={`${sidebarCtx.isCompact ? 'w-6 h-6' : 'w-7 h-7'} object-contain flex-shrink-0`} />
+                {!sidebarCtx.isCompact && (
+                  <h1 className="text-[24px] font-semibold text-white truncate" style={{ fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif", letterSpacing: '-0.5px' }}>
+                    Skyfynd
+                  </h1>
+                )}
+              </div>
+              <button
+                onClick={logout}
+                className={`flex-shrink-0 text-[#A1A1AA] hover:text-white transition-colors rounded border border-white/[0.06] hover:border-white/[0.15] ${
+                  sidebarCtx.isCompact ? 'p-1.5' : 'text-xs px-2 py-1'
+                }`}
+                title="Logout"
+              >
+                {sidebarCtx.isCompact ? <LogOut className="w-3.5 h-3.5" /> : 'Logout'}
+              </button>
             </div>
-            <button
-              onClick={logout}
-              className="text-xs text-[#A1A1AA] hover:text-white transition-colors px-2 py-1 rounded border border-white/[0.06] hover:border-white/[0.15]"
-            >
-              Logout
-            </button>
           </div>
-        </div>
 
-        <AdminNav />
+          <AdminNav />
 
-        <div className="flex-1 overflow-y-auto">
-          {sidebarContent ?? <CustomerDropdown />}
-        </div>
+          <div className="flex-1 overflow-y-auto">
+            {sidebarContent ?? <CustomerDropdown />}
+          </div>
 
-        <div className="px-4 py-3 border-t border-white/[0.06]">
-          <p className="text-[11px] text-[#52525B] truncate">{session?.name} &middot; {session?.email}</p>
-        </div>
-      </aside>
+          <div className={`${sidebarCtx.isCompact ? 'px-2.5' : 'px-4'} py-3 border-t border-white/[0.06]`}>
+            <p className="text-[11px] text-[#52525B] truncate">
+              {sidebarCtx.isCompact ? session?.email : <>{session?.name} &middot; {session?.email}</>}
+            </p>
+          </div>
+        </aside>
+      </SidebarProvider>
 
       {/* Sidebar resize handle */}
       <ResizeHandle onMouseDown={sidebar.onMouseDown} />
