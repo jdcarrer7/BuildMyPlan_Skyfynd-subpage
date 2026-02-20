@@ -304,11 +304,13 @@ export default function AdminLayout({ children, sidebarContent, metricsContent, 
       )}
 
       {/* Main Content */}
-      <main className="flex-1 overflow-y-auto p-6 min-w-0 relative">
+      <main className="flex-1 overflow-y-auto min-w-0">
         {presenceBubbles && (
-          <div className="absolute top-3 right-6 z-30">{presenceBubbles}</div>
+          <div className="flex justify-end px-6 pt-4 pb-1">{presenceBubbles}</div>
         )}
-        {children}
+        <div className="px-6 pb-6" style={{ paddingTop: presenceBubbles ? 0 : 24 }}>
+          {children}
+        </div>
       </main>
 
       {/* Docked RIGHT: resize handle + metrics panel */}

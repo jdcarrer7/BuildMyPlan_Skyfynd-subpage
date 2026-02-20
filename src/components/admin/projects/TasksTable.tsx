@@ -1,19 +1,19 @@
 'use client';
 
 import { useState, useMemo, useRef, useEffect, useCallback } from 'react';
-import { ChevronUp, ChevronDown, Plus, Trash2 } from 'lucide-react';
+import { Plus, Trash2 } from 'lucide-react';
 import { useProjectStore } from '@/hooks/useProjectStore';
 import { usePersistedState } from '@/hooks/usePersistedState';
 import { useResizableColumns } from '@/hooks/useResizableColumns';
 import { SortButton, type SortCriterion } from './SortPanel';
 import { FilterButton, applyFilters, type FilterCriterion, type FilterColumnDef } from './FilterPanel';
 import { ColumnsButton } from './ColumnsPanel';
+import ColumnHeaderMenu from './ColumnHeaderMenu';
 import EditingIndicator from '@/components/admin/EditingIndicator';
 import type { PresenceUser } from '@/hooks/usePresence';
 import type { TaskStatus, ProjectTask } from '@/lib/types/project';
 
 type SortColumn = 'name' | 'assignees' | 'due_date' | 'status' | 'project' | 'created_at' | 'notes';
-type SortDir = 'asc' | 'desc';
 
 const statusConfig: Record<TaskStatus, { label: string; color: string; bg: string }> = {
   todo: { label: 'Not Started', color: '#EF4444', bg: 'rgba(239,68,68,0.15)' },
@@ -115,29 +115,30 @@ export default function TasksTable({ onlineUsers, currentUserEmail, onEditStart,
     return map;
   }, [projects]);
 
-  const handleHeaderClick = useCallback((col: SortColumn, shiftKey: boolean) => {
-    setSortCriteria((prev) => {
-      const idx = prev.findIndex((s) => s.column === col);
-      if (shiftKey) {
-        if (idx >= 0) {
-          const next = [...prev];
-          next[idx] = { ...next[idx], dir: next[idx].dir === 'asc' ? 'desc' : 'asc' };
-          return next;
-        }
-        return [...prev, { column: col, dir: 'asc' }];
-      }
-      if (prev.length === 1 && prev[0].column === col) {
-        return [{ column: col, dir: prev[0].dir === 'asc' ? 'desc' : 'asc' }];
-      }
-      return [{ column: col, dir: 'asc' }];
+  // Column header menu helpers
+  const getSortDir = useCallback((col: string): 'asc' | 'desc' | null => {
+    const found = sortCriteria.find((s) => s.column === col);
+    return found ? (found.dir as 'asc' | 'desc') : null;
+  }, [sortCriteria]);
+
+  const setSortForColumn = useCallback((col: string, dir: 'asc' | 'desc') => {
+    setSortCriteria([{ column: col, dir }]);
+  }, []);
+
+  const clearSortForColumn = useCallback((col: string) => {
+    setSortCriteria((prev) => prev.filter((s) => s.column !== col));
+  }, []);
+
+  const addFilterForColumn = useCallback((col: string) => {
+    setFilterCriteria((prev) => {
+      if (prev.some((f) => f.column === col)) return prev;
+      return [...prev, { column: col, operator: 'contains' as const, value: '' }];
     });
   }, []);
 
-  const getSortInfo = useCallback((col: SortColumn) => {
-    const idx = sortCriteria.findIndex((s) => s.column === col);
-    if (idx < 0) return null;
-    return { priority: idx + 1, dir: sortCriteria[idx].dir as SortDir, isMulti: sortCriteria.length > 1 };
-  }, [sortCriteria]);
+  const hideColumn = useCallback((col: string) => {
+    setVisibleColumns((prev) => prev.filter((k) => k !== col));
+  }, []);
 
   const compareTasks = useCallback((a: ProjectTask, b: ProjectTask, column: SortColumn): number => {
     switch (column) {
@@ -291,43 +292,32 @@ export default function TasksTable({ onlineUsers, currentUserEmail, onEditStart,
           <table className="min-w-[900px]" style={{ tableLayout: 'fixed', width: visibleCols.reduce((sum, c) => sum + getWidth(c.key), 0) }}>
             <thead>
               <tr className="border-b border-white/[0.06] bg-white/[0.02]">
-                {visibleCols.map((col) => {
-                  const sortInfo = getSortInfo(col.key);
-                  return (
+                {visibleCols.map((col) => (
                     <th
                       key={col.key}
                       style={{ width: getWidth(col.key) }}
                       className="text-left text-[10px] font-semibold text-[#52525B] uppercase tracking-wider px-3 py-2.5 select-none relative"
                     >
-                      <div
-                        className="flex items-center gap-1 cursor-pointer hover:text-[#A1A1AA] transition-colors"
-                        onClick={(e) => handleHeaderClick(col.key, e.shiftKey)}
-                      >
-                        <span>{col.emoji}</span>
-                        <span>{col.label}</span>
-                        {sortInfo && (
-                          <span className="flex items-center gap-0.5">
-                            {sortInfo.isMulti && (
-                              <span className="text-[9px] font-bold text-[#3B82F6] bg-[#3B82F6]/15 w-3.5 h-3.5 rounded-full flex items-center justify-center">
-                                {sortInfo.priority}
-                              </span>
-                            )}
-                            {sortInfo.dir === 'asc' ? (
-                              <ChevronUp className="w-3 h-3 text-[#3B82F6]" />
-                            ) : (
-                              <ChevronDown className="w-3 h-3 text-[#3B82F6]" />
-                            )}
-                          </span>
-                        )}
-                      </div>
-                      {/* Resize handle */}
-                      <div
-                        onMouseDown={(e) => onResizeStart(col.key, e)}
-                        className="absolute right-0 top-0 bottom-0 w-1 cursor-col-resize hover:bg-[#3B82F6]/40 transition-colors"
+                      <ColumnHeaderMenu
+                        columnKey={col.key}
+                        columnLabel={col.label}
+                        columnEmoji={col.emoji}
+                        canHide={col.key !== 'name'}
+                        sortDir={getSortDir(col.key)}
+                        onSortAsc={() => setSortForColumn(col.key, 'asc')}
+                        onSortDesc={() => setSortForColumn(col.key, 'desc')}
+                        onClearSort={() => clearSortForColumn(col.key)}
+                        onFilter={() => addFilterForColumn(col.key)}
+                        onHide={() => hideColumn(col.key)}
+                        resizeHandle={
+                          <div
+                            onMouseDown={(e) => onResizeStart(col.key, e)}
+                            className="absolute right-0 top-0 bottom-0 w-1 cursor-col-resize hover:bg-[#3B82F6]/40 transition-colors"
+                          />
+                        }
                       />
                     </th>
-                  );
-                })}
+                  ))}
               </tr>
             </thead>
             <tbody>
