@@ -10,7 +10,7 @@ import TaskList from './TaskList';
 import ProjectForm from './ProjectForm';
 
 const statusConfig: Record<ProjectStatus, { label: string; color: string; bg: string }> = {
-  not_started: { label: 'Not Started', color: '#71717A', bg: 'rgba(113,113,122,0.15)' },
+  not_started: { label: 'Not Started', color: '#EF4444', bg: 'rgba(239,68,68,0.15)' },
   in_progress: { label: 'In Progress', color: '#F59E0B', bg: 'rgba(245,158,11,0.15)' },
   done: { label: 'Done', color: '#10B981', bg: 'rgba(16,185,129,0.15)' },
 };

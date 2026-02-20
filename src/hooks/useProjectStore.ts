@@ -22,14 +22,20 @@ interface ProjectState {
   projectLoading: boolean;
   projectError: string | null;
 
+  // Archived projects (trash)
+  archivedProjects: Project[];
+
   // Actions
   fetchProjects: () => Promise<void>;
   selectProject: (id: string) => Promise<void>;
   clearSelectedProject: () => void;
-  createProject: (data: CreateProjectInput) => Promise<{ success: boolean; error?: string }>;
+  createProject: (data: CreateProjectInput) => Promise<{ success: boolean; id?: string; error?: string }>;
   updateProject: (id: string, data: Partial<Project>) => Promise<{ success: boolean; error?: string }>;
   archiveProject: (id: string) => Promise<{ success: boolean; error?: string }>;
-  createTask: (projectId: string, data: CreateTaskInput) => Promise<{ success: boolean; error?: string }>;
+  fetchArchivedProjects: () => Promise<void>;
+  restoreProject: (id: string) => Promise<{ success: boolean; error?: string }>;
+  permanentlyDeleteProject: (id: string) => Promise<{ success: boolean; error?: string }>;
+  createTask: (projectId: string, data: CreateTaskInput) => Promise<{ success: boolean; id?: string; error?: string }>;
   updateTask: (projectId: string, taskId: string, data: Partial<ProjectTask>) => Promise<{ success: boolean; error?: string }>;
   deleteTask: (projectId: string, taskId: string) => Promise<{ success: boolean; error?: string }>;
   toggleTaskStatus: (projectId: string, taskId: string) => Promise<void>;
@@ -46,6 +52,8 @@ export const useProjectStore = create<ProjectState>((set, get) => ({
   selectedTasks: [],
   projectLoading: false,
   projectError: null,
+
+  archivedProjects: [],
 
   fetchProjects: async () => {
     // Only show loading on first fetch
@@ -96,7 +104,7 @@ export const useProjectStore = create<ProjectState>((set, get) => ({
       const result = await res.json();
       if (result.status === 'success') {
         await get().fetchProjects();
-        return { success: true };
+        return { success: true, id: result.project.id };
       }
       return { success: false, error: result.error };
     } catch {
@@ -131,6 +139,50 @@ export const useProjectStore = create<ProjectState>((set, get) => ({
       if (result.status === 'success') {
         set({ selectedProjectId: null, selectedProject: null, selectedTasks: [] });
         await get().fetchProjects();
+        await get().fetchArchivedProjects();
+        return { success: true };
+      }
+      return { success: false, error: result.error };
+    } catch {
+      return { success: false, error: 'Network error' };
+    }
+  },
+
+  fetchArchivedProjects: async () => {
+    try {
+      const res = await fetch('/api/admin/projects/archived');
+      const data = await res.json();
+      if (data.status === 'success') {
+        set({ archivedProjects: data.projects || [] });
+      }
+    } catch {
+      // Silently fail
+    }
+  },
+
+  restoreProject: async (id) => {
+    try {
+      const res = await fetch(`/api/admin/projects/${id}/restore`, { method: 'POST' });
+      const result = await res.json();
+      if (result.status === 'success') {
+        await get().fetchProjects();
+        await get().fetchArchivedProjects();
+        return { success: true };
+      }
+      return { success: false, error: result.error };
+    } catch {
+      return { success: false, error: 'Network error' };
+    }
+  },
+
+  permanentlyDeleteProject: async (id) => {
+    try {
+      const res = await fetch(`/api/admin/projects/${id}/permanent-delete`, { method: 'DELETE' });
+      const result = await res.json();
+      if (result.status === 'success') {
+        set((state) => ({
+          archivedProjects: state.archivedProjects.filter((p) => p.id !== id),
+        }));
         return { success: true };
       }
       return { success: false, error: result.error };
@@ -151,7 +203,7 @@ export const useProjectStore = create<ProjectState>((set, get) => ({
         // Append task to local state
         set((state) => ({ selectedTasks: [...state.selectedTasks, result.task] }));
         await get().fetchProjects(); // refresh progress counts
-        return { success: true };
+        return { success: true, id: result.task.id };
       }
       return { success: false, error: result.error };
     } catch {

@@ -122,6 +122,44 @@ export async function archiveProject(id: string): Promise<void> {
   if (error) throw new Error(`Failed to archive project: ${error.message}`);
 }
 
+export async function listArchivedProjects(): Promise<Project[]> {
+  const supabase = getSupabaseAdmin();
+
+  const { data, error } = await supabase
+    .from('projects')
+    .select('*')
+    .eq('is_archived', true)
+    .order('updated_at', { ascending: false });
+
+  if (error) throw new Error(`Failed to list archived projects: ${error.message}`);
+  return data || [];
+}
+
+export async function restoreProject(id: string): Promise<void> {
+  const supabase = getSupabaseAdmin();
+
+  const { error } = await supabase
+    .from('projects')
+    .update({ is_archived: false, updated_at: new Date().toISOString() })
+    .eq('id', id);
+
+  if (error) throw new Error(`Failed to restore project: ${error.message}`);
+}
+
+export async function permanentlyDeleteProject(id: string): Promise<void> {
+  const supabase = getSupabaseAdmin();
+
+  // Delete all tasks first
+  await supabase.from('project_tasks').delete().eq('project_id', id);
+
+  const { error } = await supabase
+    .from('projects')
+    .delete()
+    .eq('id', id);
+
+  if (error) throw new Error(`Failed to delete project: ${error.message}`);
+}
+
 export async function listAllTasks(): Promise<ProjectTask[]> {
   const supabase = getSupabaseAdmin();
 
@@ -179,6 +217,7 @@ export async function updateTask(taskId: string, data: Partial<ProjectTask>): Pr
   if (data.assignees !== undefined) updates.assignees = data.assignees;
   if (data.due_date !== undefined) updates.due_date = data.due_date;
   if (data.sort_order !== undefined) updates.sort_order = data.sort_order;
+  if (data.project_id !== undefined) updates.project_id = data.project_id;
   updates.updated_at = new Date().toISOString();
 
   const { data: task, error } = await supabase

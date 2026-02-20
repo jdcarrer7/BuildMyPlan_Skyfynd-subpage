@@ -1,13 +1,11 @@
 'use client';
 
-import { useMemo, useState } from 'react';
-import { ChevronLeft, ChevronRight, BarChart3 } from 'lucide-react';
+import { useMemo } from 'react';
 import { useProjectStore } from '@/hooks/useProjectStore';
 import DonutChart from './DonutChart';
 
 export default function ProjectMetricsSidebar() {
   const { projects, allTasks } = useProjectStore();
-  const [isCollapsed, setIsCollapsed] = useState(false);
 
   const projectMetrics = useMemo(() => {
     const total = projects.length;
@@ -27,83 +25,50 @@ export default function ProjectMetricsSidebar() {
 
   if (projects.length === 0) return null;
 
-  // Collapsed state
-  if (isCollapsed) {
-    return (
-      <div className="w-10 bg-[#111113] border-l border-white/[0.06] flex flex-col items-center py-4 h-screen sticky top-0">
-        <button
-          onClick={() => setIsCollapsed(false)}
-          className="p-1.5 rounded-md text-[#52525B] hover:text-[#A1A1AA] hover:bg-white/[0.04] transition-colors mb-4"
-          title="Expand metrics"
-        >
-          <ChevronLeft className="w-4 h-4" />
-        </button>
-        <BarChart3 className="w-4 h-4 text-[#3F3F46]" />
-      </div>
-    );
-  }
-
   return (
-    <div className="w-[250px] bg-[#111113] border-l border-white/[0.06] flex flex-col h-screen sticky top-0 overflow-y-auto">
-      {/* Header */}
-      <div className="flex items-center justify-between px-4 py-3 border-b border-white/[0.06]">
-        <span className="text-[10px] font-bold uppercase tracking-widest text-[#52525B]">
-          Overview
-        </span>
-        <button
-          onClick={() => setIsCollapsed(true)}
-          className="p-1 rounded text-[#52525B] hover:text-[#A1A1AA] transition-colors"
-        >
-          <ChevronRight className="w-3.5 h-3.5" />
-        </button>
+    <div className="p-4 space-y-6">
+      {/* Projects Donut */}
+      <div>
+        <p className="text-[10px] font-bold uppercase tracking-widest text-[#52525B] mb-4 text-center">
+          Project Completion
+        </p>
+        <div className="flex justify-center">
+          <DonutChart
+            completed={projectMetrics.completed}
+            inProgress={projectMetrics.inProgress}
+            total={projectMetrics.total}
+            size={130}
+            strokeWidth={12}
+          />
+        </div>
+        <div className="mt-3 space-y-1.5">
+          <LegendRow color="#10B981" label="Done" value={projectMetrics.completed} />
+          <LegendRow color="#F59E0B" label="In Progress" value={projectMetrics.inProgress} />
+          <LegendRow color="rgba(255,255,255,0.1)" label="Not Started" value={projectMetrics.notStarted} />
+        </div>
       </div>
 
-      <div className="p-4 space-y-8 flex-1">
-        {/* Projects Donut */}
-        <div>
-          <p className="text-[10px] font-bold uppercase tracking-widest text-[#52525B] mb-4 text-center">
-            Project Completion
-          </p>
-          <div className="flex justify-center">
-            <DonutChart
-              completed={projectMetrics.completed}
-              inProgress={projectMetrics.inProgress}
-              total={projectMetrics.total}
-              size={150}
-              strokeWidth={14}
-            />
-          </div>
-          {/* Legend */}
-          <div className="mt-4 space-y-2">
-            <LegendRow color="#10B981" label="Done" value={projectMetrics.completed} />
-            <LegendRow color="#F59E0B" label="In Progress" value={projectMetrics.inProgress} />
-            <LegendRow color="rgba(255,255,255,0.1)" label="Not Started" value={projectMetrics.notStarted} />
-          </div>
+      {/* Divider */}
+      <div className="border-t border-white/[0.06]" />
+
+      {/* Tasks Donut */}
+      <div>
+        <p className="text-[10px] font-bold uppercase tracking-widest text-[#52525B] mb-4 text-center">
+          Task Breakdown
+        </p>
+        <div className="flex justify-center">
+          <DonutChart
+            completed={taskMetrics.done}
+            inProgress={taskMetrics.inProgress}
+            total={taskMetrics.total}
+            size={130}
+            strokeWidth={12}
+          />
         </div>
-
-        {/* Divider */}
-        <div className="border-t border-white/[0.06]" />
-
-        {/* Tasks Donut */}
-        <div>
-          <p className="text-[10px] font-bold uppercase tracking-widest text-[#52525B] mb-4 text-center">
-            Task Breakdown
-          </p>
-          <div className="flex justify-center">
-            <DonutChart
-              completed={taskMetrics.done}
-              inProgress={taskMetrics.inProgress}
-              total={taskMetrics.total}
-              size={150}
-              strokeWidth={14}
-            />
-          </div>
-          {/* Legend */}
-          <div className="mt-4 space-y-2">
-            <LegendRow color="#10B981" label="Done" value={taskMetrics.done} />
-            <LegendRow color="#F59E0B" label="In Progress" value={taskMetrics.inProgress} />
-            <LegendRow color="rgba(255,255,255,0.1)" label="To Do" value={taskMetrics.todo} />
-          </div>
+        <div className="mt-3 space-y-1.5">
+          <LegendRow color="#10B981" label="Done" value={taskMetrics.done} />
+          <LegendRow color="#F59E0B" label="In Progress" value={taskMetrics.inProgress} />
+          <LegendRow color="#EF4444" label="Not Started" value={taskMetrics.todo} />
         </div>
       </div>
     </div>

@@ -1,18 +1,22 @@
 'use client';
 
 import { useState, useMemo, useRef, useEffect, useCallback } from 'react';
-import { ChevronUp, ChevronDown } from 'lucide-react';
+import { ChevronUp, ChevronDown, Plus, Trash2 } from 'lucide-react';
 import { useProjectStore } from '@/hooks/useProjectStore';
 import { usePersistedState } from '@/hooks/usePersistedState';
+import { useResizableColumns } from '@/hooks/useResizableColumns';
 import { SortButton, type SortCriterion } from './SortPanel';
 import { FilterButton, applyFilters, type FilterCriterion, type FilterColumnDef } from './FilterPanel';
+import { ColumnsButton } from './ColumnsPanel';
+import EditingIndicator from '@/components/admin/EditingIndicator';
+import type { PresenceUser } from '@/hooks/usePresence';
 import type { ProjectStatus, ProjectWithProgress } from '@/lib/types/project';
 
 type SortColumn = 'name' | 'assignees' | 'status' | 'due_date' | 'created_at' | 'description' | 'tasks';
 type SortDir = 'asc' | 'desc';
 
 const statusConfig: Record<ProjectStatus, { label: string; color: string; bg: string }> = {
-  not_started: { label: 'Not Started', color: '#71717A', bg: 'rgba(113,113,122,0.15)' },
+  not_started: { label: 'Not Started', color: '#EF4444', bg: 'rgba(239,68,68,0.15)' },
   in_progress: { label: 'In Progress', color: '#FBBF24', bg: 'rgba(251,191,36,0.15)' },
   done: { label: 'Done', color: '#34D399', bg: 'rgba(52,211,153,0.15)' },
 };
@@ -87,17 +91,46 @@ function getProjectFieldValue(project: ProjectWithProgress, column: string): str
   }
 }
 
-export default function ProjectsTable() {
-  const { projects, selectProject, updateProject } = useProjectStore();
+const defaultColumnWidths: Record<string, number> = {
+  name: 200,
+  assignees: 130,
+  status: 120,
+  due_date: 120,
+  created_at: 130,
+  description: 200,
+  tasks: 100,
+};
 
-  // Persisted sort & filter state
+const allColumnKeys = columns.map((c) => c.key);
+
+interface ProjectsTableProps {
+  onlineUsers: PresenceUser[];
+  currentUserEmail: string;
+  onEditStart: (cellId: string, label: string) => void;
+  onEditEnd: () => void;
+}
+
+export default function ProjectsTable({ onlineUsers, currentUserEmail, onEditStart, onEditEnd }: ProjectsTableProps) {
+  const { projects, selectProject, updateProject, createProject, archiveProject } = useProjectStore();
+  const { getWidth, onResizeStart } = useResizableColumns({
+    storageKey: 'projects-table-col-widths',
+    defaults: defaultColumnWidths,
+  });
+
+  // Persisted sort, filter & column visibility state
   const [sortCriteria, setSortCriteria] = usePersistedState<SortCriterion[]>('projects-table-sort', []);
   const [filterCriteria, setFilterCriteria] = usePersistedState<FilterCriterion[]>('projects-table-filter', []);
+  const [visibleColumns, setVisibleColumns] = usePersistedState<string[]>('projects-table-columns', allColumnKeys);
+
+  const visibleCols = useMemo(() => columns.filter((c) => visibleColumns.includes(c.key)), [visibleColumns]);
 
   // Editing state
   const [editingCell, setEditingCell] = useState<string | null>(null);
   const [editValue, setEditValue] = useState('');
   const inputRef = useRef<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>(null);
+
+  // Track newly created row to auto-enter edit mode
+  const [newRowId, setNewRowId] = useState<string | null>(null);
 
   useEffect(() => {
     if (editingCell && inputRef.current) {
@@ -107,6 +140,14 @@ export default function ProjectsTable() {
       }
     }
   }, [editingCell]);
+
+  // Auto-enter edit mode for newly created rows
+  useEffect(() => {
+    if (newRowId && projects.find((p) => p.id === newRowId)) {
+      startEdit(newRowId, 'name', 'New Project');
+      setNewRowId(null);
+    }
+  }, [newRowId, projects]);
 
   // Header click: single sort or shift+click for multi-sort
   const handleHeaderClick = useCallback((col: SortColumn, shiftKey: boolean) => {
@@ -154,15 +195,19 @@ export default function ProjectsTable() {
   const startEdit = (id: string, column: string, value: string) => {
     setEditingCell(`${id}:${column}`);
     setEditValue(value);
+    const project = projects.find((p) => p.id === id);
+    onEditStart(`project:${id}:${column}`, `${project?.name || 'Project'} > ${column}`);
   };
 
   const cancelEdit = () => {
     setEditingCell(null);
     setEditValue('');
+    onEditEnd();
   };
 
   const saveEdit = async (id: string, column: string) => {
     setEditingCell(null);
+    onEditEnd();
     const trimmed = editValue.trim();
     switch (column) {
       case 'name':
@@ -214,24 +259,33 @@ export default function ProjectsTable() {
             criteria={sortCriteria}
             onChange={setSortCriteria}
           />
+          <ColumnsButton
+            columns={columns}
+            visibleKeys={visibleColumns}
+            onChange={setVisibleColumns}
+            requiredKeys={['name']}
+          />
         </div>
       </div>
 
       {/* Table */}
       <div className="border border-white/[0.06] rounded-lg overflow-hidden">
         <div className="overflow-x-auto">
-          <table className="w-full min-w-[900px]">
+          <table className="min-w-[900px]" style={{ tableLayout: 'fixed', width: visibleCols.reduce((sum, c) => sum + getWidth(c.key), 0) }}>
             <thead>
               <tr className="border-b border-white/[0.06] bg-white/[0.02]">
-                {columns.map((col) => {
+                {visibleCols.map((col) => {
                   const sortInfo = getSortInfo(col.key);
                   return (
                     <th
                       key={col.key}
-                      onClick={(e) => handleHeaderClick(col.key, e.shiftKey)}
-                      className="text-left text-[10px] font-semibold text-[#52525B] uppercase tracking-wider px-3 py-2.5 cursor-pointer hover:text-[#A1A1AA] transition-colors select-none"
+                      style={{ width: getWidth(col.key) }}
+                      className="text-left text-[10px] font-semibold text-[#52525B] uppercase tracking-wider px-3 py-2.5 select-none relative"
                     >
-                      <div className="flex items-center gap-1">
+                      <div
+                        className="flex items-center gap-1 cursor-pointer hover:text-[#A1A1AA] transition-colors"
+                        onClick={(e) => handleHeaderClick(col.key, e.shiftKey)}
+                      >
                         <span>{col.emoji}</span>
                         <span>{col.label}</span>
                         {sortInfo && (
@@ -249,6 +303,10 @@ export default function ProjectsTable() {
                           </span>
                         )}
                       </div>
+                      <div
+                        onMouseDown={(e) => onResizeStart(col.key, e)}
+                        className="absolute right-0 top-0 bottom-0 w-1 cursor-col-resize hover:bg-[#3B82F6]/40 transition-colors"
+                      />
                     </th>
                   );
                 })}
@@ -259,6 +317,7 @@ export default function ProjectsTable() {
                 <ProjectRow
                   key={project.id}
                   project={project}
+                  visibleCols={visibleCols}
                   isEditing={isEditing}
                   editValue={editValue}
                   inputRef={inputRef}
@@ -267,11 +326,14 @@ export default function ProjectsTable() {
                   saveEdit={saveEdit}
                   setEditValue={setEditValue}
                   onNavigate={() => selectProject(project.id)}
+                  onTrash={() => archiveProject(project.id)}
+                  onlineUsers={onlineUsers}
+                  currentUserEmail={currentUserEmail}
                 />
               ))}
               {projects.length === 0 && (
                 <tr>
-                  <td colSpan={7} className="px-3 py-8 text-center text-xs text-[#3F3F46]">
+                  <td colSpan={visibleCols.length} className="px-3 py-8 text-center text-xs text-[#3F3F46]">
                     No projects yet
                   </td>
                 </tr>
@@ -279,6 +341,19 @@ export default function ProjectsTable() {
             </tbody>
           </table>
         </div>
+        {/* Add new row */}
+        <button
+          onClick={async () => {
+            const result = await createProject({ name: 'New Project' });
+            if (result.success && result.id) {
+              setNewRowId(result.id);
+            }
+          }}
+          className="w-full flex items-center gap-2 px-3 py-2 text-[11px] text-[#52525B] hover:text-[#A1A1AA] hover:bg-white/[0.02] transition-colors border-t border-white/[0.04]"
+        >
+          <Plus className="w-3.5 h-3.5" />
+          New
+        </button>
       </div>
     </div>
   );
@@ -288,6 +363,7 @@ export default function ProjectsTable() {
 
 function ProjectRow({
   project,
+  visibleCols,
   isEditing,
   editValue,
   inputRef,
@@ -296,8 +372,12 @@ function ProjectRow({
   saveEdit,
   setEditValue,
   onNavigate,
+  onTrash,
+  onlineUsers,
+  currentUserEmail,
 }: {
   project: ProjectWithProgress;
+  visibleCols: { key: string; label: string; emoji: string }[];
   isEditing: (id: string, column: string) => boolean;
   editValue: string;
   inputRef: React.RefObject<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement | null>;
@@ -306,19 +386,27 @@ function ProjectRow({
   saveEdit: (id: string, column: string) => void;
   setEditValue: (v: string) => void;
   onNavigate: () => void;
+  onTrash: () => void;
+  onlineUsers: PresenceUser[];
+  currentUserEmail: string;
 }) {
   const id = project.id;
   const status = statusConfig[project.status] || statusConfig.not_started;
+  const visibleKeys = new Set(visibleCols.map((c) => c.key));
 
   const handleKeyDown = (e: React.KeyboardEvent, column: string) => {
     if (e.key === 'Enter' && column !== 'description') saveEdit(id, column);
     if (e.key === 'Escape') cancelEdit();
   };
 
-  return (
-    <tr className="border-b border-white/[0.04] last:border-b-0 hover:bg-white/[0.02] transition-colors">
-      <td className="px-3 py-2.5">
-        {isEditing(id, 'name') ? (
+  const indicator = (col: string) => (
+    <EditingIndicator cellId={`project:${id}:${col}`} onlineUsers={onlineUsers} currentUserEmail={currentUserEmail} />
+  );
+
+  const renderCell = (key: string) => {
+    switch (key) {
+      case 'name':
+        return isEditing(id, 'name') ? (
           <div className="flex items-center gap-2">
             <div className="w-2.5 h-2.5 rounded-sm flex-shrink-0" style={{ backgroundColor: project.color }} />
             <input
@@ -331,17 +419,18 @@ function ProjectRow({
             />
           </div>
         ) : (
-          <div className="flex items-center gap-2 cursor-text" onClick={() => startEdit(id, 'name', project.name)}>
-            <div className="w-2.5 h-2.5 rounded-sm flex-shrink-0" style={{ backgroundColor: project.color }} />
-            <span className="text-[13px] text-[#FAFAFA] font-medium truncate max-w-[200px]">
-              {project.name}
-            </span>
+          <div>
+            {indicator('name')}
+            <div className="flex items-center gap-2 cursor-pointer" onClick={onNavigate} onDoubleClick={(e) => { e.stopPropagation(); startEdit(id, 'name', project.name); }}>
+              <div className="w-2.5 h-2.5 rounded-sm flex-shrink-0" style={{ backgroundColor: project.color }} />
+              <span className="text-[13px] text-[#FAFAFA] font-medium truncate hover:text-[#3B82F6] transition-colors">
+                {project.name}
+              </span>
+            </div>
           </div>
-        )}
-      </td>
-
-      <td className="px-3 py-2.5">
-        {isEditing(id, 'assignees') ? (
+        );
+      case 'assignees':
+        return isEditing(id, 'assignees') ? (
           <input
             ref={inputRef as React.RefObject<HTMLInputElement>}
             value={editValue}
@@ -352,20 +441,21 @@ function ProjectRow({
             className="w-full bg-transparent text-[10px] text-[#A1A1AA] font-medium outline-none caret-[#3B82F6]"
           />
         ) : (
-          <div className="flex items-center gap-1 flex-wrap cursor-text min-h-[20px]" onClick={() => startEdit(id, 'assignees', project.assignees.join(', '))}>
-            {project.assignees.length > 0 ? (
-              project.assignees.map((a, i) => (
-                <span key={i} className="text-[10px] font-medium text-[#A1A1AA] bg-white/[0.06] px-1.5 py-0.5 rounded">{a}</span>
-              ))
-            ) : (
-              <span className="text-[11px] text-[#3F3F46]">—</span>
-            )}
+          <div>
+            {indicator('assignees')}
+            <div className="flex items-center gap-1 flex-nowrap overflow-hidden cursor-text min-h-[20px]" onClick={() => startEdit(id, 'assignees', project.assignees.join(', '))}>
+              {project.assignees.length > 0 ? (
+                project.assignees.map((a, i) => (
+                  <span key={i} className="text-[10px] font-medium text-[#A1A1AA] bg-white/[0.06] px-1.5 py-0.5 rounded shrink-0">{a}</span>
+                ))
+              ) : (
+                <span className="text-[11px] text-[#3F3F46]">—</span>
+              )}
+            </div>
           </div>
-        )}
-      </td>
-
-      <td className="px-3 py-2.5">
-        {isEditing(id, 'status') ? (
+        );
+      case 'status':
+        return isEditing(id, 'status') ? (
           <select
             ref={inputRef as React.RefObject<HTMLSelectElement>}
             value={editValue}
@@ -379,18 +469,19 @@ function ProjectRow({
             <option value="done">Done</option>
           </select>
         ) : (
-          <span
-            onClick={() => startEdit(id, 'status', project.status)}
-            className="text-[10px] font-semibold px-2 py-1 rounded-full whitespace-nowrap cursor-pointer hover:ring-1 hover:ring-white/20 transition-all"
-            style={{ color: status.color, backgroundColor: status.bg }}
-          >
-            {status.label}
-          </span>
-        )}
-      </td>
-
-      <td className="px-3 py-2.5">
-        {isEditing(id, 'due_date') ? (
+          <div>
+            {indicator('status')}
+            <span
+              onClick={() => startEdit(id, 'status', project.status)}
+              className="text-[10px] font-semibold px-2 py-1 rounded-full whitespace-nowrap cursor-pointer hover:ring-1 hover:ring-white/20 transition-all"
+              style={{ color: status.color, backgroundColor: status.bg }}
+            >
+              {status.label}
+            </span>
+          </div>
+        );
+      case 'due_date':
+        return isEditing(id, 'due_date') ? (
           <input
             ref={inputRef as React.RefObject<HTMLInputElement>}
             type="date"
@@ -401,52 +492,114 @@ function ProjectRow({
             className="bg-transparent text-[11px] text-[#FAFAFA] outline-none caret-[#3B82F6]"
           />
         ) : (
-          <span
-            onClick={() => startEdit(id, 'due_date', toDateInputValue(project.due_date))}
-            className={`text-[11px] whitespace-nowrap cursor-text hover:text-[#3B82F6] transition-colors ${
-              project.due_date && new Date(project.due_date) < new Date() && project.status !== 'done'
-                ? 'text-[#EF4444]' : 'text-[#71717A]'
-            }`}
-          >
-            {formatDate(project.due_date)}
-          </span>
-        )}
-      </td>
-
-      <td className="px-3 py-2.5">
-        <span className="text-[11px] text-[#71717A] whitespace-nowrap">{formatDate(project.created_at)}</span>
-      </td>
-
-      <td className="px-3 py-2.5">
-        {isEditing(id, 'description') ? (
+          <div>
+            {indicator('due_date')}
+            <span
+              onClick={() => startEdit(id, 'due_date', toDateInputValue(project.due_date))}
+              className={`text-[11px] whitespace-nowrap cursor-text hover:text-[#3B82F6] transition-colors ${
+                project.due_date && new Date(project.due_date) < new Date() && project.status !== 'done'
+                  ? 'text-[#EF4444]' : 'text-[#71717A]'
+              }`}
+            >
+              {formatDate(project.due_date)}
+            </span>
+          </div>
+        );
+      case 'created_at':
+        return <span className="text-[11px] text-[#71717A] whitespace-nowrap">{formatDate(project.created_at)}</span>;
+      case 'description':
+        return isEditing(id, 'description') ? (
           <input
             ref={inputRef as React.RefObject<HTMLInputElement>}
             value={editValue}
             onChange={(e) => setEditValue(e.target.value)}
             onBlur={() => saveEdit(id, 'description')}
             onKeyDown={(e) => handleKeyDown(e, 'description')}
-            className="w-full bg-transparent text-[11px] text-[#A1A1AA] outline-none max-w-[220px] caret-[#3B82F6]"
+            className="w-full bg-transparent text-[11px] text-[#A1A1AA] outline-none caret-[#3B82F6]"
           />
         ) : (
-          <span
-            onClick={() => startEdit(id, 'description', project.description || '')}
-            className="text-[11px] text-[#52525B] truncate block max-w-[220px] cursor-text hover:text-[#A1A1AA] transition-colors min-h-[16px]"
-          >
-            {project.description || '—'}
-          </span>
-        )}
-      </td>
+          <div>
+            {indicator('description')}
+            <span
+              onClick={() => startEdit(id, 'description', project.description || '')}
+              className="text-[11px] text-[#52525B] truncate block cursor-text hover:text-[#A1A1AA] transition-colors min-h-[16px]"
+            >
+              {project.description || '—'}
+            </span>
+          </div>
+        );
+      case 'tasks':
+        return (
+          <button onClick={onNavigate} className="flex items-center gap-2 hover:opacity-80 transition-opacity">
+            <span className="text-[11px] text-[#71717A] whitespace-nowrap">{project.completed_tasks}/{project.total_tasks}</span>
+            {project.total_tasks > 0 && (
+              <div className="w-12 h-1.5 bg-white/[0.06] rounded-full overflow-hidden">
+                <div className="h-full rounded-full bg-[#34D399] transition-all" style={{ width: `${project.progress}%` }} />
+              </div>
+            )}
+          </button>
+        );
+      default:
+        return null;
+    }
+  };
 
-      <td className="px-3 py-2.5">
-        <button onClick={onNavigate} className="flex items-center gap-2 hover:opacity-80 transition-opacity">
-          <span className="text-[11px] text-[#71717A] whitespace-nowrap">{project.completed_tasks}/{project.total_tasks}</span>
-          {project.total_tasks > 0 && (
-            <div className="w-12 h-1.5 bg-white/[0.06] rounded-full overflow-hidden">
-              <div className="h-full rounded-full bg-[#34D399] transition-all" style={{ width: `${project.progress}%` }} />
+  const [contextMenu, setContextMenu] = useState<{ x: number; y: number } | null>(null);
+
+  // Close context menu on outside click or scroll
+  useEffect(() => {
+    if (!contextMenu) return;
+    const close = () => setContextMenu(null);
+    window.addEventListener('click', close);
+    window.addEventListener('scroll', close, true);
+    return () => {
+      window.removeEventListener('click', close);
+      window.removeEventListener('scroll', close, true);
+    };
+  }, [contextMenu]);
+
+  return (
+    <>
+      <tr
+        className="group border-b border-white/[0.04] last:border-b-0 hover:bg-white/[0.02] transition-colors"
+        onContextMenu={(e) => {
+          e.preventDefault();
+          setContextMenu({ x: e.clientX, y: e.clientY });
+        }}
+      >
+        {visibleCols.map((col) => (
+          <td key={col.key} className="px-3 py-2.5 overflow-hidden">
+            {renderCell(col.key)}
+          </td>
+        ))}
+      </tr>
+
+      {/* Right-click context menu */}
+      {contextMenu && (
+        <tr>
+          <td colSpan={0} className="p-0 border-0">
+            <div
+              className="fixed z-50 bg-[#1C1C1E] border border-white/[0.1] rounded-lg shadow-2xl py-1 min-w-[160px]"
+              style={{ left: contextMenu.x, top: contextMenu.y }}
+            >
+              <button
+                onClick={() => { onNavigate(); setContextMenu(null); }}
+                className="w-full flex items-center gap-2.5 px-3 py-2 text-sm text-[#FAFAFA] hover:bg-white/[0.06] transition-colors"
+              >
+                Open project
+              </button>
+              <div className="h-px bg-white/[0.06] mx-2 my-1" />
+              <button
+                onClick={() => { onTrash(); setContextMenu(null); }}
+                className="w-full flex items-center gap-2.5 px-3 py-2 text-sm text-red-400 hover:bg-white/[0.06] transition-colors"
+              >
+                <Trash2 className="w-3.5 h-3.5" />
+                Move to Trash
+              </button>
             </div>
-          )}
-        </button>
-      </td>
-    </tr>
+          </td>
+        </tr>
+      )}
+    </>
   );
 }

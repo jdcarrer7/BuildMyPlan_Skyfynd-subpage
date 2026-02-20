@@ -8,7 +8,7 @@ import { MiniDonut } from './DonutChart';
 import ProjectForm from './ProjectForm';
 
 const statusGroups: { key: ProjectStatus; label: string; color: string }[] = [
-  { key: 'not_started', label: 'NOT STARTED', color: '#71717A' },
+  { key: 'not_started', label: 'NOT STARTED', color: '#EF4444' },
   { key: 'in_progress', label: 'IN PROGRESS', color: '#F59E0B' },
   { key: 'done', label: 'DONE', color: '#10B981' },
 ];

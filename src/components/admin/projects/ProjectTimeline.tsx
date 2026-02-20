@@ -10,7 +10,7 @@ interface ProjectTimelineProps {
 const statusColors: Record<string, string> = {
   done: '#10B981',
   in_progress: '#F59E0B',
-  todo: '#71717A',
+  todo: '#EF4444',
 };
 
 export default function ProjectTimeline({ tasks, projectDueDate }: ProjectTimelineProps) {
