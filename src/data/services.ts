@@ -29,6 +29,8 @@ export interface Service {
   description: string;
   tiers: Tier[];
   addOns: AddOn[];
+  /** When true, tier prices are hidden from the client-facing UI (shown as "Request Quote") */
+  hidePrice?: boolean;
 }
 
 export interface Category {
@@ -130,7 +132,7 @@ export const services: Service[] = [
           { name: 'Website Type', value: 'Hybrid (CMS + advanced interaction)', included: true },
           { name: 'Custom Design', value: 'Premium & Immersive', included: true },
           { name: 'Responsive (Desktop/Tablet/Mobile)', value: true, included: true },
-          { name: 'Pages Included', value: '11-20 pages', included: true },
+          { name: 'Pages Included', value: '11+ pages (Custom Quote)', included: true },
           { name: 'CMS (Dynamic Content)', value: 'Advanced CMS', included: true },
           { name: 'Contact Form', value: 'Advanced flows', included: true },
           { name: 'Blog', value: 'Advanced', included: true },
@@ -234,6 +236,7 @@ export const services: Service[] = [
     categoryName: 'Design & Development',
     name: 'App Creation',
     description: 'Mobile and web application development from MVP to full-scale platforms, fully customized to your specific business needs and workflows.',
+    hidePrice: true,
     tiers: [
       {
         id: 'essential',

@@ -12,15 +12,6 @@ interface AppPriceSidebarProps {
 const SUMMARY_STEP = 11;
 
 export default function AppPriceSidebar({ currentStep, onGoToSummary }: AppPriceSidebarProps) {
-  const {
-    oneTimeSubtotal,
-    rushFee,
-    oneTimeTotal,
-    monthlyTotal,
-    hasCustomQuote,
-    timelineMultiplier,
-  } = useAppBuilderStore();
-
   return (
     <motion.div
       initial={{ opacity: 0, x: 20 }}
@@ -29,88 +20,21 @@ export default function AppPriceSidebar({ currentStep, onGoToSummary }: AppPrice
     >
       <div className="flex items-center gap-2 mb-4">
         <Smartphone className="w-5 h-5 text-[var(--accent-blue)]" />
-        <h3 className="text-lg font-semibold text-white">App Estimate</h3>
+        <h3 className="text-lg font-semibold text-white">App Quote</h3>
       </div>
 
-      {hasCustomQuote ? (
-        <div className="flex items-start gap-3 p-4 bg-[var(--accent-orange)]/10 border border-[var(--accent-orange)]/30 rounded-lg mb-4">
-          <AlertCircle className="w-5 h-5 text-[var(--accent-orange)] shrink-0 mt-0.5" />
-          <div>
-            <p className="text-sm text-white font-medium">Custom Quote Required</p>
-            <p className="text-xs text-[var(--text-secondary)] mt-1">
-              Some of your selections require custom pricing. We&apos;ll provide a detailed quote.
-            </p>
-          </div>
+      <div className="flex items-start gap-3 p-4 bg-[var(--accent-orange)]/10 border border-[var(--accent-orange)]/30 rounded-lg mb-4">
+        <AlertCircle className="w-5 h-5 text-[var(--accent-orange)] shrink-0 mt-0.5" />
+        <div>
+          <p className="text-sm text-white font-medium">Custom Quote</p>
+          <p className="text-xs text-[var(--text-secondary)] mt-1">
+            Configure your app requirements and we&apos;ll provide a tailored quote based on your selections.
+          </p>
         </div>
-      ) : null}
-
-      <div className="space-y-3">
-        <div className="flex justify-between text-sm">
-          <span className="text-[var(--text-secondary)]">One-Time Subtotal</span>
-          <span className="text-white font-medium">
-            {hasCustomQuote ? 'TBD' : `$${oneTimeSubtotal.toLocaleString()}`}
-          </span>
-        </div>
-
-        {rushFee > 0 && (
-          <div className="flex justify-between text-sm">
-            <span className="text-[var(--accent-orange)]">
-              Rush Fee ({Math.round((timelineMultiplier - 1) * 100)}%)
-            </span>
-            <span className="text-[var(--accent-orange)]">
-              +${rushFee.toLocaleString()}
-            </span>
-          </div>
-        )}
-
-        <div className="border-t border-[var(--border-subtle)] pt-3">
-          <div className="flex justify-between">
-            <span className="text-white font-semibold">One-Time Total</span>
-            <motion.span
-              key={oneTimeTotal}
-              initial={{ scale: 1.1 }}
-              animate={{ scale: 1 }}
-              className="text-xl font-bold gradient-text"
-            >
-              {hasCustomQuote ? 'Custom' : `$${oneTimeTotal.toLocaleString()}`}
-            </motion.span>
-          </div>
-        </div>
-
-        {monthlyTotal > 0 && (
-          <div className="flex justify-between text-sm pt-2 border-t border-[var(--border-subtle)]">
-            <span className="text-[var(--text-muted)]">+ Monthly Costs</span>
-            <span className="text-[var(--text-secondary)]">
-              ${monthlyTotal.toLocaleString()}/mo
-            </span>
-          </div>
-        )}
       </div>
-
-      {/* Due Today */}
-      {!hasCustomQuote && (oneTimeTotal + monthlyTotal) > 0 && (
-        <div className="mt-4 pt-3 border-t-2 border-[var(--accent-purple)]/50">
-          <div className="flex justify-between items-center">
-            <span className="text-white font-bold">Due Today</span>
-            <motion.span
-              key={`due-${oneTimeTotal}-${monthlyTotal}`}
-              initial={{ scale: 1.1 }}
-              animate={{ scale: 1 }}
-              className="text-xl font-bold gradient-text"
-            >
-              ${(oneTimeTotal + monthlyTotal).toLocaleString()}
-            </motion.span>
-          </div>
-          {monthlyTotal > 0 && (
-            <p className="text-xs text-[var(--text-muted)] mt-1">
-              One-time + first month&apos;s subscription
-            </p>
-          )}
-        </div>
-      )}
 
       <p className="text-[10px] text-[var(--text-muted)] mt-4">
-        *Estimate based on selections. Final price confirmed after consultation.
+        *Final pricing provided after consultation based on your configuration.
       </p>
 
       {/* Go to Summary Button - hidden on summary step */}

@@ -176,11 +176,9 @@ export default function Step11Summary({ showQuoteForm = false, onCloseQuoteForm 
     setExpandedCard(prev => prev === card ? null : card);
   };
 
-  // Price display helper - shows $0 greyed out for free items
-  const formatPrice = (price: number | null, prefix: string = '', suffix: string = '') => {
-    if (price === null) return <span className="text-[var(--accent-orange)]">Custom Quote</span>;
-    if (price === 0) return <span className="text-[var(--text-muted)]">{prefix}$0{suffix}</span>;
-    return <span className="text-white font-medium">{prefix}${price.toLocaleString()}{suffix}</span>;
+  // App prices hidden from client — always show as included/custom
+  const formatPrice = (_price: number | null, _prefix: string = '', _suffix: string = '') => {
+    return <span className="text-[var(--text-muted)]">Included</span>;
   };
 
   // Summary section component with edit button
@@ -358,20 +356,11 @@ export default function Step11Summary({ showQuoteForm = false, onCloseQuoteForm 
                               </span>
                               {formatPrice(f.setupPrice, '+$', ' setup')}
                             </div>
-                            {f.usagePrice !== null && f.usagePrice > 0 && (
+                            {usageOption && (
                               <div className="flex justify-between text-sm pl-4">
                                 <span className="text-[var(--text-muted)]">
-                                  Usage: {usageOption?.label}
+                                  Usage: {usageOption.label}
                                 </span>
-                                <span className="text-[var(--accent-pink)]">+${f.usagePrice}/mo</span>
-                              </div>
-                            )}
-                            {f.usagePrice === 0 && (
-                              <div className="flex justify-between text-sm pl-4">
-                                <span className="text-[var(--text-muted)]">
-                                  Usage: {usageOption?.label}
-                                </span>
-                                <span className="text-[var(--text-muted)]">$0/mo</span>
                               </div>
                             )}
                           </div>
@@ -395,9 +384,7 @@ export default function Step11Summary({ showQuoteForm = false, onCloseQuoteForm 
                               {service?.label}
                               {s.recurring && <span className="text-[var(--accent-orange)] ml-1">(monthly)</span>}
                             </span>
-                            <span className="text-white font-medium">
-                              +${s.price}{s.recurring && '/mo'}
-                            </span>
+                            {/* Prices hidden from client */}
                           </div>
                         );
                       })}
@@ -409,63 +396,23 @@ export default function Step11Summary({ showQuoteForm = false, onCloseQuoteForm 
                 <SummarySection title="Timeline" icon={<Clock className="w-5 h-5 text-[var(--accent-blue)]" />} stepNumber={10}>
                   <div className="flex justify-between">
                     <span className="text-[var(--text-secondary)]">{timelineLabel}</span>
-                    {store.rushFee > 0 ? (
-                      <span className="text-[var(--accent-orange)] font-medium">
-                        +${store.rushFee.toLocaleString()} ({Math.round((store.timelineMultiplier - 1) * 100)}%)
-                      </span>
-                    ) : (
-                      <span className="text-green-400 font-medium">No rush fee</span>
-                    )}
                   </div>
                 </SummarySection>
               </div>
             </div>
           </div>
 
-        {/* Totals - Always visible */}
+        {/* Custom Quote Notice */}
         <div className="mt-6 p-4 bg-gradient-to-r from-[var(--accent-blue)]/20 to-[var(--accent-pink)]/20 border border-[var(--accent-blue)]/30 rounded-lg">
-          {store.hasCustomQuote ? (
-            <div className="flex items-start gap-3">
-              <AlertCircle className="w-5 h-5 text-[var(--accent-orange)] shrink-0 mt-0.5" />
-              <div>
-                <p className="text-white font-semibold">Custom Quote Required</p>
-                <p className="text-sm text-[var(--text-secondary)] mt-1">
-                  Some of your selections require custom pricing. Submit your configuration and we&apos;ll provide a detailed quote.
-                </p>
-              </div>
+          <div className="flex items-start gap-3">
+            <AlertCircle className="w-5 h-5 text-[var(--accent-orange)] shrink-0 mt-0.5" />
+            <div>
+              <p className="text-white font-semibold">Custom Quote</p>
+              <p className="text-sm text-[var(--text-secondary)] mt-1">
+                Submit your app configuration and we&apos;ll provide a tailored quote based on your specific requirements.
+              </p>
             </div>
-          ) : (
-            <>
-              <div className="flex justify-between items-center">
-                <span className="text-white font-semibold">One-time Total</span>
-                <motion.span
-                  key={store.oneTimeTotal}
-                  initial={{ scale: 1.1 }}
-                  animate={{ scale: 1 }}
-                  className="text-2xl font-bold gradient-text"
-                >
-                  ${store.oneTimeTotal.toLocaleString()}
-                </motion.span>
-              </div>
-              <div className="flex justify-between items-center mt-2 pt-2 border-t border-[var(--border-subtle)]">
-                <span className="text-white font-semibold">Monthly Total</span>
-                {store.monthlyTotal > 0 ? (
-                  <span className="text-lg font-semibold text-[var(--accent-pink)]">
-                    ${store.monthlyTotal.toLocaleString()}/mo
-                  </span>
-                ) : (
-                  <span className="text-[var(--text-muted)] text-lg">$0/mo</span>
-                )}
-              </div>
-              <div className="flex justify-between items-center mt-2 pt-2 border-t-2 border-[var(--accent-blue)]/50">
-                <span className="text-white font-bold">Due Today</span>
-                <span className="text-xl font-bold gradient-text">${(store.oneTimeTotal + store.monthlyTotal).toLocaleString()}</span>
-              </div>
-              {store.monthlyTotal > 0 && (
-                <p className="text-xs text-[var(--text-muted)] mt-1">One-time + first month&apos;s subscription</p>
-              )}
-            </>
-          )}
+          </div>
         </div>
       </div>
 

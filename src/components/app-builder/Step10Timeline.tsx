@@ -84,7 +84,7 @@ export default function Step10Timeline() {
                           +{Math.round((option.multiplier - 1) * 100)}%
                         </span>
                         <p className={`text-xs ${isSelected ? 'text-white/60' : 'text-[var(--text-muted)]'}`}>
-                          +${fee.toLocaleString()} rush fee
+                          rush fee
                         </p>
                       </div>
                     ) : (
@@ -114,7 +114,7 @@ export default function Step10Timeline() {
             <div>
               <p className="text-sm text-white font-medium">Rush Fee Applied</p>
               <p className="text-sm text-[var(--text-secondary)] mt-1">
-                A rush fee of <span className="text-[var(--accent-orange)] font-semibold">${rushFee.toLocaleString()}</span> will be added to expedite your project.
+                A rush fee will be applied to expedite your project. The exact amount will be included in your custom quote.
               </p>
             </div>
           </div>

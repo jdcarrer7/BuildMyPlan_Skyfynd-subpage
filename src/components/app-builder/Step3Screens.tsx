@@ -55,9 +55,7 @@ export default function Step3Screens() {
                   <p className={`text-sm mb-3 ${isSelected ? 'text-white/70' : 'text-[var(--text-muted)]'}`}>
                     {option.description || option.tooltip}
                   </p>
-                  <div className={`text-2xl font-bold ${isSelected ? 'text-white' : 'text-[var(--accent-blue)]'}`}>
-                    {option.price === null ? 'Custom Quote' : `$${option.price.toLocaleString()}`}
-                  </div>
+                  {/* Prices hidden from client — internal reference only in appBuilder.ts */}
                 </button>
               </div>
             </motion.div>

@@ -70,9 +70,7 @@ export default function Step9Services() {
                     <p className="text-sm text-[var(--text-muted)]">{service.description || service.tooltip}</p>
                   </div>
                 </div>
-                <span className={`font-semibold shrink-0 ${isSelected ? 'text-[var(--accent-blue)]' : 'text-white'}`}>
-                  {service.price !== null ? `$${service.price.toLocaleString()}` : 'Ask for Quote'}
-                </span>
+                {/* Prices hidden from client */}
               </motion.button>
             );
           })}
@@ -130,16 +128,7 @@ export default function Step9Services() {
                       )}
                     </div>
                   </div>
-                  {!hasOptions && (
-                    <span className={`font-semibold shrink-0 ${isSelected ? 'text-[var(--accent-teal)]' : 'text-white'}`}>
-                      {service.price !== null ? `$${service.price.toLocaleString()}/mo` : 'Ask for Quote'}
-                    </span>
-                  )}
-                  {hasOptions && !isSelected && (
-                    <span className="font-semibold shrink-0 text-white">
-                      From ${service.options![0].price.toLocaleString()}/mo
-                    </span>
-                  )}
+                  {/* Prices hidden from client */}
                 </motion.button>
 
                 {/* Tier dropdown for services with options */}
@@ -184,9 +173,7 @@ export default function Step9Services() {
                                 <p className="text-xs text-[var(--text-muted)]">{option.description}</p>
                               </div>
                             </div>
-                            <span className={`text-sm font-semibold shrink-0 ${isOptionSelected ? 'text-[var(--accent-teal)]' : 'text-white'}`}>
-                              ${option.price.toLocaleString()}/mo
-                            </span>
+                            {/* Prices hidden from client */}
                           </motion.button>
                         );
                       })}

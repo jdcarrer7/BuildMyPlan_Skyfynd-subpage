@@ -69,7 +69,7 @@ export default function Step7Features() {
                     </h3>
                     {isSelected && selectedOption && (
                       <p className="text-sm text-[var(--accent-blue)]">
-                        {selectedOption.label} - {selectedOption.price === null ? 'Custom Quote' : `$${selectedOption.price}`}
+                        {selectedOption.label}
                       </p>
                     )}
                   </div>
@@ -131,9 +131,7 @@ export default function Step7Features() {
                                   {option.description}
                                 </p>
                               </div>
-                              <span className="font-semibold ml-4 whitespace-nowrap">
-                                {option.price === null ? 'Quote' : `$${option.price}`}
-                              </span>
+                              {/* Prices hidden from client */}
                             </button>
                           );
                         })}

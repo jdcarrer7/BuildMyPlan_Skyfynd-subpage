@@ -61,9 +61,7 @@ export default function Step2Platform() {
                     </p>
                   </div>
                 </button>
-                <span className="font-bold text-lg ml-4">
-                  {option.price === null ? 'Custom' : `$${option.price.toLocaleString()}`}
-                </span>
+                {/* Prices hidden from client — internal reference only in appBuilder.ts */}
               </div>
             </motion.div>
           );

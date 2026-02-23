@@ -44,13 +44,12 @@ export default function CombinedEstimateSidebar({ currentService, onRequestQuote
         hasCustomQuote: websiteConfig.hasCustomQuote,
       };
     } else if (type === 'app') {
-      const appConfig = config as AppConfig;
       return {
         label: 'App',
         icon: Smartphone,
-        oneTime: appConfig.oneTimeTotal,
-        monthly: appConfig.monthlyTotal,
-        hasCustomQuote: appConfig.hasCustomQuote,
+        oneTime: 0,
+        monthly: 0,
+        hasCustomQuote: true, // App prices hidden from client — always show as custom quote
       };
     } else if (type === 'animation') {
       const animationConfig = config as AnimationConfig;

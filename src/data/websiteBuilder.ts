@@ -216,33 +216,27 @@ export const siteSizeOptions: SiteSizeOption[] = [
   {
     id: '1',
     label: '1 page (Landing)',
-    price: 300,
+    price: 350,
     tooltip: 'A single, focused page. Great for campaigns, launches, or simple online presence.',
   },
   {
     id: '2-5',
     label: '2–5 pages',
-    price: 600,
+    price: 750,
     tooltip: 'Typical for small sites: Home, About, Services, Contact, etc.',
   },
   {
     id: '6-10',
     label: '6–10 pages',
-    price: 1000,
+    price: 1400,
     tooltip: 'Room for detailed services, team pages, case studies, blog, and more.',
   },
   {
-    id: '11-20',
-    label: '11–20 pages',
-    price: 1600,
-    tooltip: 'Comprehensive sites with multiple service lines, resources, and content sections.',
-  },
-  {
-    id: '20+',
-    label: '20+ pages',
+    id: '11+',
+    label: '11+ pages',
     price: null,
     customQuote: true,
-    tooltip: 'Large-scale sites requiring custom scoping and pricing.',
+    tooltip: 'Comprehensive sites requiring custom scoping and pricing. We\'ll provide a tailored quote based on your specific needs.',
   },
 ];
 

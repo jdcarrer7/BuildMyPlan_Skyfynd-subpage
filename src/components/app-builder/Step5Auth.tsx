@@ -54,9 +54,7 @@ export default function Step5Auth() {
                     </p>
                   </div>
                   <div className="flex items-center gap-3">
-                    <span className="font-bold text-lg">
-                      {option.price === null ? 'Custom' : option.price === 0 ? 'Free' : `$${option.price.toLocaleString()}`}
-                    </span>
+                    {/* Prices hidden from client */}
                     {isSelected && (
                       <div className="w-6 h-6 rounded-full bg-white/20 flex items-center justify-center">
                         <Check className="w-4 h-4" />

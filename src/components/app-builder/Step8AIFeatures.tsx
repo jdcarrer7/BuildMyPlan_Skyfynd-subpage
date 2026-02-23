@@ -86,11 +86,11 @@ export default function Step8AIFeatures() {
                     {isSelected && selectedSetup && (
                       <div className="flex flex-wrap gap-2 mt-1">
                         <span className="text-sm text-[var(--accent-blue)]">
-                          Setup: {selectedSetup.label} ({selectedSetup.price === null ? 'Quote' : `$${selectedSetup.price}`})
+                          Setup: {selectedSetup.label}
                         </span>
-                        {selectedUsage && selectedUsage.price !== null && selectedUsage.price > 0 && (
+                        {selectedUsage && (
                           <span className="text-sm text-[var(--accent-teal)]">
-                            + ${selectedUsage.price}/mo
+                            Usage: {selectedUsage.label}
                           </span>
                         )}
                       </div>
@@ -149,9 +149,7 @@ export default function Step8AIFeatures() {
                                     {option.description || 'AI setup and integration'}
                                   </p>
                                 </div>
-                                <span className="font-semibold ml-4 whitespace-nowrap">
-                                  {option.price === null ? 'Quote' : `$${option.price}`}
-                                </span>
+                                {/* Prices hidden from client */}
                               </button>
                             );
                           })}
@@ -184,9 +182,7 @@ export default function Step8AIFeatures() {
                                     {option.description || option.includes}
                                   </p>
                                 </div>
-                                <span className="font-semibold ml-4 whitespace-nowrap">
-                                  {option.price === null ? 'Quote' : option.price === 0 ? 'Included' : `$${option.price}/mo`}
-                                </span>
+                                {/* Prices hidden from client */}
                               </button>
                             );
                           })}

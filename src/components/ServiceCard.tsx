@@ -129,8 +129,14 @@ export default function ServiceCard({ service, isExpanded, onToggleExpand, onScr
                 </div>
               )}
               <div className="text-base font-semibold tracking-wide leading-tight">{tier.name}</div>
-              <div className="text-[10px] opacity-60 uppercase tracking-wider mt-1 whitespace-nowrap">starting at</div>
-              <div className="text-xl font-bold mt-1">${tier.price.toLocaleString()}</div>
+              {service.hidePrice ? (
+                <div className="text-[11px] font-medium mt-2 text-[var(--accent-orange)]">Request Quote</div>
+              ) : (
+                <>
+                  <div className="text-[10px] opacity-60 uppercase tracking-wider mt-1 whitespace-nowrap">starting at</div>
+                  <div className="text-xl font-bold mt-1">${tier.price.toLocaleString()}</div>
+                </>
+              )}
             </button>
           );
         })}
