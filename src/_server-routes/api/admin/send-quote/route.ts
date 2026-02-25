@@ -33,7 +33,7 @@ function buildQuoteHtml(q: QuoteJSON): string {
 
   // Header
   html += '<tr><td style="background-color:#4a148c;background:linear-gradient(135deg,#4a148c 0%,#7b1fa2 50%,#9c27b0 100%);padding:30px 40px;text-align:center;">';
-  html += `<img src="${LOGO_URL}" alt="SkyFynd" width="140" style="display:block;margin:0 auto 12px;max-width:140px;" />`;
+  html += `<img src="${LOGO_URL}" alt="Skyfynd" width="140" style="display:block;margin:0 auto 12px;max-width:140px;" />`;
   html += '<h1 style="color:#ffffff;margin:0 0 4px;font-size:22px;font-weight:700;">Quote Estimate</h1>';
   html += `<p style="color:#e1bee7;margin:0;font-size:14px;">${q.qrNumber} &bull; ${dateStr}</p>`;
   html += '</td></tr>';
@@ -206,7 +206,7 @@ export async function POST(request: Request) {
 
     // Build HTML email
     const htmlBody = buildQuoteHtml(quote);
-    const subject = `Your Quote from SkyFynd \u2014 ${quote.qrNumber}`;
+    const subject = `Your Quote from Skyfynd \u2014 ${quote.qrNumber}`;
 
     // Send via Nodemailer + Gmail SMTP
     const gmailUser = process.env.GMAIL_USER;
@@ -224,10 +224,10 @@ export async function POST(request: Request) {
     });
 
     await transporter.sendMail({
-      from: `"SkyFynd" <${gmailUser}>`,
+      from: `"Skyfynd" <${gmailUser}>`,
       to: clientEmail,
       subject,
-      text: `Your SkyFynd Quote\n\nQR Number: ${quote.qrNumber}\nOne-Time Total: $${quote.totals.oneTimeTotal || 0}\nMonthly Total: $${quote.totals.monthlyTotal || 0}\nDue Today: $${quote.totals.grandTotal || 0}`,
+      text: `Your Skyfynd Quote\n\nQR Number: ${quote.qrNumber}\nOne-Time Total: $${quote.totals.oneTimeTotal || 0}\nMonthly Total: $${quote.totals.monthlyTotal || 0}\nDue Today: $${quote.totals.grandTotal || 0}`,
       html: htmlBody,
     });
 

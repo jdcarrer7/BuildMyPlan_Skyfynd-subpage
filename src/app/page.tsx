@@ -95,7 +95,7 @@ export default function BuildMyPlan() {
             <span className="text-sm text-[var(--text-secondary)] tracking-wide">13 Services • 3 Tiers • Unlimited Possibilities</span>
           </motion.div>
 
-          {/* Title - SkyFynd style: 64px hero, tight line-height */}
+          {/* Title - Skyfynd style: 64px hero, tight line-height */}
           <h1 className="font-serif mb-6" style={{ fontSize: 'clamp(36px, 8vw, 55px)', fontWeight: 600, lineHeight: 1.05, letterSpacing: '-0.03em', color: '#FAFAFA' }}>
             Build Your{' '}
             <span className="gradient-text">Perfect Plan</span>

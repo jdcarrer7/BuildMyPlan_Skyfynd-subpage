@@ -2,19 +2,19 @@
 @import "tailwindcss";
 
 :root {
-  /* Backgrounds - SkyFynd Dark Theme */
+  /* Backgrounds - Skyfynd Dark Theme */
   --bg-primary: #0A0A0B;
   --bg-secondary: #111113;
   --bg-card: #18181B;
   --bg-card-hover: #1C1C1F;
   --bg-elevated: #27272A;
 
-  /* Text - SkyFynd hierarchy */
+  /* Text - Skyfynd hierarchy */
   --text-primary: #FAFAFA;
   --text-secondary: #A1A1AA;
   --text-muted: #71717A;
 
-  /* Accent Colors - SkyFynd purple/blue/teal scheme */
+  /* Accent Colors - Skyfynd purple/blue/teal scheme */
   --accent-purple: #8B5CF6;
   --accent-purple-light: #A78BFA;
   --accent-purple-dark: #7C3AED;
@@ -31,7 +31,7 @@
   --accent-fuchsia: #A78BFA;
   --accent-pink: #10B981;
 
-  /* Gradients - SkyFynd logo-inspired purple → blue → teal */
+  /* Gradients - Skyfynd logo-inspired purple → blue → teal */
   --gradient-primary: linear-gradient(135deg, #8B5CF6 0%, #3B82F6 50%, #10B981 100%);
   --gradient-purple-blue: linear-gradient(135deg, #8B5CF6 0%, #3B82F6 100%);
   --gradient-soft: linear-gradient(135deg, rgba(139, 92, 246, 0.15) 0%, rgba(59, 130, 246, 0.12) 50%, rgba(16, 185, 129, 0.15) 100%);
@@ -41,16 +41,16 @@
   --gradient-blob-teal: radial-gradient(circle, rgba(16, 185, 129, 0.08) 0%, transparent 70%);
   --gradient-nav-glow: linear-gradient(135deg, #60A5FA, #10B981, #FBBF24, #F97316, #EF4444, #60A5FA);
 
-  /* Shadows - SkyFynd style with blue/teal glow */
+  /* Shadows - Skyfynd style with blue/teal glow */
   --shadow-glow-hover: 0 8px 24px rgba(59, 130, 246, 0.4), 0 0 40px rgba(16, 185, 129, 0.2);
 
-  /* Borders - SkyFynd style */
+  /* Borders - Skyfynd style */
   --border-subtle: rgba(255, 255, 255, 0.06);
   --border-light: rgba(255, 255, 255, 0.1);
   --border-medium: rgba(255, 255, 255, 0.15);
   --border-accent: rgba(139, 92, 246, 0.3);
 
-  /* Shadows - SkyFynd style with blue/teal glow */
+  /* Shadows - Skyfynd style with blue/teal glow */
   --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
   --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.07);
   --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
@@ -60,11 +60,11 @@
   --shadow-blue: 0 4px 14px rgba(59, 130, 246, 0.25);
   --shadow-teal: 0 4px 14px rgba(16, 185, 129, 0.25);
 
-  /* Font families - SkyFynd style */
+  /* Font families - Skyfynd style */
   --font-serif: 'Source Serif Pro', Georgia, serif;
   --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Segoe UI', sans-serif;
 
-  /* Typography - Apple-inspired sizes (SkyFynd uses 17px as body base) */
+  /* Typography - Apple-inspired sizes (Skyfynd uses 17px as body base) */
   --text-xs: 12px;
   --text-sm: 14px;
   --text-base: 17px;
@@ -87,7 +87,7 @@
   --space-3xl: 64px;
   --space-4xl: 96px;
 
-  /* Border radius - SkyFynd values */
+  /* Border radius - Skyfynd values */
   --radius-sm: 4px;
   --radius-md: 8px;
   --radius-lg: 12px;
@@ -157,7 +157,7 @@ body::before {
   z-index: 0;
 }
 
-/* Scrollbar Styling - SkyFynd style */
+/* Scrollbar Styling - Skyfynd style */
 ::-webkit-scrollbar {
   width: 8px;
 }
@@ -192,7 +192,7 @@ body::before {
   background-clip: text;
 }
 
-/* Gradient Border - SkyFynd style */
+/* Gradient Border - Skyfynd style */
 .gradient-border {
   position: relative;
   background: var(--bg-card);
@@ -214,7 +214,7 @@ body::before {
   pointer-events: none;
 }
 
-/* Card - SkyFynd glassmorphism */
+/* Card - Skyfynd glassmorphism */
 .card {
   background: linear-gradient(135deg, rgba(17, 17, 19, 0.95) 0%, rgba(24, 24, 27, 0.9) 100%);
   backdrop-filter: blur(20px);
@@ -246,7 +246,7 @@ body::before {
   opacity: 0.6;
 }
 
-/* Primary Button - SkyFynd GlowButton glass style */
+/* Primary Button - Skyfynd GlowButton glass style */
 .btn-primary {
   position: relative;
   display: inline-flex;
@@ -290,7 +290,7 @@ body::before {
   transform: translateY(-1px) scale(1.01);
 }
 
-/* Secondary Button - SkyFynd style (pill-shaped) */
+/* Secondary Button - Skyfynd style (pill-shaped) */
 .btn-secondary {
   background: transparent;
   color: var(--text-primary);
@@ -326,7 +326,7 @@ body::before {
   box-shadow: var(--shadow-purple);
 }
 
-/* Tag - SkyFynd style */
+/* Tag - Skyfynd style */
 .tag {
   display: inline-flex;
   align-items: center;
@@ -347,7 +347,7 @@ body::before {
   font-weight: 600;
 }
 
-/* Premium Badge - SkyFynd style */
+/* Premium Badge - Skyfynd style */
 .badge-premium {
   background: var(--gradient-primary);
   color: #FFFFFF;
@@ -360,7 +360,7 @@ body::before {
   box-shadow: var(--shadow-purple);
 }
 
-/* Discount Badge - SkyFynd style */
+/* Discount Badge - Skyfynd style */
 .badge-discount {
   background: rgba(139, 92, 246, 0.1);
   border: 1px solid rgba(139, 92, 246, 0.2);
@@ -424,7 +424,7 @@ body::before {
   animation: pulse-glow 3s ease-in-out infinite;
 }
 
-/* Background with ambient glow - SkyFynd style */
+/* Background with ambient glow - Skyfynd style */
 .bg-particles {
   position: relative;
   overflow-x: hidden;
@@ -441,7 +441,7 @@ body::before {
   z-index: 1;
 }
 
-/* Premium tier highlight - SkyFynd style */
+/* Premium tier highlight - Skyfynd style */
 .tier-popular {
   position: relative;
 }
@@ -518,7 +518,7 @@ body::before {
   opacity: 0.7;
 }
 
-/* Glass effect for overlays - SkyFynd glassmorphism */
+/* Glass effect for overlays - Skyfynd glassmorphism */
 .glass {
   background: linear-gradient(140deg, rgba(17, 17, 19, 0.9), rgba(17, 17, 19, 0.7));
   backdrop-filter: blur(28px);
@@ -527,7 +527,7 @@ body::before {
   border-radius: 16px;
 }
 
-/* Smooth focus states - SkyFynd style */
+/* Smooth focus states - Skyfynd style */
 button:focus-visible,
 a:focus-visible {
   outline: 2px solid var(--accent-blue);
@@ -559,13 +559,13 @@ input:-webkit-autofill:active {
   transition: background-color 5000s ease-in-out 0s;
 }
 
-/* Selection styling - SkyFynd style */
+/* Selection styling - Skyfynd style */
 ::selection {
   background: rgba(59, 130, 246, 0.2);
 }
 
 /* ========================================
-   TYPOGRAPHY UTILITY CLASSES - SkyFynd Style
+   TYPOGRAPHY UTILITY CLASSES - Skyfynd Style
    ======================================== */
 
 /* Hero Title - 64px, semibold, tight line height */

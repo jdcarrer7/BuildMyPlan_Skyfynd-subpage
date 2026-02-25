@@ -49,7 +49,7 @@ export default function ServiceCard({ service, isExpanded, onToggleExpand, onScr
   // Check if this service has a custom builder
   const hasCustomBuilder = ['websites', 'app-creation', 'animations', 'images', 'ringtones', 'paid-media', 'social-media', 'email-marketing', 'brand-strategy', 'visual-identity', 'brand-applications', 'content-strategy', 'copywriting', 'ai-receptionist'].includes(service.id);
 
-  // Service icon and color mapping (matching SkyFynd nav bar style)
+  // Service icon and color mapping (matching Skyfynd nav bar style)
   const serviceIconMap: Record<string, { icon: React.ReactNode; color: string }> = {
     'websites': { icon: <Globe className="w-5 h-5" />, color: '#3B82F6' }, // Blue
     'app-creation': { icon: <Smartphone className="w-5 h-5" />, color: '#8B5CF6' }, // Purple
