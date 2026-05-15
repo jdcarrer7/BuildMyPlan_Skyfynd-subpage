@@ -47,7 +47,7 @@ export default function ImageStepIndicator({ currentStep, totalSteps, onStepClic
                 className={`
                   relative flex items-center justify-center w-10 h-10 rounded-full font-medium text-sm transition-all
                   ${isCompleted
-                    ? 'bg-green-500 text-white cursor-pointer hover:bg-green-600'
+                    ? 'bg-gradient-to-br from-[var(--accent-blue)] to-[var(--accent-teal)] text-white cursor-pointer hover:opacity-90'
                     : isCurrent
                       ? 'bg-gradient-to-br from-[var(--accent-blue)] to-[var(--accent-teal)] text-white'
                       : 'bg-[var(--bg-card)] text-[var(--text-muted)] border border-[var(--border-subtle)]'
@@ -60,7 +60,7 @@ export default function ImageStepIndicator({ currentStep, totalSteps, onStepClic
               {step < totalSteps && (
                 <div
                   className={`w-12 lg:w-20 h-0.5 mx-2 ${
-                    step < currentStep ? 'bg-green-500' : 'bg-[var(--border-subtle)]'
+                    step < currentStep ? 'bg-gradient-to-r from-[var(--accent-blue)] to-[var(--accent-teal)]' : 'bg-[var(--border-subtle)]'
                   }`}
                 />
               )}

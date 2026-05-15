@@ -75,8 +75,8 @@ export default function BuilderQuoteForm({ onBack }: BuilderQuoteFormProps) {
         className="card p-8 text-center"
       >
         <div className="flex justify-center mb-6">
-          <div className="w-16 h-16 rounded-full bg-green-500/20 flex items-center justify-center">
-            <CheckCircle className="w-10 h-10 text-green-500" />
+          <div className="w-16 h-16 rounded-full bg-gradient-to-br from-[var(--accent-blue)]/20 to-[var(--accent-teal)]/20 flex items-center justify-center">
+            <CheckCircle className="w-10 h-10 text-[var(--accent-blue)]" />
           </div>
         </div>
 

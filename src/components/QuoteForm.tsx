@@ -107,8 +107,8 @@ export default function QuoteForm({ isOpen, onClose }: QuoteFormProps) {
                   animate={{ opacity: 1, y: 0 }}
                   className="text-center py-8"
                 >
-                  <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-green-500/20 flex items-center justify-center">
-                    <CheckCircle className="w-10 h-10 text-green-400" />
+                  <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-gradient-to-br from-[var(--accent-blue)]/20 to-[var(--accent-teal)]/20 flex items-center justify-center">
+                    <CheckCircle className="w-10 h-10 text-[var(--accent-blue)]" />
                   </div>
                   <h2 className="text-2xl font-bold text-white font-serif mb-3">
                     Quote Request Sent!

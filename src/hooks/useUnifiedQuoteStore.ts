@@ -744,6 +744,18 @@ export const useUnifiedQuoteStore = create<UnifiedQuoteState>()(
     }),
     {
       name: 'unified-quote-storage',
+      version: 2,
+      partialize: (state) => ({
+        configuredServices: state.configuredServices,
+      }),
+      migrate: (persistedState) => {
+        if (persistedState && typeof persistedState === 'object' && 'customerInfo' in persistedState) {
+          const { customerInfo: _drop, ...rest } = persistedState as Record<string, unknown>;
+          void _drop;
+          return rest;
+        }
+        return persistedState;
+      },
     }
   )
 );
