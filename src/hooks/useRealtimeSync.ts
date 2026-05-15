@@ -36,10 +36,10 @@ export function useRealtimeSync() {
 
     const channel = supabase
       .channel('admin-db-changes')
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'projects' }, () => {
+      .on('postgres_changes', { event: '*', schema: 'skyfynd_dashboard', table: 'projects' }, () => {
         debouncedRefetch();
       })
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'project_tasks' }, () => {
+      .on('postgres_changes', { event: '*', schema: 'skyfynd_dashboard', table: 'project_tasks' }, () => {
         debouncedRefetch();
       })
       .subscribe();

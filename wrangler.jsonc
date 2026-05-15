@@ -13,8 +13,9 @@
   },
   // Public vars only — safe to commit
   "vars": {
-    "NEXT_PUBLIC_SUPABASE_URL": "https://jayjqlnarnqshbqbquhj.supabase.co",
-    "NEXT_PUBLIC_SUPABASE_ANON_KEY": "sb_publishable_8d70Z7sdfREtGz5mCIzXpw_Pz3ULW1B",
+    "SUPABASE_URL": "https://supabase.skyfynd.io",
+    "NEXT_PUBLIC_SUPABASE_URL": "https://supabase.skyfynd.io",
+    "NEXT_PUBLIC_SUPABASE_ANON_KEY": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYW5vbiIsImlzcyI6InN1cGFiYXNlIiwiaWF0IjoxNzczMDg2ODMwLCJleHAiOjE5MzA3NjY4MzB9.YgBG1VjN2nYSD0o4oIkUF6EslGZbZB1_m5kJ6WxZ9PY",
     "NEXT_PUBLIC_BASE_URL": "https://plans.skyfynd.io",
     "NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY": "pk_live_51T0uep3s2LeYyAbKGAe90DsqxZJYUv1nY0Jb9F9FPnJmRtk9etSVHaDc4hin3N4iDH3XJZpwljS0nKUw4Rlc7rQM00nshqgYJx"
   }
@@ -22,7 +23,7 @@
   // Required secrets:
   //   SESSION_SECRET
   //   RESEND_API_KEY
-  //   SUPABASE_SERVICE_ROLE_KEY
+  //   SUPABASE_SERVICE_ROLE_KEY  ← must be the VPS service-role key (supabase.skyfynd.io), not Supabase Cloud
   //   STRIPE_SECRET_KEY
   //   STRIPE_WEBHOOK_SECRET
 }

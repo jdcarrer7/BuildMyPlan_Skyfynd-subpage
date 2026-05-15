@@ -18,12 +18,13 @@ export function getSupabaseBrowserClient(): SupabaseClient {
   }
 
   browserClient = createClient(url, key, {
+    db: { schema: 'skyfynd_dashboard' },
     realtime: {
       params: {
         eventsPerSecond: 10,
       },
     },
-  });
+  }) as unknown as SupabaseClient;
 
   return browserClient;
 }
