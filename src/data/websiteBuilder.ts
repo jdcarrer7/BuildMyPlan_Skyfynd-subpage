@@ -459,7 +459,7 @@ export const additionalServices: AdditionalService[] = [
   {
     id: 'maintenance',
     label: 'Ongoing Maintenance',
-    price: 45,
+    price: 99,
     startsAt: true,
     recurring: 'monthly',
     tooltip: 'Monthly updates, security monitoring, backups, content edits.',
