@@ -57,7 +57,7 @@ function useScrollDirection() {
 }
 
 // Company logo component
-function Company({ size = 48, textSize = 20 }: { size?: number; textSize?: number }) {
+function Company({ size = 48, textSize = 28 }: { size?: number; textSize?: number }) {
   return (
     <a href={SKYFYND_BASE_URL} style={companyStyles.link}>
       <div style={{ ...companyStyles.logoWrapper, width: size, height: size }}>
@@ -113,8 +113,12 @@ const companyStyles: Record<string, React.CSSProperties> = {
   },
   text: {
     lineHeight: 1.4,
-    fontWeight: 600,
+    fontWeight: 800,
     margin: 0,
+    background: 'linear-gradient(135deg, #8B5CF6 0%, #3B82F6 50%, #10B981 100%)',
+    WebkitBackgroundClip: 'text',
+    WebkitTextFillColor: 'transparent',
+    backgroundClip: 'text',
   },
 };
 
