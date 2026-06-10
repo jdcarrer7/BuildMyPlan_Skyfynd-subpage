@@ -1,8 +1,24 @@
+import type { ResolvedServiceConfig, ResolvedStep } from '@/lib/types/admin';
+
 const LOGO_URL = 'https://f005.backblazeb2.com/file/SKYFYND-assets/Skyfynd+logo.png';
 const GRADIENT_IMG_URL = 'https://f004.backblazeb2.com/file/carrero-biz/email-header-gradient.png';
 
 function fmt(n: number): string {
   return Number(n).toLocaleString('en-US');
+}
+
+/** Escape user-provided text before interpolating into HTML emails. */
+function esc(value: unknown): string {
+  return String(value ?? '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+function money(n: number): string {
+  return '$' + fmt(Math.round(n || 0));
 }
 
 // ── Shared email scaffolding (Outlook / Hotmail / Gmail compatible) ──────────
@@ -128,7 +144,266 @@ function infoRow(label: string, value: string, valueColor?: string): string {
   return `<tr><td style="color:#71717A;font-size:13px;padding:6px 0;">${label}</td><td style="text-align:right;font-weight:600;color:${valueColor || '#ffffff'};font-size:13px;padding:6px 0;">${value}</td></tr>`;
 }
 
+// ── Configured-quote breakdown (itemized service cards + totals strip) ────────
+// Skyfynd-dark analog of the Solid Rock quote card: a gradient-outlined panel
+// with one row per service (colored dot · service + selected options · price)
+// and a totals footer (subtotal → bundle discount → total, plus recurring).
+
+/** Shape consumed by the quote-request email builders (matches QuoteRequestPayload). */
+export interface QuoteEmailData {
+  name: string;
+  email: string;
+  company?: string;
+  phone?: string;
+  notes?: string;
+  source?: string;
+  serviceNames?: string;
+  serviceCount?: number;
+  hasCustomQuote?: boolean;
+  oneTimeTotal?: number;
+  monthlyTotal?: number;
+  discountPercentage?: number;
+  grandTotal?: number;
+  resolvedServices?: ResolvedServiceConfig[];
+}
+
+// Per-service dot, cycling the Skyfynd gradient stops.
+const DOT_COLORS = ['#A78BFA', '#60AFFA', '#34D399'];
+
+/** Flatten a service's steps to the meaningful selected-option labels (skips "Included" features). */
+function collectStepLabels(steps?: ResolvedStep[]): string[] {
+  const out: string[] = [];
+  const walk = (arr: ResolvedStep[]) => {
+    for (const s of arr) {
+      if (s.selectedLabel && s.selectedLabel !== 'Included' && s.selectedId !== null) {
+        out.push(s.selectedLabel);
+      }
+      if (s.children) walk(s.children);
+    }
+  };
+  walk(steps || []);
+  return out;
+}
+
+function servicePriceHtml(svc: ResolvedServiceConfig): string {
+  if (svc.hasCustomQuote) return '<span style="color:#F59E0B;">Custom</span>';
+  const parts: string[] = [];
+  if (svc.oneTimeTotal > 0) parts.push(money(svc.oneTimeTotal));
+  if (svc.monthlyTotal > 0) parts.push(money(svc.monthlyTotal) + '<span style="font-size:11px;font-weight:500;color:#71717A;">/mo</span>');
+  return parts.join(' + ') || '<span style="color:#71717A;">Included</span>';
+}
+
+/** One row in the dark totals strip. `emphasis` enlarges it; `divider` rules a line above. */
+function quoteTotalRow(
+  label: string,
+  valueHtml: string,
+  opts: { emphasis?: boolean; color?: string; divider?: boolean } = {}
+): string {
+  const { emphasis = false, color, divider = false } = opts;
+  const top = divider ? 'border-top:1px solid #2A2A33;' : '';
+  const pad = emphasis ? '10px 0 6px;' : '5px 0;';
+  const labelStyle = emphasis ? 'font-size:15px;font-weight:700;color:#FAFAFA;' : 'font-size:13px;color:#A1A1AA;';
+  const valueStyle = emphasis ? `font-size:18px;font-weight:700;color:${color || '#60AFFA'};` : `font-size:14px;font-weight:600;color:${color || '#FAFAFA'};`;
+  return `<tr><td style="padding:${pad}${top}${labelStyle}vertical-align:bottom;">${esc(label)}</td>` +
+    `<td style="padding:${pad}${top}text-align:right;${valueStyle}vertical-align:bottom;">${valueHtml}</td></tr>`;
+}
+
+/**
+ * The visual quote — itemized service cards + a totals strip — in the Skyfynd
+ * dark palette. Returns '' when there are no resolved services so callers can
+ * append unconditionally (and fall back to a simple summary).
+ */
+function buildServiceBreakdown(
+  services: ResolvedServiceConfig[] | undefined,
+  totals: { oneTimeTotal?: number; monthlyTotal?: number; discountPercentage?: number },
+  heading = 'Your configured quote'
+): string {
+  const resolved = (services || []).filter(Boolean);
+  if (!resolved.length) return '';
+
+  const oneTimeTotal = totals.oneTimeTotal || 0;
+  const monthlyTotal = totals.monthlyTotal || 0;
+  const discount = totals.discountPercentage || 0;
+
+  let h = '';
+  h += `<p style="color:#71717A;font-size:12px;text-transform:uppercase;letter-spacing:0.6px;margin:0 0 10px;">${esc(heading)}</p>`;
+
+  // Bundle-discount ribbon (only when one applies).
+  if (discount > 0) {
+    h += '<table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin:0 0 10px;"><tr>';
+    h += `<td bgcolor="#34D399" style="background-color:#34D399;border-radius:999px;padding:5px 13px;font-size:12px;font-weight:700;color:#0D0D0F;">&#9733;&nbsp; Bundle discount applied &middot; ${discount}% off</td>`;
+    h += '</tr></table>';
+  }
+
+  // Line-item rows: colored dot · service + selected options · price.
+  let itemRows = '';
+  resolved.forEach((svc, i) => {
+    const color = DOT_COLORS[i % DOT_COLORS.length];
+    const border = 'border-bottom:1px solid #232323;';
+    const labels = collectStepLabels(svc.steps).slice(0, 3).join(' · ');
+    itemRows += '<tr>';
+    itemRows += `<td width="11" style="padding:13px 0 13px 18px;${border}vertical-align:top;"><span style="display:inline-block;width:9px;height:9px;border-radius:50%;background-color:${color};">&nbsp;</span></td>`;
+    itemRows += `<td style="padding:13px 10px 13px 9px;${border}vertical-align:top;">`;
+    itemRows += `<span style="font-size:14px;font-weight:700;color:#FAFAFA;line-height:1.3;">${esc(svc.serviceLabel)}</span>`;
+    if (labels) itemRows += `<br><span style="font-size:12px;color:#71717A;">${esc(labels)}</span>`;
+    itemRows += '</td>';
+    itemRows += `<td style="padding:13px 18px 13px 0;${border}text-align:right;vertical-align:top;white-space:nowrap;font-size:15px;font-weight:700;color:#FAFAFA;">${servicePriceHtml(svc)}</td>`;
+    itemRows += '</tr>';
+  });
+
+  // Totals — separate project (one-time) and recurring (monthly) buckets, each
+  // showing subtotal → discount → total when a bundle discount applies.
+  const subOne = resolved.reduce((a, s) => a + (s.oneTimeTotal || 0), 0);
+  const subMon = resolved.reduce((a, s) => a + (s.monthlyTotal || 0), 0);
+  const rows: string[] = [];
+  if (subOne > 0) {
+    if (discount > 0 && subOne > oneTimeTotal) {
+      rows.push(quoteTotalRow('Project subtotal', money(subOne)));
+      rows.push(quoteTotalRow(`Bundle discount (${discount}%)`, '&minus;' + money(subOne - oneTimeTotal), { color: '#F87171' }));
+      rows.push(quoteTotalRow('Project total', money(oneTimeTotal), { emphasis: true, divider: true }));
+    } else {
+      rows.push(quoteTotalRow('Project total', money(oneTimeTotal || subOne), { emphasis: true }));
+    }
+  }
+  if (subMon > 0) {
+    if (discount > 0 && subMon > monthlyTotal) {
+      rows.push(quoteTotalRow('Monthly subtotal', money(subMon) + '/mo', { divider: subOne > 0 }));
+      rows.push(quoteTotalRow(`Bundle discount (${discount}%)`, '&minus;' + money(subMon - monthlyTotal) + '/mo', { color: '#F87171' }));
+      rows.push(quoteTotalRow('Monthly total', money(monthlyTotal) + '/mo', { emphasis: true, color: '#34D399' }));
+    } else {
+      rows.push(quoteTotalRow('Monthly total', money(monthlyTotal || subMon) + '/mo', { emphasis: true, color: '#34D399', divider: subOne > 0 }));
+    }
+  }
+  const totalsFooter = rows.length
+    ? `<tr><td colspan="3" bgcolor="#0D0D0F" style="background-color:#0D0D0F;padding:10px 18px;">` +
+      '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">' + rows.join('') + '</table></td></tr>'
+    : '';
+
+  // Gradient-outlined panel: a 2px gradient ring around the dark card.
+  h += '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:0 0 12px;">';
+  h += `<tr><td class="sf-grad" bgcolor="#60AFFA" style="background-color:#60AFFA;background-image:url(${GRADIENT_IMG_URL});background-size:cover;background-repeat:no-repeat;border-radius:14px;padding:2px;">`;
+  h += '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:#141418;border-radius:12px;overflow:hidden;">';
+  h += itemRows + totalsFooter;
+  h += '</table></td></tr></table>';
+
+  h += '<p style="color:#52525B;font-size:11px;font-style:italic;line-height:1.5;margin:0 0 4px;">Estimate from the Skyfynd plan builder &#8212; final pricing confirmed after our team reviews your project.</p>';
+  return h;
+}
+
+/** Plain-text rendering of the configured quote (deliverability + non-HTML clients). */
+export function buildQuoteBreakdownText(data: QuoteEmailData): string {
+  const resolved = (data.resolvedServices || []).filter(Boolean);
+  if (!resolved.length) return '';
+  const lines = ['Configured quote:'];
+  for (const svc of resolved) {
+    const opts = collectStepLabels(svc.steps).slice(0, 3).join(' / ');
+    let price = svc.hasCustomQuote ? 'Custom' : [
+      svc.oneTimeTotal > 0 ? money(svc.oneTimeTotal) : null,
+      svc.monthlyTotal > 0 ? money(svc.monthlyTotal) + '/mo' : null,
+    ].filter(Boolean).join(' + ') || 'Included';
+    lines.push(`  - ${svc.serviceLabel}${opts ? ' (' + opts + ')' : ''}: ${price}`);
+  }
+  if ((data.oneTimeTotal || 0) > 0) lines.push(`Project total: ${money(data.oneTimeTotal || 0)}`);
+  if ((data.monthlyTotal || 0) > 0) lines.push(`Monthly total: ${money(data.monthlyTotal || 0)}/mo`);
+  if ((data.discountPercentage || 0) > 0) lines.push(`(Bundle discount: ${data.discountPercentage}% off)`);
+  return lines.join('\n');
+}
+
 // ── Email builders ──────────────────────────────────────────────────────────
+
+/**
+ * Customer-facing quote-request confirmation. Renders the full itemized quote
+ * the customer configured (when resolvedServices is present), then the
+ * what-happens-next steps. Falls back to a simple summary box otherwise.
+ */
+export function buildQuoteRequestConfirmationEmail(data: QuoteEmailData, qrNumber: string): string {
+  let html = emailDocOpen();
+  html += emailHeader('Quote Request Received', qrNumber);
+
+  html += '<tr><td style="padding:24px;">';
+  html += `<p style="color:#E5E5E5;font-size:16px;margin:0 0 16px;">Hi ${esc((data.name || '').trim().split(/\s+/)[0] || data.name)},</p>`;
+  html += '<p style="color:#A1A1AA;font-size:14px;line-height:1.6;margin:0 0 24px;">Thank you for your quote request! We\'ve received the details below and our team will review them shortly. You can expect to hear from us within 24 hours.</p>';
+
+  const breakdown = buildServiceBreakdown(data.resolvedServices, data, 'The quote you built');
+  if (breakdown) {
+    html += breakdown;
+  } else if (data.serviceNames || data.serviceCount) {
+    // Fallback summary when no resolved services were captured.
+    html += '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom:24px;">';
+    html += '<tr><td bgcolor="#1C1825" style="background-color:#1C1825;border-radius:8px;padding:16px 20px;">';
+    html += '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">';
+    html += infoRow('Reference', esc(qrNumber));
+    if (data.serviceCount) html += infoRow('Services', `${data.serviceCount} selected`);
+    if (data.serviceNames) html += `<tr><td colspan="2" style="color:#71717A;font-size:12px;padding:8px 0 0;line-height:1.5;">${esc(data.serviceNames)}</td></tr>`;
+    html += '</table></td></tr></table>';
+  }
+
+  html += '<p style="color:#A1A1AA;font-size:14px;line-height:1.6;margin:14px 0 8px;">Here\'s what happens next:</p>';
+  html += '<table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin-bottom:24px;">';
+  html += '<tr><td style="color:#A78BFA;font-size:14px;font-weight:700;padding:4px 12px 4px 0;vertical-align:top;">1.</td><td style="color:#A1A1AA;font-size:14px;line-height:1.6;padding:4px 0;">We review your request and prepare a detailed quote</td></tr>';
+  html += '<tr><td style="color:#60AFFA;font-size:14px;font-weight:700;padding:4px 12px 4px 0;vertical-align:top;">2.</td><td style="color:#A1A1AA;font-size:14px;line-height:1.6;padding:4px 0;">You\'ll receive your personalized portal with pricing and details</td></tr>';
+  html += '<tr><td style="color:#34D399;font-size:14px;font-weight:700;padding:4px 12px 4px 0;vertical-align:top;">3.</td><td style="color:#A1A1AA;font-size:14px;line-height:1.6;padding:4px 0;">Review, sign, and get started &#8212; all in one place</td></tr>';
+  html += '</table>';
+
+  html += '<p style="color:#71717A;font-size:12px;text-align:center;margin:0;">Keep this email for your records. Your reference number is <strong style="color:#ffffff;">' + esc(qrNumber) + '</strong>.</p>';
+  html += '</td></tr>';
+
+  html += emailFooter();
+  html += emailDocClose();
+  return html;
+}
+
+/**
+ * Admin-facing new-quote notification. Contact card + the same itemized quote
+ * breakdown the customer sees, plus their notes and a one-tap reply CTA.
+ */
+export function buildQuoteRequestNotificationEmail(data: QuoteEmailData, qrNumber: string): string {
+  let html = emailDocOpen();
+  html += emailHeader('New Quote Request', qrNumber);
+
+  html += '<tr><td style="padding:24px;">';
+  html += `<p style="color:#E5E5E5;font-size:15px;line-height:1.6;margin:0 0 20px;">A new quote just came in through the <strong style="color:#ffffff;">${esc(data.source || 'website')}</strong>. Here are the details:</p>`;
+
+  // Contact card
+  html += '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom:20px;">';
+  html += '<tr><td bgcolor="#1C1825" style="background-color:#1C1825;border-radius:8px;padding:8px 20px;">';
+  html += '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">';
+  html += infoRow('Name', esc(data.name));
+  html += infoRow('Email', `<a href="mailto:${esc(data.email)}" style="color:#60AFFA;text-decoration:none;">${esc(data.email)}</a>`);
+  if (data.phone) html += infoRow('Phone', `<a href="tel:${esc((data.phone || '').replace(/[^0-9+]/g, ''))}" style="color:#60AFFA;text-decoration:none;">${esc(data.phone)}</a>`);
+  if (data.company) html += infoRow('Company', esc(data.company));
+  html += infoRow('Reference', esc(qrNumber));
+  html += '</table></td></tr></table>';
+
+  const breakdown = buildServiceBreakdown(data.resolvedServices, data, 'Configured quote');
+  if (breakdown) {
+    html += breakdown;
+  } else if (data.serviceNames) {
+    html += '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom:20px;">';
+    html += '<tr><td bgcolor="#1C1825" style="background-color:#1C1825;border-radius:8px;padding:16px 20px;">';
+    html += '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">';
+    if (data.serviceCount) html += infoRow('Services', `${data.serviceCount} selected`);
+    html += `<tr><td colspan="2" style="color:#71717A;font-size:12px;padding:8px 0 0;line-height:1.5;">${esc(data.serviceNames)}</td></tr>`;
+    if ((data.grandTotal || 0) > 0) html += infoRow('Estimated total', money(data.grandTotal || 0));
+    html += '</table></td></tr></table>';
+  }
+
+  // Customer notes
+  if (data.notes && data.notes.trim()) {
+    html += '<p style="color:#71717A;font-size:12px;text-transform:uppercase;letter-spacing:0.6px;margin:0 0 8px;">Customer notes</p>';
+    html += '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom:24px;">';
+    html += '<tr><td style="background-color:#15151A;border:1px solid #232323;border-left:3px solid #A78BFA;border-radius:8px;padding:14px 16px;">';
+    html += `<p style="color:#E5E5E5;font-size:14px;line-height:1.6;margin:0;">${esc(data.notes).replace(/\r?\n/g, '<br>')}</p>`;
+    html += '</td></tr></table>';
+  }
+
+  html += ctaButton(`mailto:${esc(data.email)}`, 'Reply to Customer');
+  html += '</td></tr>';
+
+  html += emailFooter('New lead from the Skyfynd quote builder.');
+  html += emailDocClose();
+  return html;
+}
 
 export function buildQuoteConfirmationEmail(
   clientName: string,
