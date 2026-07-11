@@ -102,7 +102,7 @@ export default function Step7Support() {
 
                 <div className="text-lg font-semibold">
                   {option.oneTimePrice === 0 ? (
-                    <span className="text-green-400">Free</span>
+                    <span className="text-[var(--accent-blue-light)]">Free</span>
                   ) : (
                     <span className="gradient-text">${option.oneTimePrice.toLocaleString()}</span>
                   )}
@@ -169,7 +169,7 @@ export default function Step7Support() {
 
                 <div className="text-lg font-semibold">
                   {option.monthlyPrice === 0 ? (
-                    <span className="text-green-400">Free</span>
+                    <span className="text-[var(--accent-blue-light)]">Free</span>
                   ) : (
                     <span className="gradient-text">${option.monthlyPrice.toLocaleString()}</span>
                   )}
@@ -236,7 +236,7 @@ export default function Step7Support() {
 
                 <div className="text-lg font-semibold">
                   {option.monthlyPrice === 0 ? (
-                    <span className="text-green-400">Free</span>
+                    <span className="text-[var(--accent-blue-light)]">Free</span>
                   ) : (
                     <span className="gradient-text">${option.monthlyPrice.toLocaleString()}</span>
                   )}

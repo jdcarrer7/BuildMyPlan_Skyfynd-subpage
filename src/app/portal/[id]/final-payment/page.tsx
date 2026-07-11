@@ -91,8 +91,8 @@ export default function FinalPaymentPage() {
     return (
       <div className="flex items-center justify-center min-h-[60vh] px-2">
         <div className="text-center max-w-md mx-auto space-y-6">
-          <div className="w-16 sm:w-20 h-16 sm:h-20 rounded-full bg-[#10B981]/10 flex items-center justify-center mx-auto">
-            <CheckCircle2 className="w-8 sm:w-10 h-8 sm:h-10 text-[#10B981]" />
+          <div className="w-16 sm:w-20 h-16 sm:h-20 rounded-full bg-[var(--accent-blue)]/10 flex items-center justify-center mx-auto">
+            <CheckCircle2 className="w-8 sm:w-10 h-8 sm:h-10 text-[var(--accent-blue-light)]" />
           </div>
           <div>
             <h1
@@ -159,7 +159,7 @@ export default function FinalPaymentPage() {
                   <p className="text-[#52525B] text-xs mt-0.5">{depositDate}</p>
                 )}
               </div>
-              <span className="text-[#10B981] font-semibold">-${fmt(depositDollars)}</span>
+              <span className="text-[var(--accent-blue-light)] font-semibold">-${fmt(depositDollars)}</span>
             </div>
 
             {/* Remaining Balance */}

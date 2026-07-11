@@ -166,9 +166,9 @@ export default function QuoteSummary({ quote }: QuoteSummaryProps) {
           )}
 
           {discounts && discounts.totalSaved > 0 && (
-            <div className="grid grid-cols-3 bg-[#10B981]/5 px-3 sm:px-4 py-2.5 text-xs sm:text-sm font-semibold">
-              <span className="text-[#10B981]">Discount ({totals.discountPercentage || 0}%)</span>
-              <span className="text-right col-span-2 text-[#10B981]">
+            <div className="grid grid-cols-3 bg-[var(--accent-blue)]/5 px-3 sm:px-4 py-2.5 text-xs sm:text-sm font-semibold">
+              <span className="text-[var(--accent-blue-light)]">Discount ({totals.discountPercentage || 0}%)</span>
+              <span className="text-right col-span-2 text-[var(--accent-blue-light)]">
                 -${fmt(discounts.totalSaved)}
               </span>
             </div>

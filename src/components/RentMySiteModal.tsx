@@ -114,7 +114,7 @@ export default function RentMySiteModal({ isOpen, onClose }: RentMySiteModalProp
                       <ul className="space-y-2">
                         {tier.features.map((feature, idx) => (
                           <li key={idx} className="flex items-start gap-2 text-xs">
-                            <span className={`mt-0.5 shrink-0 ${feature.included === true ? 'text-emerald-400' : 'text-[var(--text-muted)]/40'}`}>
+                            <span className={`mt-0.5 shrink-0 ${feature.included === true ? 'text-[var(--accent-blue-light)]' : 'text-[var(--text-muted)]/40'}`}>
                               {feature.included === true ? (
                                 <Check className="w-3.5 h-3.5" />
                               ) : (

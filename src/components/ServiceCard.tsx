@@ -55,8 +55,8 @@ export default function ServiceCard({ service, isExpanded, onToggleExpand, onScr
     'app-creation': { icon: <Smartphone className="w-5 h-5" />, color: '#8B5CF6' }, // Purple
     'animations': { icon: <Film className="w-5 h-5" />, color: '#3B82F6' }, // Pink
     'images': { icon: <Image className="w-5 h-5" />, color: '#F59E0B' }, // Amber
-    'ringtones': { icon: <Music className="w-5 h-5" />, color: '#10B981' }, // Emerald
-    'paid-media': { icon: <Megaphone className="w-5 h-5" />, color: '#22C55E' }, // Green
+    'ringtones': { icon: <Music className="w-5 h-5" />, color: 'var(--accent-teal)' }, // Teal
+    'paid-media': { icon: <Megaphone className="w-5 h-5" />, color: 'var(--accent-teal)' }, // Teal
     'social-media': { icon: <Share2 className="w-5 h-5" />, color: '#06B6D4' }, // Cyan
     'email-marketing': { icon: <Mail className="w-5 h-5" />, color: '#F97316' }, // Orange
     'brand-strategy': { icon: <Target className="w-5 h-5" />, color: '#EF4444' }, // Red
@@ -293,7 +293,7 @@ export default function ServiceCard({ service, isExpanded, onToggleExpand, onScr
               <ul className="space-y-2.5">
                 {currentTier.features.map((feature, idx) => (
                   <li key={idx} className="flex items-start gap-3 text-sm">
-                    <span className={`mt-0.5 ${feature.included === true ? 'text-emerald-400' : feature.included === 'addon' ? 'text-[var(--accent-orange)]' : 'text-[var(--text-muted)]'}`}>
+                    <span className={`mt-0.5 ${feature.included === true ? 'text-[var(--accent-blue-light)]' : feature.included === 'addon' ? 'text-[var(--accent-orange)]' : 'text-[var(--text-muted)]'}`}>
                       {feature.included === true ? (
                         <Check className="w-4 h-4" />
                       ) : feature.included === 'addon' ? (

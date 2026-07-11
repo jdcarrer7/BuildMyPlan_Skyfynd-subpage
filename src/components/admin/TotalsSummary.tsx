@@ -44,8 +44,8 @@ export default function TotalsSummary({ quote, onAddQuoteDiscount }: Props) {
         {hasDiscount && (
           <div className="border-t border-white/[0.06] pt-3">
             <div className="flex justify-between text-sm">
-              <span className="text-[#10B981]">Discount ({totals.discountPercentage}%)</span>
-              <span className="text-[#10B981] font-medium">-${totalSaved.toLocaleString()}</span>
+              <span className="text-[var(--accent-blue-light)]">Discount ({totals.discountPercentage}%)</span>
+              <span className="text-[var(--accent-blue-light)] font-medium">-${totalSaved.toLocaleString()}</span>
             </div>
           </div>
         )}
@@ -85,7 +85,7 @@ export default function TotalsSummary({ quote, onAddQuoteDiscount }: Props) {
         {hasDiscount && (
           <div className="mt-2 px-4 py-3 rounded-lg text-center" style={{ background: 'linear-gradient(135deg, rgba(59, 130, 246, 0.08) 0%, rgba(16, 185, 129, 0.08) 100%)', border: '1px solid rgba(59, 130, 246, 0.2)' }}>
             <p className="text-sm text-white font-medium">
-              You Saved: <span className="text-[#10B981] font-bold">${totalSaved.toLocaleString()}</span>
+              You Saved: <span className="text-[var(--accent-blue-light)] font-bold">${totalSaved.toLocaleString()}</span>
             </p>
           </div>
         )}

@@ -689,7 +689,7 @@ export default function Step11Summary({ showQuoteForm = false, onCloseQuoteForm 
                             +${config.rushFee.toLocaleString()} ({Math.round((config.timelineMultiplier - 1) * 100)}%)
                           </span>
                         ) : (
-                          <span className="text-green-400 font-medium">No rush fee</span>
+                          <span className="text-[var(--accent-blue-light)] font-medium">No rush fee</span>
                         )}
                       </div>
                     </div>
@@ -808,7 +808,7 @@ export default function Step11Summary({ showQuoteForm = false, onCloseQuoteForm 
                           +${config.rushFee.toLocaleString()}
                         </span>
                       ) : (
-                        <span className="text-green-400 font-medium">No rush fee</span>
+                        <span className="text-[var(--accent-blue-light)] font-medium">No rush fee</span>
                       )}
                     </div>
                   </div>
@@ -916,7 +916,7 @@ export default function Step11Summary({ showQuoteForm = false, onCloseQuoteForm 
                           +${config.rushFee.toLocaleString()}
                         </span>
                       ) : (
-                        <span className="text-green-400 font-medium">No rush fee</span>
+                        <span className="text-[var(--accent-blue-light)] font-medium">No rush fee</span>
                       )}
                     </div>
                   </div>
@@ -1024,7 +1024,7 @@ export default function Step11Summary({ showQuoteForm = false, onCloseQuoteForm 
                           +${config.rushFee.toLocaleString()}
                         </span>
                       ) : (
-                        <span className="text-green-400 font-medium">No rush fee</span>
+                        <span className="text-[var(--accent-blue-light)] font-medium">No rush fee</span>
                       )}
                     </div>
                   </div>

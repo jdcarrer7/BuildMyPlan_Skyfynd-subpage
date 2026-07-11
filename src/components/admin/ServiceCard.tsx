@@ -114,7 +114,7 @@ export default function ServiceCard({ service, discount, onAddDiscount }: Props)
                 {discount ? 'Edit Discount' : 'Add Discount'}
               </button>
               {discount && (
-                <span className="text-xs text-[#10B981]">
+                <span className="text-xs text-[var(--accent-blue-light)]">
                   {discount.type === 'percentage' ? `${discount.value}%` : `$${discount.value}`} off
                   {discount.appliesTo !== 'both' ? ` (${discount.appliesTo})` : ''}
                 </span>

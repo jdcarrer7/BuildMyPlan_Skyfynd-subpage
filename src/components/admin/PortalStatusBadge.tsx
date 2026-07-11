@@ -12,7 +12,7 @@ interface Props {
 export default function PortalStatusBadge({ status, size = 'sm', hasFinalPayment }: Props) {
   const isFullyPaid = status === 'payment_completed' && hasFinalPayment;
   const label = isFullyPaid ? 'Fully Paid' : STATUS_LABELS[status] || status;
-  const color = isFullyPaid ? '#10B981' : STATUS_COLORS[status] || '#71717A';
+  const color = isFullyPaid ? '#60A5FA' : STATUS_COLORS[status] || '#71717A';
 
   return (
     <span

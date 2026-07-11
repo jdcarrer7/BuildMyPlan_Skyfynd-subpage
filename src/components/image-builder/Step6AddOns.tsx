@@ -116,7 +116,7 @@ export default function Step6AddOns() {
 
                       <div className="flex items-center gap-1">
                         {'included' in option && option.included ? (
-                          <span className="text-sm text-green-400">Included</span>
+                          <span className="text-sm text-[var(--accent-blue-light)]">Included</span>
                         ) : option.price === 0 ? (
                           <span className="text-sm text-[var(--text-muted)]">$0</span>
                         ) : 'startsAt' in option && option.startsAt ? (

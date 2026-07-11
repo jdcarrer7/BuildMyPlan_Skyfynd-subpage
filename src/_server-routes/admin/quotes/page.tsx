@@ -135,7 +135,7 @@ function AdminQuotesContent() {
           {/* Actions: PDF Export + Send Quote */}
           <div className="flex items-center justify-end gap-3 flex-wrap">
             {sendQuoteResult && (
-              <span className={`text-sm ${sendQuoteResult.success ? 'text-green-400' : 'text-red-400'}`}>
+              <span className={`text-sm ${sendQuoteResult.success ? 'text-[var(--accent-blue-light)]' : 'text-red-400'}`}>
                 {sendQuoteResult.message}
               </span>
             )}

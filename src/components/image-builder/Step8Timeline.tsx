@@ -86,7 +86,7 @@ export default function Step8Timeline() {
                       +{Math.round((option.multiplier - 1) * 100)}% Rush Fee
                     </span>
                   ) : (
-                    <span className="text-green-400 font-medium">No Rush Fee</span>
+                    <span className="text-[var(--accent-blue-light)] font-medium">No Rush Fee</span>
                   )}
                 </div>
               </motion.button>

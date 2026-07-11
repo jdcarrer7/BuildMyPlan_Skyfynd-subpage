@@ -113,9 +113,9 @@ export default function Step1AppType() {
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          className="mt-6 p-4 bg-green-500/10 border border-green-500/30 rounded-lg"
+          className="mt-6 p-4 bg-[var(--accent-blue)]/10 border border-[var(--accent-blue)]/30 rounded-lg"
         >
-          <p className="text-sm text-green-400">
+          <p className="text-sm text-[var(--accent-blue-light)]">
             Great choice! We&apos;ve pre-selected some recommended options based on typical{' '}
             <span className="font-medium">
               {appTypes.find(t => t.id === appType)?.label}

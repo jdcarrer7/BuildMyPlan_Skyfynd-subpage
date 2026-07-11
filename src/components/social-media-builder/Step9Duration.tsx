@@ -25,7 +25,7 @@ export default function Step9Duration() {
     if (multiplier > 1) {
       return 'bg-red-500/20 text-red-400 border-red-500/30';
     } else if (multiplier < 1) {
-      return 'bg-green-500/20 text-green-400 border-green-500/30';
+      return 'bg-[var(--accent-blue)]/20 text-[var(--accent-blue-light)] border-[var(--accent-blue)]/30';
     }
     return 'bg-gray-500/20 text-gray-400 border-gray-500/30';
   };
@@ -144,11 +144,11 @@ export default function Step9Duration() {
             <span className="text-[var(--text-muted)]">3 Months</span>
           </div>
           <div className="text-center">
-            <span className="block text-green-400 font-medium">-10%</span>
+            <span className="block text-[var(--accent-blue-light)] font-medium">-10%</span>
             <span className="text-[var(--text-muted)]">6 Months</span>
           </div>
           <div className="text-center">
-            <span className="block text-green-400 font-medium">-20%</span>
+            <span className="block text-[var(--accent-blue-light)] font-medium">-20%</span>
             <span className="text-[var(--text-muted)]">12 Months</span>
           </div>
         </div>

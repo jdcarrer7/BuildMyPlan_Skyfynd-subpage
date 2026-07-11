@@ -343,7 +343,7 @@ export default function QuoteEditor({
             </span>
           )}
           {saveResult && (
-            <span className={`text-sm ${saveResult.success ? 'text-[#10B981]' : 'text-red-400'}`}>
+            <span className={`text-sm ${saveResult.success ? 'text-[var(--accent-blue-light)]' : 'text-red-400'}`}>
               {saveResult.message}
             </span>
           )}
@@ -500,8 +500,8 @@ export default function QuoteEditor({
           {quote.discounts && quote.discounts.totalSaved > 0 && (
             <div className="border-t border-white/[0.06] pt-3">
               <div className="flex justify-between text-sm">
-                <span className="text-[#10B981]">Discount ({quote.totals.discountPercentage}%)</span>
-                <span className="text-[#10B981] font-medium">-${quote.discounts.totalSaved.toLocaleString()}</span>
+                <span className="text-[var(--accent-blue-light)]">Discount ({quote.totals.discountPercentage}%)</span>
+                <span className="text-[var(--accent-blue-light)] font-medium">-${quote.discounts.totalSaved.toLocaleString()}</span>
               </div>
             </div>
           )}

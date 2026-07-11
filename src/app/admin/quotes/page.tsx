@@ -251,7 +251,7 @@ function AdminQuotesContent() {
                       Sent {new Date(p.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
                     </span>
                     {p.payment && (
-                      <span className="text-[#10B981] text-xs font-medium">
+                      <span className="text-[var(--accent-blue-light)] text-xs font-medium">
                         ${(p.payment.amount / 100).toLocaleString()} paid
                       </span>
                     )}
@@ -286,7 +286,7 @@ function AdminQuotesContent() {
                       className="w-full bg-white/[0.04] border border-white/[0.1] rounded-lg px-3 py-2 text-[#FAFAFA] text-xs placeholder:text-[#52525B] focus:border-[#60AFFA] focus:ring-1 focus:ring-[#60AFFA] outline-none resize-none transition-all"
                     />
                     {resolveResult && (
-                      <div className={`text-xs px-3 py-2 rounded-lg ${resolveResult.success ? 'bg-[#10B981]/10 text-[#10B981]' : 'bg-red-500/10 text-red-400'}`}>
+                      <div className={`text-xs px-3 py-2 rounded-lg ${resolveResult.success ? 'bg-[var(--accent-blue)]/10 text-[var(--accent-blue-light)]' : 'bg-red-500/10 text-red-400'}`}>
                         {resolveResult.message}
                       </div>
                     )}
@@ -324,7 +324,7 @@ function AdminQuotesContent() {
           <div className="flex items-center justify-end gap-3">
             {(sendPortalResult || sendFinalPaymentResult) && (
               <span className={`text-sm mr-auto ${
-                (sendPortalResult || sendFinalPaymentResult)?.success ? 'text-[#10B981]' : 'text-red-400'
+                (sendPortalResult || sendFinalPaymentResult)?.success ? 'text-[var(--accent-blue-light)]' : 'text-red-400'
               }`}>
                 {(sendPortalResult || sendFinalPaymentResult)?.message}
               </span>
@@ -413,7 +413,7 @@ function AdminQuotesContent() {
               {/* Actions */}
               <div className="p-3 space-y-2">
                 {editSaveResult && (
-                  <div className={`text-xs px-3 py-2 rounded-lg ${editSaveResult.success ? 'bg-[#10B981]/10 text-[#10B981]' : 'bg-red-500/10 text-red-400'}`}>
+                  <div className={`text-xs px-3 py-2 rounded-lg ${editSaveResult.success ? 'bg-[var(--accent-blue)]/10 text-[var(--accent-blue-light)]' : 'bg-red-500/10 text-red-400'}`}>
                     {editSaveResult.message}
                   </div>
                 )}
@@ -490,7 +490,7 @@ function AdminQuotesContent() {
                   Mark this project as completed? It will move to the Completed section.
                 </p>
                 {completeResult && (
-                  <div className={`text-xs px-3 py-2 rounded-lg ${completeResult.success ? 'bg-[#10B981]/10 text-[#10B981]' : 'bg-red-500/10 text-red-400'}`}>
+                  <div className={`text-xs px-3 py-2 rounded-lg ${completeResult.success ? 'bg-[var(--accent-blue)]/10 text-[var(--accent-blue-light)]' : 'bg-red-500/10 text-red-400'}`}>
                     {completeResult.message}
                   </div>
                 )}

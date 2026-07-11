@@ -408,7 +408,7 @@ export default function Step12Summary({ showQuoteForm = false, onCloseQuoteForm 
                         +{timelinePremiumPercent}% (${store.timelinePremium.toLocaleString()})
                       </span>
                     ) : (
-                      <span className="text-green-400 font-medium">No premium</span>
+                      <span className="text-[var(--accent-blue-light)] font-medium">No premium</span>
                     )}
                   </div>
                 </SummarySection>
@@ -526,7 +526,7 @@ export default function Step12Summary({ showQuoteForm = false, onCloseQuoteForm 
                         {config.rushFee > 0 ? (
                           <span className="text-[var(--accent-orange)] font-medium">+${config.rushFee.toLocaleString()}</span>
                         ) : (
-                          <span className="text-green-400 font-medium">No rush fee</span>
+                          <span className="text-[var(--accent-blue-light)] font-medium">No rush fee</span>
                         )}
                       </div>
                     </div>
@@ -623,7 +623,7 @@ export default function Step12Summary({ showQuoteForm = false, onCloseQuoteForm 
                         {config.rushFee > 0 ? (
                           <span className="text-[var(--accent-orange)] font-medium">+${config.rushFee.toLocaleString()}</span>
                         ) : (
-                          <span className="text-green-400 font-medium">No rush fee</span>
+                          <span className="text-[var(--accent-blue-light)] font-medium">No rush fee</span>
                         )}
                       </div>
                     </div>
@@ -720,7 +720,7 @@ export default function Step12Summary({ showQuoteForm = false, onCloseQuoteForm 
                         {config.rushFee > 0 ? (
                           <span className="text-[var(--accent-orange)] font-medium">+${config.rushFee.toLocaleString()}</span>
                         ) : (
-                          <span className="text-green-400 font-medium">No rush fee</span>
+                          <span className="text-[var(--accent-blue-light)] font-medium">No rush fee</span>
                         )}
                       </div>
                     </div>
@@ -809,7 +809,7 @@ export default function Step12Summary({ showQuoteForm = false, onCloseQuoteForm 
                         {config.rushFee > 0 ? (
                           <span className="text-[var(--accent-orange)] font-medium">+${config.rushFee.toLocaleString()}</span>
                         ) : (
-                          <span className="text-green-400 font-medium">No rush fee</span>
+                          <span className="text-[var(--accent-blue-light)] font-medium">No rush fee</span>
                         )}
                       </div>
                     </div>
@@ -898,7 +898,7 @@ export default function Step12Summary({ showQuoteForm = false, onCloseQuoteForm 
                         {config.rushFee > 0 ? (
                           <span className="text-[var(--accent-orange)] font-medium">+${config.rushFee.toLocaleString()}</span>
                         ) : (
-                          <span className="text-green-400 font-medium">No rush fee</span>
+                          <span className="text-[var(--accent-blue-light)] font-medium">No rush fee</span>
                         )}
                       </div>
                     </div>
@@ -1082,7 +1082,7 @@ export default function Step12Summary({ showQuoteForm = false, onCloseQuoteForm 
                       <div className="flex justify-between">
                         <span className="text-[var(--text-secondary)]">{durationLabelSM}</span>
                         {config.durationMultiplier < 1 && (
-                          <span className="text-green-400 font-medium">-{Math.round((1 - config.durationMultiplier) * 100)}% discount</span>
+                          <span className="text-[var(--accent-blue-light)] font-medium">-{Math.round((1 - config.durationMultiplier) * 100)}% discount</span>
                         )}
                         {config.durationMultiplier > 1 && (
                           <span className="text-[var(--accent-orange)] font-medium">+{Math.round((config.durationMultiplier - 1) * 100)}% premium</span>
@@ -1360,7 +1360,7 @@ export default function Step12Summary({ showQuoteForm = false, onCloseQuoteForm 
                         {timelinePremiumPercentBA > 0 ? (
                           <span className="text-[var(--accent-orange)] font-medium">+{timelinePremiumPercentBA}% premium</span>
                         ) : (
-                          <span className="text-green-400 font-medium">No premium</span>
+                          <span className="text-[var(--accent-blue-light)] font-medium">No premium</span>
                         )}
                       </div>
                     </div>

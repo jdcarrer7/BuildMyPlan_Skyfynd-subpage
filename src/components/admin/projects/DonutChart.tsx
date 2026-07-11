@@ -88,7 +88,7 @@ export default function DonutChart({
               cy={center}
               r={radius}
               fill="none"
-              stroke="#10B981"
+              stroke="#3B82F6"
               strokeWidth={strokeWidth}
               strokeDasharray={`${completedLength} ${circumference - completedLength}`}
               strokeDashoffset={-completedOffset}
@@ -138,7 +138,7 @@ export function MiniDonut({ completed, total, size = 28 }: { completed: number; 
             cy={center}
             r={radius}
             fill="none"
-            stroke="#10B981"
+            stroke="#3B82F6"
             strokeWidth={strokeWidth}
             strokeDasharray={`${dashLength} ${circumference - dashLength}`}
             strokeLinecap="round"

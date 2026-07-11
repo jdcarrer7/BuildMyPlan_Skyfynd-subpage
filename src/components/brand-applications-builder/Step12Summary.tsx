@@ -458,7 +458,7 @@ export default function Step12Summary({ showQuoteForm = false, onCloseQuoteForm 
                         +{timelinePremiumPercent}% (${store.timelinePremium.toLocaleString()})
                       </span>
                     ) : (
-                      <span className="text-green-400 font-medium">No premium</span>
+                      <span className="text-[var(--accent-blue-light)] font-medium">No premium</span>
                     )}
                   </div>
                 </SummarySection>
@@ -588,7 +588,7 @@ export default function Step12Summary({ showQuoteForm = false, onCloseQuoteForm 
                       {config.timelinePremium > 0 ? (
                         <span className="text-[var(--accent-orange)] font-medium">+${config.timelinePremium.toLocaleString()}</span>
                       ) : (
-                        <span className="text-green-400 font-medium">No premium</span>
+                        <span className="text-[var(--accent-blue-light)] font-medium">No premium</span>
                       )}
                     </div>
                   </div>
@@ -677,7 +677,7 @@ export default function Step12Summary({ showQuoteForm = false, onCloseQuoteForm 
                       {config.timelinePremium > 0 ? (
                         <span className="text-[var(--accent-orange)] font-medium">+${config.timelinePremium.toLocaleString()}</span>
                       ) : (
-                        <span className="text-green-400 font-medium">No premium</span>
+                        <span className="text-[var(--accent-blue-light)] font-medium">No premium</span>
                       )}
                     </div>
                   </div>
@@ -766,7 +766,7 @@ export default function Step12Summary({ showQuoteForm = false, onCloseQuoteForm 
                       {config.rushFee > 0 ? (
                         <span className="text-[var(--accent-orange)] font-medium">+${config.rushFee.toLocaleString()}</span>
                       ) : (
-                        <span className="text-green-400 font-medium">No rush fee</span>
+                        <span className="text-[var(--accent-blue-light)] font-medium">No rush fee</span>
                       )}
                     </div>
                   </div>
@@ -863,7 +863,7 @@ export default function Step12Summary({ showQuoteForm = false, onCloseQuoteForm 
                       {config.rushFee > 0 ? (
                         <span className="text-[var(--accent-orange)] font-medium">+${config.rushFee.toLocaleString()}</span>
                       ) : (
-                        <span className="text-green-400 font-medium">No rush fee</span>
+                        <span className="text-[var(--accent-blue-light)] font-medium">No rush fee</span>
                       )}
                     </div>
                   </div>

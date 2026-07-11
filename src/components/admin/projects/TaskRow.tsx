@@ -14,7 +14,7 @@ interface TaskRowProps {
 const statusStyles: Record<string, { bg: string; border: string; check: string }> = {
   todo: { bg: 'bg-transparent', border: 'border-[#52525B]', check: '' },
   in_progress: { bg: 'bg-[#F59E0B]/20', border: 'border-[#F59E0B]', check: '' },
-  done: { bg: 'bg-[#10B981]', border: 'border-[#10B981]', check: 'text-white' },
+  done: { bg: 'bg-gradient-to-br from-[var(--accent-blue)] to-[var(--accent-teal)]', border: 'border-[var(--accent-blue)]', check: 'text-white' },
 };
 
 export default function TaskRow({ task, onToggleStatus, onUpdate, onDelete }: TaskRowProps) {

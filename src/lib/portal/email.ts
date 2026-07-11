@@ -529,7 +529,7 @@ export function buildFinalPaymentEmail(
   html += '<tr><td bgcolor="#1C1825" style="background-color:#1C1825;border-radius:8px;padding:16px 20px;">';
   html += '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">';
   html += infoRow('Project Total', `$${fmt(grandTotal)}`);
-  html += `<tr><td style="color:#71717A;font-size:13px;padding:6px 0;">Deposit Paid <span style="color:#52525B;font-size:11px;">(${paidDate})</span></td><td style="text-align:right;font-weight:600;color:#10B981;font-size:13px;padding:6px 0;">-$${fmt(depositAmount)}</td></tr>`;
+  html += `<tr><td style="color:#71717A;font-size:13px;padding:6px 0;">Deposit Paid <span style="color:#52525B;font-size:11px;">(${paidDate})</span></td><td style="text-align:right;font-weight:600;color:#60A5FA;font-size:13px;padding:6px 0;">-$${fmt(depositAmount)}</td></tr>`;
   html += '<tr><td colspan="2" style="border-top:1px solid #2A2435;padding:0;font-size:1px;line-height:1px;">&#160;</td></tr>';
   html += `<tr><td style="color:#ffffff;font-size:14px;font-weight:700;padding:8px 0;">Remaining Balance</td><td style="text-align:right;font-weight:700;color:#ffffff;font-size:16px;padding:8px 0;">$${fmt(remainingBalance)}</td></tr>`;
   html += '</table></td></tr></table>';
@@ -580,15 +580,15 @@ export function buildPaymentConfirmationEmail(
   html += '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">';
 
   if (paymentType === 'subscription') {
-    html += `<tr><td style="color:#ffffff;font-size:14px;font-weight:700;padding:8px 0;">Monthly Subscription</td><td style="text-align:right;font-weight:700;color:#10B981;font-size:16px;padding:8px 0;">$${fmt(monthlyAmount || amountPaid)}/mo</td></tr>`;
+    html += `<tr><td style="color:#ffffff;font-size:14px;font-weight:700;padding:8px 0;">Monthly Subscription</td><td style="text-align:right;font-weight:700;color:#60A5FA;font-size:16px;padding:8px 0;">$${fmt(monthlyAmount || amountPaid)}/mo</td></tr>`;
   } else if (paymentType === 'final' && grandTotal && depositAmount) {
     html += infoRow('Project Total', `$${fmt(grandTotal)}`);
-    html += `<tr><td style="color:#71717A;font-size:13px;padding:6px 0;">Deposit Paid</td><td style="text-align:right;font-weight:600;color:#10B981;font-size:13px;padding:6px 0;">-$${fmt(depositAmount)}</td></tr>`;
+    html += `<tr><td style="color:#71717A;font-size:13px;padding:6px 0;">Deposit Paid</td><td style="text-align:right;font-weight:600;color:#60A5FA;font-size:13px;padding:6px 0;">-$${fmt(depositAmount)}</td></tr>`;
     html += '<tr><td colspan="2" style="border-top:1px solid #2A2435;padding:0;font-size:1px;line-height:1px;">&#160;</td></tr>';
-    html += `<tr><td style="color:#ffffff;font-size:14px;font-weight:700;padding:8px 0;">Final Payment</td><td style="text-align:right;font-weight:700;color:#10B981;font-size:16px;padding:8px 0;">$${fmt(amountPaid)}</td></tr>`;
+    html += `<tr><td style="color:#ffffff;font-size:14px;font-weight:700;padding:8px 0;">Final Payment</td><td style="text-align:right;font-weight:700;color:#60A5FA;font-size:16px;padding:8px 0;">$${fmt(amountPaid)}</td></tr>`;
   } else {
     // Deposit
-    html += `<tr><td style="color:#ffffff;font-size:14px;font-weight:700;padding:8px 0;">Deposit Paid</td><td style="text-align:right;font-weight:700;color:#10B981;font-size:16px;padding:8px 0;">$${fmt(amountPaid)}</td></tr>`;
+    html += `<tr><td style="color:#ffffff;font-size:14px;font-weight:700;padding:8px 0;">Deposit Paid</td><td style="text-align:right;font-weight:700;color:#60A5FA;font-size:16px;padding:8px 0;">$${fmt(amountPaid)}</td></tr>`;
   }
 
   html += '</table></td></tr></table>';

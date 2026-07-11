@@ -8,7 +8,7 @@ interface ProjectTimelineProps {
 }
 
 const statusColors: Record<string, string> = {
-  done: '#10B981',
+  done: 'var(--accent-blue)',
   in_progress: '#F59E0B',
   todo: '#EF4444',
 };

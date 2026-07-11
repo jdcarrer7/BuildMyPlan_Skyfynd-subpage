@@ -69,7 +69,7 @@ export default function Step7Deliverables() {
                     </span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <span className={`text-sm ${format.included ? 'text-green-400' : 'text-white'}`}>
+                    <span className={`text-sm ${format.included ? 'text-[var(--accent-blue-light)]' : 'text-white'}`}>
                       {format.included ? 'Included' : `+$${format.price}`}
                     </span>
                     <button
@@ -147,7 +147,7 @@ export default function Step7Deliverables() {
                     </span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <span className={`text-sm ${option.included ? 'text-green-400' : 'text-white'}`}>
+                    <span className={`text-sm ${option.included ? 'text-[var(--accent-blue-light)]' : 'text-white'}`}>
                       {option.included ? 'Included' : `+$${option.price}`}
                     </span>
                     <button
@@ -225,7 +225,7 @@ export default function Step7Deliverables() {
                     </span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <span className={`text-sm ${option.included ? 'text-green-400' : 'text-white'}`}>
+                    <span className={`text-sm ${option.included ? 'text-[var(--accent-blue-light)]' : 'text-white'}`}>
                       {option.included ? 'Included' : `+$${option.price}`}
                     </span>
                     <button

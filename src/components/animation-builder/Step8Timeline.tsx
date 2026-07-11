@@ -64,7 +64,7 @@ export default function Step8Timeline() {
                 </div>
 
                 <div className="flex items-center gap-3">
-                  <span className={`font-semibold ${hasMultiplier ? 'text-[var(--accent-orange)]' : 'text-green-400'}`}>
+                  <span className={`font-semibold ${hasMultiplier ? 'text-[var(--accent-orange)]' : 'text-[var(--accent-blue-light)]'}`}>
                     {hasMultiplier ? `${option.multiplier}x rate` : 'Standard rate'}
                   </span>
                   <span

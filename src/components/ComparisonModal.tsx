@@ -35,7 +35,7 @@ export default function ComparisonModal({ service, isOpen, onClose }: Comparison
     if (typeof value === 'boolean') {
       return (
         <span className="flex items-center justify-center">
-          <Check className="w-5 h-5 text-green-400" />
+          <Check className="w-5 h-5 text-[var(--accent-blue-light)]" />
         </span>
       );
     }

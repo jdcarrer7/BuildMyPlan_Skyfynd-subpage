@@ -10,7 +10,7 @@ import ProjectForm from './ProjectForm';
 const statusGroups: { key: ProjectStatus; label: string; color: string }[] = [
   { key: 'not_started', label: 'NOT STARTED', color: '#EF4444' },
   { key: 'in_progress', label: 'IN PROGRESS', color: '#F59E0B' },
-  { key: 'done', label: 'DONE', color: '#10B981' },
+  { key: 'done', label: 'DONE', color: '#60A5FA' },
 ];
 
 export default function ProjectList() {

@@ -9,8 +9,8 @@ interface Props {
 
 const sourceColors: Record<string, string> = {
   'Main Page': 'bg-[#3B82F6]/20 text-[#60A5FA]',
-  'Rent Me a Site': 'bg-[#10B981]/20 text-[#34D399]',
-  'RentMe': 'bg-[#10B981]/20 text-[#34D399]',
+  'Rent Me a Site': 'bg-[var(--accent-blue)]/20 text-[var(--accent-blue-light)]',
+  'RentMe': 'bg-[var(--accent-blue)]/20 text-[var(--accent-blue-light)]',
   'Custom Builder': 'bg-[#3B82F6]/20 text-[#60A5FA]',
 };
 

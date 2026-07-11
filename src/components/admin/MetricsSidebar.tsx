@@ -37,7 +37,7 @@ export default function MetricsSidebar() {
   const cards = [
     { label: 'Quotes', value: metrics.quotesReceived, icon: <FileText className="w-4 h-4" />, color: '#60A5FA', bg: 'rgba(59,130,246,0.1)' },
     { label: 'In Progress', value: metrics.inProgress, icon: <Rocket className="w-4 h-4" />, color: '#FBBF24', bg: 'rgba(251,191,36,0.1)' },
-    { label: 'Completed', value: metrics.completed, icon: <CheckCircle2 className="w-4 h-4" />, color: '#34D399', bg: 'rgba(16,185,129,0.1)' },
+    { label: 'Completed', value: metrics.completed, icon: <CheckCircle2 className="w-4 h-4" />, color: '#60A5FA', bg: 'rgba(59,130,246,0.1)' },
     { label: 'Est. Revenue', value: metrics.totalRevenue, icon: <TrendingUp className="w-4 h-4" />, color: '#F97316', bg: 'rgba(249,115,22,0.1)' },
   ];
 
@@ -59,17 +59,17 @@ export default function MetricsSidebar() {
     {
       label: 'Completed',
       value: metrics.completed,
-      color: '#34D399',
-      gradient: metrics.completed > 0 ? 'linear-gradient(90deg, #10B981, #34D399)' : 'transparent',
+      color: '#60A5FA',
+      gradient: metrics.completed > 0 ? 'linear-gradient(90deg, var(--accent-blue), var(--accent-teal))' : 'transparent',
       width: metrics.quotesReceived > 0 ? `${Math.max(4, (metrics.completed / metrics.quotesReceived) * 100)}%` : '0%',
     },
   ];
 
   const portalStages = [
     { label: 'Sent', value: metrics.portalsSent, dotColor: '#8B5CF6' },
-    { label: 'Signed', value: metrics.portalsSigned, dotColor: '#22C55E' },
+    { label: 'Signed', value: metrics.portalsSigned, dotColor: 'var(--accent-blue)' },
     { label: 'Deposit', value: metrics.portalsDepositPaid, dotColor: '#F59E0B' },
-    { label: 'Fully Paid', value: metrics.portalsFullyPaid, dotColor: '#10B981' },
+    { label: 'Fully Paid', value: metrics.portalsFullyPaid, dotColor: 'var(--accent-blue-light)' },
   ];
 
   return (

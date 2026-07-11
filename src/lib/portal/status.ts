@@ -31,8 +31,8 @@ export const STATUS_COLORS: Record<PortalStatus, string> = {
   email_verified: '#3B82F6',
   quote_viewed: '#8B5CF6',
   change_requested: '#F59E0B',
-  quote_accepted: '#10B981',
-  contract_signed: '#22C55E',
+  quote_accepted: '#60A5FA',
+  contract_signed: '#A78BFA',
   payment_completed: '#F59E0B',
   project_completed: '#3B82F6',
 };

@@ -352,7 +352,7 @@ export default function Step9Summary({ showQuoteForm = false, onCloseQuoteForm }
                             {category?.name} <span className="text-[var(--text-muted)]">({tier?.label})</span>
                           </span>
                           {addOn.price === 0 ? (
-                            <span className="text-green-400">Included</span>
+                            <span className="text-[var(--accent-blue-light)]">Included</span>
                           ) : (
                             <span className="text-white font-medium">+${addOn.price}</span>
                           )}
@@ -376,7 +376,7 @@ export default function Step9Summary({ showQuoteForm = false, onCloseQuoteForm }
                           <div key={format.id} className="flex justify-between text-sm">
                             <span className="text-[var(--text-secondary)]">{formatInfo?.label}</span>
                             {format.price === 0 ? (
-                              <span className="text-green-400">Included</span>
+                              <span className="text-[var(--accent-blue-light)]">Included</span>
                             ) : (
                               <span className="text-white font-medium">+${format.price}</span>
                             )}
@@ -392,7 +392,7 @@ export default function Step9Summary({ showQuoteForm = false, onCloseQuoteForm }
                     <div className="flex justify-between text-sm">
                       <span className="text-[var(--text-secondary)]">{aspectRatioLabel}</span>
                       {aspectRatioPrice === 0 ? (
-                        <span className="text-green-400">Included</span>
+                        <span className="text-[var(--accent-blue-light)]">Included</span>
                       ) : (
                         <span className="text-white font-medium">+${aspectRatioPrice}</span>
                       )}
@@ -405,7 +405,7 @@ export default function Step9Summary({ showQuoteForm = false, onCloseQuoteForm }
                     <div className="flex justify-between text-sm">
                       <span className="text-[var(--text-secondary)]">{sourceFilesLabel}</span>
                       {sourceFilesPrice === 0 ? (
-                        <span className="text-green-400">Included</span>
+                        <span className="text-[var(--accent-blue-light)]">Included</span>
                       ) : (
                         <span className="text-white font-medium">+${sourceFilesPrice}</span>
                       )}
@@ -423,7 +423,7 @@ export default function Step9Summary({ showQuoteForm = false, onCloseQuoteForm }
                       +${rushFee.toLocaleString()} ({Math.round((timelineMultiplier - 1) * 100)}%)
                     </span>
                   ) : (
-                    <span className="text-green-400 font-medium">No rush fee</span>
+                    <span className="text-[var(--accent-blue-light)] font-medium">No rush fee</span>
                   )}
                 </div>
               </SummarySection>
@@ -589,7 +589,7 @@ export default function Step9Summary({ showQuoteForm = false, onCloseQuoteForm }
                           +${config.rushFee.toLocaleString()}
                         </span>
                       ) : (
-                        <span className="text-green-400 font-medium">No rush fee</span>
+                        <span className="text-[var(--accent-blue-light)] font-medium">No rush fee</span>
                       )}
                     </div>
                   </div>
@@ -716,7 +716,7 @@ export default function Step9Summary({ showQuoteForm = false, onCloseQuoteForm }
                           +${config.rushFee.toLocaleString()}
                         </span>
                       ) : (
-                        <span className="text-green-400 font-medium">No rush fee</span>
+                        <span className="text-[var(--accent-blue-light)] font-medium">No rush fee</span>
                       )}
                     </div>
                   </div>
@@ -834,7 +834,7 @@ export default function Step9Summary({ showQuoteForm = false, onCloseQuoteForm }
                           +${config.rushFee.toLocaleString()}
                         </span>
                       ) : (
-                        <span className="text-green-400 font-medium">No rush fee</span>
+                        <span className="text-[var(--accent-blue-light)] font-medium">No rush fee</span>
                       )}
                     </div>
                   </div>
@@ -942,7 +942,7 @@ export default function Step9Summary({ showQuoteForm = false, onCloseQuoteForm }
                           +${config.rushFee.toLocaleString()}
                         </span>
                       ) : (
-                        <span className="text-green-400 font-medium">No rush fee</span>
+                        <span className="text-[var(--accent-blue-light)] font-medium">No rush fee</span>
                       )}
                     </div>
                   </div>

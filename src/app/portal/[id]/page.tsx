@@ -201,18 +201,18 @@ export default function PortalPage() {
           return (
             <div key={step.key} className="flex items-center gap-1.5 sm:gap-2 shrink-0">
               {index > 0 && (
-                <div className={`w-6 sm:w-12 h-px ${isCompleted ? 'bg-[#10B981]' : 'bg-white/[0.06]'}`} />
+                <div className={`w-6 sm:w-12 h-px ${isCompleted ? 'bg-[var(--accent-blue)]' : 'bg-white/[0.06]'}`} />
               )}
               <div className="flex items-center gap-1.5 sm:gap-2">
                 <Icon
                   className={`w-5 h-5 shrink-0 ${
-                    isCompleted ? 'text-[#10B981]' :
+                    isCompleted ? 'text-[var(--accent-blue-light)]' :
                     isActive ? 'text-[#3B82F6]' :
                     'text-[#71717A]'
                   }`}
                 />
                 <span className={`text-xs sm:text-sm font-medium hidden sm:inline whitespace-nowrap ${
-                  isCompleted ? 'text-[#10B981]' :
+                  isCompleted ? 'text-[var(--accent-blue-light)]' :
                   isActive ? 'text-[#FAFAFA]' :
                   'text-[#71717A]'
                 }`}>
@@ -319,7 +319,7 @@ export default function PortalPage() {
 
         {currentStep === 'complete' && (
           <div className="text-center py-12">
-            <CheckCircle2 className="w-12 h-12 text-[#10B981] mx-auto mb-4" />
+            <CheckCircle2 className="w-12 h-12 text-[var(--accent-blue-light)] mx-auto mb-4" />
             <h2 className="text-2xl font-semibold text-[#FAFAFA] mb-2" style={{ fontFamily: "'Source Serif Pro', Georgia, serif" }}>
               All Done!
             </h2>

@@ -273,14 +273,14 @@ export default function Step8Summary({ showQuoteForm, onCloseQuoteForm }: Step8S
 
           {/* Promo Banner */}
           {isPromoActive() && store.promoDiscount > 0 && (
-            <div className="mb-4 p-3 bg-gradient-to-r from-green-500/20 to-emerald-500/20 border border-green-500/30 rounded-lg">
+            <div className="mb-4 p-3 bg-gradient-to-r from-[var(--accent-blue)]/20 to-[var(--accent-teal)]/20 border border-[var(--accent-blue)]/30 rounded-lg">
               <div className="flex items-center gap-2">
-                <Sparkles className="w-5 h-5 text-green-400" />
-                <span className="text-green-400 font-medium">
+                <Sparkles className="w-5 h-5 text-[var(--accent-blue-light)]" />
+                <span className="text-[var(--accent-blue-light)] font-medium">
                   Launch Special: Save ${store.promoDiscount.toFixed(2)} on activation!
                 </span>
               </div>
-              <p className="text-sm text-green-400/70 mt-1">
+              <p className="text-sm text-[var(--accent-blue-light)]/70 mt-1">
                 50% off activation fee - offer expires March 1, 2026
               </p>
             </div>
@@ -821,7 +821,7 @@ export default function Step8Summary({ showQuoteForm, onCloseQuoteForm }: Step8S
                               +${config.rushFee.toLocaleString()} ({Math.round((config.timelineMultiplier - 1) * 100)}%)
                             </span>
                           ) : (
-                            <span className="text-green-400 font-medium">No rush fee</span>
+                            <span className="text-[var(--accent-blue-light)] font-medium">No rush fee</span>
                           )}
                         </div>
                     </div>
@@ -1076,7 +1076,7 @@ export default function Step8Summary({ showQuoteForm, onCloseQuoteForm }: Step8S
                               +${config.rushFee.toLocaleString()} ({Math.round((config.timelineMultiplier - 1) * 100)}%)
                             </span>
                           ) : (
-                            <span className="text-green-400 font-medium">No rush fee</span>
+                            <span className="text-[var(--accent-blue-light)] font-medium">No rush fee</span>
                           )}
                         </div>
                     </div>

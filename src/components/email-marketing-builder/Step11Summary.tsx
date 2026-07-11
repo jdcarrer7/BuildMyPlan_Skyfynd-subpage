@@ -380,7 +380,7 @@ export default function Step11Summary({ showQuoteForm = false, onCloseQuoteForm 
                   <div className="flex justify-between">
                     <span className="text-[var(--text-secondary)]">{durationLabel}</span>
                     {discountPercent > 0 && (
-                      <span className="text-green-400 font-medium">-{discountPercent}% discount</span>
+                      <span className="text-[var(--accent-blue-light)] font-medium">-{discountPercent}% discount</span>
                     )}
                     {premiumPercent > 0 && (
                       <span className="text-[var(--accent-orange)] font-medium">+{premiumPercent}% premium</span>
@@ -501,7 +501,7 @@ export default function Step11Summary({ showQuoteForm = false, onCloseQuoteForm 
                       {config.rushFee > 0 ? (
                         <span className="text-[var(--accent-orange)] font-medium">+${config.rushFee.toLocaleString()}</span>
                       ) : (
-                        <span className="text-green-400 font-medium">No rush fee</span>
+                        <span className="text-[var(--accent-blue-light)] font-medium">No rush fee</span>
                       )}
                     </div>
                   </div>
@@ -598,7 +598,7 @@ export default function Step11Summary({ showQuoteForm = false, onCloseQuoteForm 
                       {config.rushFee > 0 ? (
                         <span className="text-[var(--accent-orange)] font-medium">+${config.rushFee.toLocaleString()}</span>
                       ) : (
-                        <span className="text-green-400 font-medium">No rush fee</span>
+                        <span className="text-[var(--accent-blue-light)] font-medium">No rush fee</span>
                       )}
                     </div>
                   </div>
@@ -695,7 +695,7 @@ export default function Step11Summary({ showQuoteForm = false, onCloseQuoteForm 
                       {config.rushFee > 0 ? (
                         <span className="text-[var(--accent-orange)] font-medium">+${config.rushFee.toLocaleString()}</span>
                       ) : (
-                        <span className="text-green-400 font-medium">No rush fee</span>
+                        <span className="text-[var(--accent-blue-light)] font-medium">No rush fee</span>
                       )}
                     </div>
                   </div>
@@ -784,7 +784,7 @@ export default function Step11Summary({ showQuoteForm = false, onCloseQuoteForm 
                       {config.rushFee > 0 ? (
                         <span className="text-[var(--accent-orange)] font-medium">+${config.rushFee.toLocaleString()}</span>
                       ) : (
-                        <span className="text-green-400 font-medium">No rush fee</span>
+                        <span className="text-[var(--accent-blue-light)] font-medium">No rush fee</span>
                       )}
                     </div>
                   </div>
@@ -873,7 +873,7 @@ export default function Step11Summary({ showQuoteForm = false, onCloseQuoteForm 
                       {config.rushFee > 0 ? (
                         <span className="text-[var(--accent-orange)] font-medium">+${config.rushFee.toLocaleString()}</span>
                       ) : (
-                        <span className="text-green-400 font-medium">No rush fee</span>
+                        <span className="text-[var(--accent-blue-light)] font-medium">No rush fee</span>
                       )}
                     </div>
                   </div>
@@ -1057,7 +1057,7 @@ export default function Step11Summary({ showQuoteForm = false, onCloseQuoteForm 
                     <div className="flex justify-between">
                       <span className="text-[var(--text-secondary)]">{durationLabelSM}</span>
                       {config.durationMultiplier < 1 && (
-                        <span className="text-green-400 font-medium">-{Math.round((1 - config.durationMultiplier) * 100)}% discount</span>
+                        <span className="text-[var(--accent-blue-light)] font-medium">-{Math.round((1 - config.durationMultiplier) * 100)}% discount</span>
                       )}
                       {config.durationMultiplier > 1 && (
                         <span className="text-[var(--accent-orange)] font-medium">+{Math.round((config.durationMultiplier - 1) * 100)}% premium</span>

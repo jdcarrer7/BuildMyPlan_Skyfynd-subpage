@@ -104,7 +104,7 @@ export default function Step7Deliverables() {
 
                       <div className="flex items-center gap-1">
                         {option.included ? (
-                          <span className="text-sm text-green-400">Included</span>
+                          <span className="text-sm text-[var(--accent-blue-light)]">Included</span>
                         ) : 'startsAt' in option && option.startsAt ? (
                           <span className="text-sm font-medium gradient-text">${option.price}+</span>
                         ) : (

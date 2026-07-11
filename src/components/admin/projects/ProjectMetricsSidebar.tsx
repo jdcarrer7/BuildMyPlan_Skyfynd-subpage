@@ -42,7 +42,7 @@ export default function ProjectMetricsSidebar() {
           />
         </div>
         <div className="mt-3 space-y-1.5">
-          <LegendRow color="#10B981" label="Done" value={projectMetrics.completed} />
+          <LegendRow color="var(--accent-blue)" label="Done" value={projectMetrics.completed} />
           <LegendRow color="#F59E0B" label="In Progress" value={projectMetrics.inProgress} />
           <LegendRow color="rgba(255,255,255,0.1)" label="Not Started" value={projectMetrics.notStarted} />
         </div>
@@ -66,7 +66,7 @@ export default function ProjectMetricsSidebar() {
           />
         </div>
         <div className="mt-3 space-y-1.5">
-          <LegendRow color="#10B981" label="Done" value={taskMetrics.done} />
+          <LegendRow color="var(--accent-blue)" label="Done" value={taskMetrics.done} />
           <LegendRow color="#F59E0B" label="In Progress" value={taskMetrics.inProgress} />
           <LegendRow color="#EF4444" label="Not Started" value={taskMetrics.todo} />
         </div>

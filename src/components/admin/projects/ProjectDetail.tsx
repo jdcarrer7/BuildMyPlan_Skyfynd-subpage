@@ -12,7 +12,7 @@ import ProjectForm from './ProjectForm';
 const statusConfig: Record<ProjectStatus, { label: string; color: string; bg: string }> = {
   not_started: { label: 'Not Started', color: '#EF4444', bg: 'rgba(239,68,68,0.15)' },
   in_progress: { label: 'In Progress', color: '#F59E0B', bg: 'rgba(245,158,11,0.15)' },
-  done: { label: 'Done', color: '#10B981', bg: 'rgba(16,185,129,0.15)' },
+  done: { label: 'Done', color: 'var(--accent-blue-light)', bg: 'rgba(59,130,246,0.15)' },
 };
 
 export default function ProjectDetail() {

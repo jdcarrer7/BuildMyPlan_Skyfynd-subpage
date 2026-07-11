@@ -88,7 +88,7 @@ export default function Step10Timeline() {
                         </p>
                       </div>
                     ) : (
-                      <span className="text-green-400 font-semibold">No Fee</span>
+                      <span className="text-[var(--accent-blue-light)] font-semibold">No Fee</span>
                     )}
                     {isSelected && (
                       <div className="mt-2 w-6 h-6 rounded-full bg-white/20 flex items-center justify-center ml-auto">

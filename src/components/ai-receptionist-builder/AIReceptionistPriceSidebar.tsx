@@ -482,13 +482,13 @@ export default function AIReceptionistPriceSidebar({
         {/* Promo Discount */}
         {promoActive && promoDiscount > 0 && (
           <div className="pt-2 border-t border-[var(--border-subtle)]">
-            <div className="flex items-center gap-2 p-3 bg-green-500/10 border border-green-500/30 rounded-lg">
-              <Sparkles className="w-4 h-4 text-green-400" />
+            <div className="flex items-center gap-2 p-3 bg-[var(--accent-blue)]/10 border border-[var(--accent-blue)]/30 rounded-lg">
+              <Sparkles className="w-4 h-4 text-[var(--accent-blue-light)]" />
               <div className="flex-1">
-                <p className="text-sm text-green-400 font-medium">Launch Promo Active!</p>
+                <p className="text-sm text-[var(--accent-blue-light)] font-medium">Launch Promo Active!</p>
                 <p className="text-xs text-[var(--text-secondary)]">50% off activation fee</p>
               </div>
-              <span className="text-green-400 font-semibold">-${promoDiscount}</span>
+              <span className="text-[var(--accent-blue-light)] font-semibold">-${promoDiscount}</span>
             </div>
           </div>
         )}

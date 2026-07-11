@@ -93,7 +93,7 @@ export default function Step12Timeline() {
 
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <span className={`text-lg font-semibold ${option.multiplier === 1 ? 'text-green-400' : 'text-[var(--accent-orange)]'}`}>
+                    <span className={`text-lg font-semibold ${option.multiplier === 1 ? 'text-[var(--accent-blue-light)]' : 'text-[var(--accent-orange)]'}`}>
                       {getMultiplierLabel(option.multiplier)}
                     </span>
                     <span className="text-sm text-[var(--text-muted)]">
@@ -150,7 +150,7 @@ export default function Step12Timeline() {
           <div className="flex items-center justify-between">
             <span className="text-[var(--text-secondary)]">Timeline premium</span>
             {timelineOptions.find((t) => t.id === timeline)?.multiplier === 1 ? (
-              <span className="text-green-400 font-medium">No premium</span>
+              <span className="text-[var(--accent-blue-light)] font-medium">No premium</span>
             ) : (
               <span className="text-[var(--accent-orange)] font-medium">
                 +${Math.round(projectSubtotal * ((timelineOptions.find((t) => t.id === timeline)?.multiplier || 1) - 1)).toLocaleString()}

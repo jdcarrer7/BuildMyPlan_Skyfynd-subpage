@@ -170,7 +170,7 @@ export default function Step6Reporting() {
 
                 <div className="flex items-center gap-2">
                   {option.monthlyPrice === 0 ? (
-                    <span className="text-sm font-medium text-green-400">Included</span>
+                    <span className="text-sm font-medium text-[var(--accent-blue-light)]">Included</span>
                   ) : (
                     <span className="text-sm font-semibold gradient-text">
                       +${option.monthlyPrice}
@@ -219,7 +219,7 @@ export default function Step6Reporting() {
 
                 <div className="flex items-center gap-2">
                   {option.monthlyPrice === 0 ? (
-                    <span className="text-sm font-medium text-green-400">Included</span>
+                    <span className="text-sm font-medium text-[var(--accent-blue-light)]">Included</span>
                   ) : (
                     <span className="text-sm font-semibold gradient-text">
                       +${option.monthlyPrice}
@@ -258,7 +258,7 @@ export default function Step6Reporting() {
               </span>
             )}
             {reportingFrequency !== 'none' && (
-              <span className="ml-2 px-2 py-1 bg-green-500/20 rounded text-green-400 text-xs">
+              <span className="ml-2 px-2 py-1 bg-[var(--accent-blue)]/20 rounded text-[var(--accent-blue-light)] text-xs">
                 {reportingFrequencyOptions.find((o) => o.id === reportingFrequency)?.label}
               </span>
             )}

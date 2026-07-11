@@ -25,8 +25,8 @@ interface CustomerGroup {
 
 const sourceColors: Record<string, { bg: string; text: string }> = {
   'Main Page': { bg: 'bg-[#3B82F6]/15', text: 'text-[#60A5FA]' },
-  'Rent Me a Site': { bg: 'bg-[#10B981]/15', text: 'text-[#34D399]' },
-  'RentMe': { bg: 'bg-[#10B981]/15', text: 'text-[#34D399]' },
+  'Rent Me a Site': { bg: 'bg-[var(--accent-blue)]/15', text: 'text-[var(--accent-blue-light)]' },
+  'RentMe': { bg: 'bg-[var(--accent-blue)]/15', text: 'text-[var(--accent-blue-light)]' },
   'Custom Builder': { bg: 'bg-[#3B82F6]/15', text: 'text-[#60A5FA]' },
 };
 
@@ -73,7 +73,7 @@ type PipelineCategory = 'quotes' | 'inProgress' | 'completed';
 const CATEGORY_CONFIG: Record<PipelineCategory, { label: string; icon: typeof FileText; color: string }> = {
   quotes: { label: 'Quotes', icon: FileText, color: '#3B82F6' },
   inProgress: { label: 'In Progress', icon: Rocket, color: '#F59E0B' },
-  completed: { label: 'Completed', icon: CheckCircle2, color: '#10B981' },
+  completed: { label: 'Completed', icon: CheckCircle2, color: '#60A5FA' },
 };
 
 export default function CustomerDropdown() {
@@ -256,7 +256,7 @@ export default function CustomerDropdown() {
             <div className="min-w-0 flex-1">
               <div className="flex items-center justify-between gap-2">
                 <span className="text-xs font-medium text-white truncate">{group.name}</span>
-                <span className="text-[10px] font-medium text-[#10B981]">${group.totalValue.toLocaleString()}</span>
+                <span className="text-[10px] font-medium text-[var(--accent-blue-light)]">${group.totalValue.toLocaleString()}</span>
               </div>
             </div>
 

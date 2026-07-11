@@ -61,7 +61,7 @@ export default function Step8Reporting() {
 
                 <div className="text-lg font-semibold gradient-text">
                   {option.price === 0 ? (
-                    <span className="text-green-400">Included</span>
+                    <span className="text-[var(--accent-blue-light)]">Included</span>
                   ) : (
                     <>
                       +${option.price}

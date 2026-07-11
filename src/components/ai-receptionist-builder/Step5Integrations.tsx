@@ -81,7 +81,7 @@ export default function Step5Integrations() {
 
                 <div className="flex items-center gap-2 flex-wrap">
                   {option.monthlyPrice === 0 && option.oneTimePrice === 0 ? (
-                    <span className="text-sm font-medium text-green-400">Included</span>
+                    <span className="text-sm font-medium text-[var(--accent-blue-light)]">Included</span>
                   ) : (
                     <>
                       {option.monthlyPrice > 0 && (
@@ -205,7 +205,7 @@ export default function Step5Integrations() {
 
                 <div className="flex items-center gap-2">
                   {option.monthlyPrice === 0 ? (
-                    <span className="text-sm font-medium text-green-400">Included</span>
+                    <span className="text-sm font-medium text-[var(--accent-blue-light)]">Included</span>
                   ) : (
                     <span className="text-sm font-semibold gradient-text">
                       +${option.monthlyPrice}

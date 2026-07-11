@@ -164,8 +164,8 @@ export default function EmailMarketingPriceSidebar({ currentStep, onGoToSummary 
 
           {discountPercent > 0 && (
             <div className="flex justify-between items-center text-sm">
-              <span className="text-green-400">Duration Discount (-{discountPercent}%)</span>
-              <span className="text-green-400">-${durationDiscount.toFixed(2)}/mo</span>
+              <span className="text-[var(--accent-blue-light)]">Duration Discount (-{discountPercent}%)</span>
+              <span className="text-[var(--accent-blue-light)]">-${durationDiscount.toFixed(2)}/mo</span>
             </div>
           )}
 

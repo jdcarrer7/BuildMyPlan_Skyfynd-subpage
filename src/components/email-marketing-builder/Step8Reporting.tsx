@@ -61,7 +61,7 @@ export default function Step8Reporting() {
 
                 <div className="flex items-center gap-2">
                   {option.price === 0 ? (
-                    <span className="text-lg font-semibold text-green-400">Included</span>
+                    <span className="text-lg font-semibold text-[var(--accent-blue-light)]">Included</span>
                   ) : (
                     <>
                       <span className="text-lg font-semibold gradient-text">

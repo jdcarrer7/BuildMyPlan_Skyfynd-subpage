@@ -98,7 +98,7 @@ export default function Step7Timeline() {
                         +${rushFee.toLocaleString()}
                       </span>
                     ) : (
-                      <span className={`font-medium ${isSelected ? 'text-green-400' : 'text-[var(--text-muted)]'}`}>
+                      <span className={`font-medium ${isSelected ? 'text-[var(--accent-blue-light)]' : 'text-[var(--text-muted)]'}`}>
                         No rush fee
                       </span>
                     )}

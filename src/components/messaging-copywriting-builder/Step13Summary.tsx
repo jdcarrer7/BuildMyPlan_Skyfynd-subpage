@@ -345,7 +345,7 @@ export default function Step13Summary({ showQuoteForm = false, onCloseQuoteForm 
                           +{timelinePremiumPercent}% (${store.timelinePremium.toLocaleString()})
                         </span>
                       ) : (
-                        <span className="text-green-400 font-medium">No premium</span>
+                        <span className="text-[var(--accent-blue-light)] font-medium">No premium</span>
                       )}
                     </div>
                   </SummarySection>
