@@ -10,6 +10,12 @@ import type { QuoteRequestPayload } from '@/lib/types/quote';
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || 'https://plans.skyfynd.io';
 
 // ── ID Generation ──
+// Every quote this site writes is a Skyfynd quote in OMI's multi-account
+// schema, numbered from the same legacy 'qr_number' / 'customer_id' counters
+// OMI uses for the Skyfynd account (OMI src/lib/supabase/quotes.ts).
+
+const SKYFYND_ACCOUNT_ID = '00000000-0000-4000-a000-000000000001';
+const MAX_QR_ATTEMPTS = 3;
 
 export async function generateQRNumber(): Promise<string> {
   const supabase = getSupabaseAdmin();
@@ -21,10 +27,11 @@ export async function generateQRNumber(): Promise<string> {
 export async function assignCustomerId(email: string): Promise<string> {
   const supabase = getSupabaseAdmin();
 
-  // Check if this email already has a quote
+  // Check if this email already has a Skyfynd quote (never another account's id)
   const { data: existing } = await supabase
     .from('quotes')
     .select('customer_id')
+    .eq('account_id', SKYFYND_ACCOUNT_ID)
     .eq('email', email)
     .limit(1)
     .single();
@@ -41,11 +48,10 @@ export async function assignCustomerId(email: string): Promise<string> {
 
 export async function createQuote(body: QuoteRequestPayload): Promise<{ qrNumber: string }> {
   const supabase = getSupabaseAdmin();
-  const qrNumber = await generateQRNumber();
   const customerId = await assignCustomerId(body.email);
 
   const quoteJSON: QuoteJSON = {
-    qrNumber,
+    qrNumber: '',
     customerId,
     submittedAt: new Date().toISOString(),
     source: body.source,
@@ -71,27 +77,48 @@ export async function createQuote(body: QuoteRequestPayload): Promise<{ qrNumber
     },
   };
 
-  const { error } = await supabase.from('quotes').insert({
-    qr_number: qrNumber,
-    customer_id: customerId,
-    submitted_at: quoteJSON.submittedAt,
-    source: body.source,
-    name: body.name,
-    email: body.email,
-    company: body.company || '',
-    phone: body.phone || '',
-    service_count: body.serviceCount,
-    service_names: body.serviceNames,
-    one_time_total: body.oneTimeTotal,
-    monthly_total: body.monthlyTotal,
-    discount_percentage: body.discountPercentage,
-    grand_total: body.grandTotal,
-    has_custom_quote: body.hasCustomQuote,
-    quote_data: quoteJSON,
-  });
+  // A QR number some other writer already used is redrawn: only a unique
+  // violation on qr_number (nothing was written), bounded, and the counter is
+  // only ever lifted to the highest number in use, never lowered.
+  for (let attempt = 1; ; attempt += 1) {
+    const qrNumber = await generateQRNumber();
+    quoteJSON.qrNumber = qrNumber;
+    const { error } = await supabase.from('quotes').insert({
+      account_id: SKYFYND_ACCOUNT_ID,
+      qr_number: qrNumber,
+      customer_id: customerId,
+      submitted_at: quoteJSON.submittedAt,
+      source: body.source,
+      name: body.name,
+      email: body.email,
+      company: body.company || '',
+      phone: body.phone || '',
+      service_count: body.serviceCount,
+      service_names: body.serviceNames,
+      one_time_total: body.oneTimeTotal,
+      monthly_total: body.monthlyTotal,
+      discount_percentage: body.discountPercentage,
+      grand_total: body.grandTotal,
+      has_custom_quote: body.hasCustomQuote,
+      quote_data: quoteJSON,
+    });
+    if (!error) return { qrNumber };
 
-  if (error) throw new Error(`Failed to create quote: ${error.message}`);
-  return { qrNumber };
+    const qrTaken = error.code === '23505' && /qr_number|uq_quotes_account_qr/i.test(`${error.message} ${error.details ?? ''}`);
+    if (!qrTaken || attempt >= MAX_QR_ATTEMPTS) throw new Error(`Failed to create quote: ${error.message}`);
+
+    const { data: used } = await supabase
+      .from('quotes')
+      .select('qr_number')
+      .eq('account_id', SKYFYND_ACCOUNT_ID)
+      .order('qr_number', { ascending: false })
+      .limit(1000);
+    const max = ((used || []) as { qr_number: string | null }[]).reduce((m, r) => {
+      const hit = /^QR-(\d{1,9})$/.exec(String(r.qr_number || ''));
+      return hit ? Math.max(m, Number(hit[1])) : m;
+    }, 0);
+    if (max > 0) await supabase.from('counters').update({ value: max }).eq('name', 'qr_number').lt('value', max);
+  }
 }
 
 // ── List Quotes ──
